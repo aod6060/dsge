@@ -9,5 +9,11 @@ env["source_files"] += [
 ]
 
 # 3rd Party Libraries
+SConscript("#/src/thirdparty/imgui/SConscript", exports="env")
 
 # Compile Engine
+
+# Compile Editors
+
+# Compile Game
+

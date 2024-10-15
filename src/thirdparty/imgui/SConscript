@@ -1,0 +1,14 @@
+Import("env")
+
+def source(file):
+    return "#/src/thirdparty/imgui/" + file
+
+
+env["source_files"] += [
+    source("imgui_draw.cpp"),
+    source("imgui_impl_opengl3.cpp"),
+    source("imgui_impl_sdl2.cpp"),
+    source("imgui_tables.cpp"),
+    source("imgui_widgets.cpp"),
+    source("imgui.cpp")
+]
