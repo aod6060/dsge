@@ -1,0 +1,14 @@
+Import("env")
+
+
+def source(file):
+    return "#/src/" + file
+
+env["source_files"] += [
+    source("main.cpp")
+]
+
+# 3rd Party Libraries
+
+
+# Compile Engine
