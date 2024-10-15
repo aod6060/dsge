@@ -1,0 +1,8 @@
+{
+    "clangd.arguments": [
+        "--enable-config"
+    ],
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include"
+    ]
+}

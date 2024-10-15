@@ -12,6 +12,7 @@ env["source_files"] += [
 SConscript("#/src/thirdparty/imgui/SConscript", exports="env")
 
 # Compile Engine
+SConscript("#/src/engine/SConscript", exports="env")
 
 # Compile Editors
 
