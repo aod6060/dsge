@@ -39,7 +39,22 @@ fp.close()
 
 env = Environment(
     TARGET_ARCH='x86',
+    CPPPATH=[
+        "include"
+    ],
+    LIBPATH=[
+        "lib"
+    ],
     LIBS=[
+        'SDL2main.lib',
+        'SDL2.lib',
+        'SDL2_image.lib',
+        'SDL2_mixer.lib',
+        'opengl32.lib',
+        'glew32.lib',
+        'jsoncpp.lib',
+        'freetype.lib',
+        'box2d.lib',
         'kernel32.lib',
         'user32.lib',
         'gdi32.lib',
