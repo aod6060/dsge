@@ -55,6 +55,7 @@ env = Environment(
         'jsoncpp.lib',
         'freetype.lib',
         'box2d.lib',
+        'lua_5_4_7.lib',
         'kernel32.lib',
         'user32.lib',
         'gdi32.lib',
