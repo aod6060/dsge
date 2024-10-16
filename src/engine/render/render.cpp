@@ -1,4 +1,3 @@
-#include "render.h"
 #include "../sys.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glw/glw.h"
