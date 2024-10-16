@@ -6,5 +6,12 @@ def source(file):
 
 env["source_files"] += [
     source("app/app.cpp"),
-    source("input/input.cpp")
+    source("input/input.cpp"),
+    source("render/render.cpp"),
+    source("render/glw/program.cpp"),
+    source("render/glw/shader.cpp"),
+    source("render/glw/uniform.cpp"),
+    source("render/glw/vertex_array.cpp"),
+    source("render/glw/vertex_buffer.cpp"),
+    source("render/glw/index_buffer.cpp")
 ]

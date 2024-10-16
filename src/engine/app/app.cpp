@@ -55,6 +55,7 @@ namespace app {
         glewInit();
 
         input::init();
+        render::init();
 
         if(config->app) {
             config->app->init();
@@ -108,8 +109,9 @@ namespace app {
             config->app->release();
         }
         
+        render::release();
         input::release();
-        
+
         SDL_GL_DeleteContext(context);
         SDL_DestroyWindow(window);
 

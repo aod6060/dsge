@@ -27,5 +27,6 @@
 #include "version.h"
 #include "app/app.h"
 #include "input/input.h"
+#include "render/render.h"
 
 #endif
