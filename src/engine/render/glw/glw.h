@@ -132,6 +132,33 @@ namespace render {
             size_t dataSize();
         };
 
+        // Texture2D
+        struct Texture2D {
+            uint32_t id = 0;
+            uint32_t width = 0;
+            uint32_t height = 0;
+
+            void init();
+            void release();
+
+            void bind(GLenum active);
+            void unbind(GLenum active);
+
+            void texImage2D(
+                int32_t level, 
+                int32_t internalFormat, 
+                size_t width, 
+                size_t height, 
+                GLenum format, 
+                GLenum type, 
+                const void* data);
+
+            void texParameter(GLenum pname, int32_t param);
+
+            static void createTexture2DFromFile(Texture2D* out, std::string path);
+
+
+        };
     }
 }
 #endif

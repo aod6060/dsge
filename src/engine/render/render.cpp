@@ -14,6 +14,8 @@ namespace render {
     glw::Program program;
     // Default Vertex Buffer
     glw::VertexBuffer defVertices;
+    // Default TexCoord Buffer
+    glw::VertexBuffer defTexCoords;
     // Default Index Buffer
     glw::IndexBuffer defIndex;
 
@@ -26,14 +28,18 @@ namespace render {
         program.init({&vertex_shader, &fragment_shader});
 
         program.vertexArray.createAttrib("vertices", 0);
+        program.vertexArray.createAttrib("texCoords", 1);
 
         program.bind();
         program.uniform.createUniform("proj");
         program.uniform.createUniform("view");
         program.uniform.createUniform("model");
-
+        program.uniform.createUniform("tex0");
+        program.uniform.set1i("tex0", 0);
+        
         program.vertexArray.bind();
         program.vertexArray.enable("vertices");
+        program.vertexArray.enable("texCoords");
         program.vertexArray.unbind();
 
         program.unbind();
@@ -44,6 +50,13 @@ namespace render {
         defVertices.add3(0.0f, 1.0f, 0.0f);
         defVertices.add3(1.0f, 1.0f, 0.0f);
         defVertices.update();
+
+        defTexCoords.init();
+        defTexCoords.add2(0.0f, 0.0f);
+        defTexCoords.add2(1.0f, 0.0f);
+        defTexCoords.add2(0.0f, 1.0f);
+        defTexCoords.add2(1.0f, 1.0f);
+        defTexCoords.update();
 
         defIndex.init();
         defIndex.add3(0, 1, 2);
@@ -90,8 +103,11 @@ namespace render {
 
     void draw() {
         program.vertexArray.bind();
+
         defVertices.bind();
         program.vertexArray.pointer("vertices", 3, GL_FLOAT);
+        defTexCoords.bind();
+        program.vertexArray.pointer("texCoords", 2, GL_FLOAT);
         defVertices.unbind();
 
         defIndex.bind();
