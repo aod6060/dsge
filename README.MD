@@ -9,4 +9,4 @@ intergrating lua as the primary scripting language down the road. For now I'm go
 3rd party libraries I want for the project which I'll make a list of them.
 
 Here is the introduction video for said project
-[![Introduction](https://i.sstatic.net/Vp2cE.png)](https://youtu.be/cNRUDgVQMXk)
+[![Introduction]](https://youtu.be/cNRUDgVQMXk)
