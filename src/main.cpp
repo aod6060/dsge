@@ -1,5 +1,8 @@
+#include "engine/input/input.h"
 #include "engine/render/glw/glw.h"
 #include "engine/sys.h"
+#include "glm/ext/quaternion_geometric.hpp"
+#include "glm/gtc/constants.hpp"
 
 
 
@@ -10,6 +13,12 @@ struct TestApplication : public app::IApplication {
 
         render::glw::Texture2D icon_32;
 
+        glm::vec2 postion = glm::vec2(32.0f);
+
+        glm::vec2 velocity = glm::vec2(0.0f);
+
+        float speed = 64.0f;
+
         virtual void init() {
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
         }
@@ -19,6 +28,31 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void update(float delta) {
+            // Horizontal
+            if(input::isKeyPressed(input::Keyboard::KEYS_LEFT)) {
+                this->velocity.x = -1;
+            } else if(input::isKeyPressed(input::Keyboard::KEYS_RIGHT)) {
+                this->velocity.x = 1;
+            } else {
+                this->velocity.x = 0;
+            }
+
+            // Vertical
+            if(input::isKeyPressed(input::Keyboard::KEYS_UP)) {
+                this->velocity.y = -1;
+            } else if(input::isKeyPressed(input::Keyboard::KEYS_DOWN)) {
+                this->velocity.y = 1;
+            } else {
+                this->velocity.y = 0;
+            }
+
+            // Normalize Velocity so it goes the same speed in the diaganal
+            if(this->velocity != glm::zero<glm::vec2>()) {
+                this->velocity = glm::normalize(this->velocity);
+            }
+
+            // Add it to the postion
+            this->postion += velocity * speed * delta;
 
         }
 
@@ -28,7 +62,7 @@ struct TestApplication : public app::IApplication {
 
             render::setView(glm::mat4(1.0f));
             render::setModel(
-                glm::translate(glm::mat4(1.0f), glm::vec3(32.0f, 32.0f, 0.0f)) *
+                glm::translate(glm::mat4(1.0f), glm::vec3(this->postion, 0.0f)) *
                 glm::scale(glm::mat4(1.0f), glm::vec3(32.0f, 32.0f, 0.0f))
             );
 
