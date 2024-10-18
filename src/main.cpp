@@ -24,7 +24,7 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void handleEvent(SDL_Event* e) {
-
+            
         }
 
         virtual void update(float delta) {
