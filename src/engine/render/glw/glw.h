@@ -70,6 +70,7 @@ namespace render {
 
         };
 
+        
         // Program
         struct Program {
             uint32_t id = 0;
@@ -159,6 +160,42 @@ namespace render {
 
 
         };
+
+
+        // UniformBuffer
+        // Reference: https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL
+        template<typename T> 
+        struct UniformBuffer {
+            T value;
+            uint32_t id;
+
+            void init() {
+                glGenBuffers(1, &this->id);
+            }
+
+            void release() {
+                glDeleteBuffers(1, &this->id);
+            }
+
+            void bind() {
+                glBindBuffer(GL_UNIFORM_BUFFER, this->id);
+            }
+
+            void unbind() {
+                glBindBuffer(GL_UNIFORM_BUFFER, 0);
+            }
+
+            void update() {
+                this->bind();
+                glBufferData(GL_UNIFORM_BUFFER, typeSize(), &value, GL_DYNAMIC_DRAW);
+                this->unbind();
+            }
+
+            size_t typeSize() {
+                return sizeof(T);
+            }
+        };
+
     }
 }
 #endif
