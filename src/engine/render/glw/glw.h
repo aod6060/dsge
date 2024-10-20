@@ -173,6 +173,26 @@ namespace render {
 
         };
 
+        // Texture2DArray
+        class Texture2DArray {
+            uint32_t id = 0;
+            uint32_t width = 0;
+            uint32_t height = 0;
+
+            void init();
+            void release();
+
+            void bind(GLenum active);
+            void unbind(GLenum active);
+
+            void texStorage3D(size_t levels, GLenum internalFormat, size_t width, size_t height, size_t depth);
+
+            void texSubImage3D(int32_t level, int32_t index, size_t width, size_t height, GLenum format, GLenum type, const void* data);
+
+            void texParameter(GLenum pname, int32_t param);
+
+            static void createTexture2DArrayFromFiles(Texture2DArray* out, const std::vector<std::string>& paths);
+        };
 
         // UniformBuffer
         // Reference: https://learnopengl.com/Advanced-OpenGL/Advanced-GLSL
@@ -211,6 +231,7 @@ namespace render {
                 glBindBufferBase(GL_UNIFORM_BUFFER, index, this->id);
             }
         };
+
 
     }
 }

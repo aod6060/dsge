@@ -9,11 +9,15 @@ namespace render {
     uint32_t height = 480;
 
     MainShader mainShader;
+    Texture2DArrayShader tex2DArrayShader;
 
     // Default Vertex Buffer
     glw::VertexBuffer defVertices;
     // Default TexCoord Buffer
     glw::VertexBuffer defTexCoords;
+    // Default TexCoord 3D Buffer
+    glw::VertexBuffer defTexCoords3D;
+
     // Default Index Buffer
     glw::IndexBuffer defIndex;
 
@@ -27,6 +31,7 @@ namespace render {
         glDisable(GL_DEPTH_TEST);
 
         mainShader.init();
+        tex2DArrayShader.init();
 
         defVertices.init();
         defVertices.add3(0.0f, 0.0f, 0.0f);
@@ -41,6 +46,13 @@ namespace render {
         defTexCoords.add2(0.0f, 1.0f);
         defTexCoords.add2(1.0f, 1.0f);
         defTexCoords.update();
+
+        defTexCoords3D.init();
+        defTexCoords3D.add3(0.0f, 0.0f, 0.0f);
+        defTexCoords3D.add3(1.0f, 0.0f, 0.0f);
+        defTexCoords3D.add3(0.0f, 1.0f, 0.0f);
+        defTexCoords3D.add3(1.0f, 1.0f, 0.0f);
+        defTexCoords3D.update();
 
         defIndex.init();
         defIndex.add3(0, 1, 2);
@@ -62,8 +74,12 @@ namespace render {
         cameraBuffer.release();
 
         defIndex.release();
+
+        defTexCoords3D.release();
+        defTexCoords.release();
         defVertices.release();
 
+        tex2DArrayShader.release();
         mainShader.release();
     }
 
@@ -83,11 +99,27 @@ namespace render {
 
     void startShader(ShaderType type) {
         shaderType = type;
-        mainShader.bind();
+        //mainShader.bind();
+
+        switch(shaderType) {
+            case ShaderType::ST_MAIN:
+                mainShader.bind();
+                break;
+            case ShaderType::ST_TEXTURE2D_ARRAY:
+                tex2DArrayShader.bind();
+                break;
+        }
     }
 
     void endShader() {
-        mainShader.unbind();
+        switch(shaderType) {
+            case ShaderType::ST_MAIN:
+                mainShader.unbind();
+                break;
+            case ShaderType::ST_TEXTURE2D_ARRAY:
+                tex2DArrayShader.unbind();
+                break;
+        }
     }
 
     void updateCameraBuffer() {
@@ -100,39 +132,54 @@ namespace render {
 
     void setModel(const glm::mat4& m) {
         //program.uniform.setMatrix4("model", m);
-        mainShader.setModel(m);
+        //mainShader.setModel(m);
+        switch(shaderType) {
+            case ShaderType::ST_MAIN:
+                mainShader.setModel(m);
+                break;
+            case ShaderType::ST_TEXTURE2D_ARRAY:
+                tex2DArrayShader.setModel(m);
+                break;
+        }
     }
 
     void draw() {
-        /*
-        program.vertexArray.bind();
+        switch(shaderType) {
+            case ShaderType::ST_MAIN:
+                {
+                    mainShader.bindVertexArray();
 
-        defVertices.bind();
-        program.vertexArray.pointer("vertices", 3, GL_FLOAT);
-        defTexCoords.bind();
-        program.vertexArray.pointer("texCoords", 2, GL_FLOAT);
-        defVertices.unbind();
+                    defVertices.bind();
+                    mainShader.verticesPointer();
+                    defTexCoords.bind();
+                    mainShader.texCoordPointer();
+                    defVertices.unbind();
 
-        defIndex.bind();
-        glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
-        defIndex.unbind();
+                    defIndex.bind();
+                    glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
+                    defIndex.unbind();
 
-        program.vertexArray.unbind();
-        */
+                    mainShader.unbindVertexArray();
+                }
+                break;
+            case ShaderType::ST_TEXTURE2D_ARRAY:
+                {
+                    tex2DArrayShader.bindVertexArray();
 
-        mainShader.bindVertexArray();
+                    defVertices.bind();
+                    tex2DArrayShader.verticesPointer();
+                    defTexCoords3D.bind();
+                    tex2DArrayShader.texCoordPointer();
+                    defVertices.unbind();
 
-        defVertices.bind();
-        mainShader.verticesPointer();
-        defTexCoords.bind();
-        mainShader.texCoordPointer();
-        defVertices.unbind();
+                    defIndex.bind();
+                    glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
+                    defIndex.unbind();
 
-        defIndex.bind();
-        glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
-        defIndex.unbind();
-
-        mainShader.unbindVertexArray();
+                    tex2DArrayShader.unbindVertexArray();
+                }
+                break;
+        }
     }
 
     /*

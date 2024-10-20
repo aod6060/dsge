@@ -2,6 +2,7 @@
 #define RENDER_INTERNAL_H
 
 #include "../sys.h"
+#include "glw/glw.h"
 
 
 
@@ -28,7 +29,7 @@ namespace render {
         void bind();
         void unbind();
         void setModel(const glm::mat4& m);
-        
+
         void bindVertexArray();
         void unbindVertexArray();
         void verticesPointer();
@@ -36,7 +37,20 @@ namespace render {
     };
 
     struct Texture2DArrayShader {
+        glw::Shader vertex_shader;
+        glw::Shader fragment_shader;
+        glw::Program program;
 
+        void init();
+        void release();
+        void bind();
+        void unbind();
+        void setModel(const glm::mat4& m);
+
+        void bindVertexArray();
+        void unbindVertexArray();
+        void verticesPointer();
+        void texCoordPointer();
     };
 
 
