@@ -5,16 +5,30 @@
 #include "glw/glw.h"
 
 namespace render {
+
+    enum ShaderType {
+        ST_MAIN = 0,
+        ST_TEXTURE2D_ARRAY
+    };
+
     void init();
     void release();
 
-    void clear(const glm::vec4& color);
     void startFrame();
     void endFrame();
 
+    void clear(const glm::vec4& color);
+    
+    void startShader(ShaderType type);
+    void endShader(ShaderType type);
+
     // Note this shouldn't be part of the public api.
-    void setProjection(const glm::mat4& m);
+    //void setProjection(const glm::mat4& m);
+
+    void updateCameraBuffer();
     void setView(const glm::mat4& m);
+
+    // This has to be 
     void setModel(const glm::mat4& m);
 
     void draw();

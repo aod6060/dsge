@@ -6,8 +6,13 @@
 layout(location=0) in vec3 vertices;
 layout(location=1) in vec2 texCoords;
 
-uniform mat4 proj;
-uniform mat4 view;
+layout(std140) uniform Camera {
+    mat4 proj;
+    mat4 view;
+};
+
+//uniform mat4 proj;
+//uniform mat4 view;
 uniform mat4 model;
 
 out vec2 v_TexCoords;

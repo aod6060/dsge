@@ -1,12 +1,19 @@
-#include "../sys.h"
+#include "render_internal.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glw/glw.h"
 
 namespace render {
+
+
+    struct Camera {
+        glm::mat4 proj;
+        glm::mat4 view;
+    };
+
+
     uint32_t width = 640;
     uint32_t height = 480;
-
-
+    
     // Shaders
     glw::Shader vertex_shader;
     glw::Shader fragment_shader;
@@ -18,6 +25,10 @@ namespace render {
     glw::VertexBuffer defTexCoords;
     // Default Index Buffer
     glw::IndexBuffer defIndex;
+
+    // Camera Uniform Buffer
+    glw::UniformBuffer<Camera> cameraBuffer;
+
 
     void init() {
         glDisable(GL_DEPTH_TEST);
@@ -62,9 +73,19 @@ namespace render {
         defIndex.add3(0, 1, 2);
         defIndex.add3(2, 1, 3);
         defIndex.update();
+
+
+        // Init Camera Buffer
+        cameraBuffer.init();
+
+        cameraBuffer.value.proj = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f);
+        cameraBuffer.value.view = glm::mat4(1.0f);
+        
     }
 
     void release() {
+        cameraBuffer.release();
+
         defIndex.release();
         defVertices.release();
 
@@ -74,27 +95,34 @@ namespace render {
         vertex_shader.release();
     }
 
+    void startFrame() {
+        // TODO: Add in framebuffer so I can scale to different screen sizes
+    }
+
+    void endFrame() {
+        // TODO: Add in framebuffer so I can scale to different screen sizes
+    }
+
+
     void clear(const glm::vec4& color) {
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void startFrame() {
+    void startShader(ShaderType type) {
         program.bind();
-
-        setProjection(glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f));
     }
 
-    void endFrame() {
+    void endShader(ShaderType type) {
         program.unbind();
     }
 
-    void setProjection(const glm::mat4& m) {
-        program.uniform.setMatrix4("proj", m);
+    void updateCameraBuffer() {
+        cameraBuffer.update();
     }
 
     void setView(const glm::mat4& m) {
-        program.uniform.setMatrix4("view", m);
+        cameraBuffer.value.view = m;
     }
 
     void setModel(const glm::mat4& m) {

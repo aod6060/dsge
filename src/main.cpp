@@ -1,5 +1,6 @@
 #include "engine/input/input.h"
 #include "engine/render/glw/glw.h"
+#include "engine/render/render.h"
 #include "engine/sys.h"
 #include "glm/ext/quaternion_geometric.hpp"
 #include "glm/gtc/constants.hpp"
@@ -57,10 +58,16 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void render() {
-            render::clear(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
             render::startFrame();
 
+            render::clear(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
             render::setView(glm::mat4(1.0f));
+            render::updateCameraBuffer();
+
+            render::startShader(render::ShaderType::ST_MAIN);
+
+            //render::setView(glm::mat4(1.0f));
             render::setModel(
                 glm::translate(glm::mat4(1.0f), glm::vec3(this->postion, 0.0f)) *
                 glm::scale(glm::mat4(1.0f), glm::vec3(32.0f, 32.0f, 0.0f))
@@ -70,6 +77,8 @@ struct TestApplication : public app::IApplication {
             render::draw();
             icon_32.unbind(GL_TEXTURE0);
             
+            render::endShader(render::ShaderType::ST_MAIN);
+
             render::endFrame();
         }
 

@@ -1,0 +1,15 @@
+Import("env")
+
+
+def source(file):
+    return "#/src/engine/render/glw/" + file
+
+env["source_files"] += [
+    source("program.cpp"),
+    source("shader.cpp"),
+    source("uniform.cpp"),
+    source("vertex_array.cpp"),
+    source("vertex_buffer.cpp"),
+    source("index_buffer.cpp"),
+    source("texture2d.cpp")
+]

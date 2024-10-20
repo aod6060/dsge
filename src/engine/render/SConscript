@@ -1,0 +1,11 @@
+Import("env")
+
+def source(file):
+    return "#/src/engine/render/" + file
+
+env["source_files"] += [
+    source("render.cpp"),
+    source("main_shader.cpp")
+]
+
+SConscript("#/src/engine/render/glw/SConscript", exports="env")
