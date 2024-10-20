@@ -70,14 +70,26 @@ namespace render {
 
         };
 
-        
+        // Uniform Block
+        struct UniformBlock {
+            Program* program;
+
+            std::map<std::string, uint32_t> uniformBlocks;
+
+            void init(Program* program);
+            void release();
+
+            void createUniformBlock(std::string name, uint32_t index);
+        };
+
         // Program
         struct Program {
             uint32_t id = 0;
             std::vector<Shader*> shaders;
             VertexArray vertexArray;
             Uniform uniform;
-
+            UniformBlock uniformBlock;
+            
             void init(const std::vector<Shader*>& shaders);
             void release();
 
@@ -193,6 +205,10 @@ namespace render {
 
             size_t typeSize() {
                 return sizeof(T);
+            }
+
+            void bufferRange(uint32_t index) {
+                glBindBufferBase(GL_UNIFORM_BUFFER, index, this->id);
             }
         };
 

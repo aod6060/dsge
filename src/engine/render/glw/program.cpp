@@ -33,9 +33,14 @@ namespace render {
             
             // Uniform
             this->uniform.init(this);
+
+            // Uniform Block
+            this->uniformBlock.init(this);
         }
 
         void Program::release() {
+            this->uniformBlock.release();
+            
             this->uniform.release();
             this->vertexArray.release();
             

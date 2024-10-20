@@ -8,6 +8,12 @@
 
 namespace render {
 
+    // Camera
+    struct Camera {
+        glm::mat4 proj;
+        glm::mat4 view;
+    };
+
     // Main Shader
     struct MainShader {
         // Shaders
@@ -19,13 +25,14 @@ namespace render {
 
         void init();
         void release();
-
         void bind();
         void unbind();
-
         void setModel(const glm::mat4& m);
-
         
+        void bindVertexArray();
+        void unbindVertexArray();
+        void verticesPointer();
+        void texCoordPointer();
     };
 
     struct Texture2DArrayShader {

@@ -20,7 +20,7 @@ namespace render {
     void clear(const glm::vec4& color);
     
     void startShader(ShaderType type);
-    void endShader(ShaderType type);
+    void endShader();
 
     // Note this shouldn't be part of the public api.
     //void setProjection(const glm::mat4& m);
@@ -28,7 +28,8 @@ namespace render {
     void updateCameraBuffer();
     void setView(const glm::mat4& m);
 
-    // This has to be 
+    // This has to be inside the startShader and
+    // endShader functions
     void setModel(const glm::mat4& m);
 
     void draw();

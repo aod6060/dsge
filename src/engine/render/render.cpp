@@ -1,24 +1,15 @@
+#include "render.h"
 #include "render_internal.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glw/glw.h"
 
 namespace render {
 
-
-    struct Camera {
-        glm::mat4 proj;
-        glm::mat4 view;
-    };
-
-
     uint32_t width = 640;
     uint32_t height = 480;
-    
-    // Shaders
-    glw::Shader vertex_shader;
-    glw::Shader fragment_shader;
-    // Program
-    glw::Program program;
+
+    MainShader mainShader;
+
     // Default Vertex Buffer
     glw::VertexBuffer defVertices;
     // Default TexCoord Buffer
@@ -30,30 +21,12 @@ namespace render {
     glw::UniformBuffer<Camera> cameraBuffer;
 
 
+    ShaderType shaderType = ShaderType::ST_MAIN;
+
     void init() {
         glDisable(GL_DEPTH_TEST);
 
-        vertex_shader.init(GL_VERTEX_SHADER, "data/shaders/main.vert.glsl");
-        fragment_shader.init(GL_FRAGMENT_SHADER, "data/shaders/main.frag.glsl");
-
-        program.init({&vertex_shader, &fragment_shader});
-
-        program.vertexArray.createAttrib("vertices", 0);
-        program.vertexArray.createAttrib("texCoords", 1);
-
-        program.bind();
-        program.uniform.createUniform("proj");
-        program.uniform.createUniform("view");
-        program.uniform.createUniform("model");
-        program.uniform.createUniform("tex0");
-        program.uniform.set1i("tex0", 0);
-        
-        program.vertexArray.bind();
-        program.vertexArray.enable("vertices");
-        program.vertexArray.enable("texCoords");
-        program.vertexArray.unbind();
-
-        program.unbind();
+        mainShader.init();
 
         defVertices.init();
         defVertices.add3(0.0f, 0.0f, 0.0f);
@@ -81,6 +54,8 @@ namespace render {
         cameraBuffer.value.proj = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f);
         cameraBuffer.value.view = glm::mat4(1.0f);
         
+        cameraBuffer.update();
+        cameraBuffer.bufferRange(0);
     }
 
     void release() {
@@ -89,10 +64,7 @@ namespace render {
         defIndex.release();
         defVertices.release();
 
-        program.release();
-
-        fragment_shader.release();
-        vertex_shader.release();
+        mainShader.release();
     }
 
     void startFrame() {
@@ -110,11 +82,12 @@ namespace render {
     }
 
     void startShader(ShaderType type) {
-        program.bind();
+        shaderType = type;
+        mainShader.bind();
     }
 
-    void endShader(ShaderType type) {
-        program.unbind();
+    void endShader() {
+        mainShader.unbind();
     }
 
     void updateCameraBuffer() {
@@ -126,10 +99,12 @@ namespace render {
     }
 
     void setModel(const glm::mat4& m) {
-        program.uniform.setMatrix4("model", m);
+        //program.uniform.setMatrix4("model", m);
+        mainShader.setModel(m);
     }
 
     void draw() {
+        /*
         program.vertexArray.bind();
 
         defVertices.bind();
@@ -143,6 +118,21 @@ namespace render {
         defIndex.unbind();
 
         program.vertexArray.unbind();
+        */
+
+        mainShader.bindVertexArray();
+
+        defVertices.bind();
+        mainShader.verticesPointer();
+        defTexCoords.bind();
+        mainShader.texCoordPointer();
+        defVertices.unbind();
+
+        defIndex.bind();
+        glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
+        defIndex.unbind();
+
+        mainShader.unbindVertexArray();
     }
 
     /*

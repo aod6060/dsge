@@ -77,7 +77,7 @@ struct TestApplication : public app::IApplication {
             render::draw();
             icon_32.unbind(GL_TEXTURE0);
             
-            render::endShader(render::ShaderType::ST_MAIN);
+            render::endShader();
 
             render::endFrame();
         }
