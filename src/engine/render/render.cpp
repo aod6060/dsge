@@ -144,42 +144,44 @@ namespace render {
     }
 
     void draw() {
-        switch(shaderType) {
-            case ShaderType::ST_MAIN:
-                {
-                    mainShader.bindVertexArray();
-
-                    defVertices.bind();
-                    mainShader.verticesPointer();
-                    defTexCoords.bind();
-                    mainShader.texCoordPointer();
-                    defVertices.unbind();
-
-                    defIndex.bind();
-                    glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
-                    defIndex.unbind();
-
-                    mainShader.unbindVertexArray();
-                }
-                break;
-            case ShaderType::ST_TEXTURE2D_ARRAY:
-                {
-                    tex2DArrayShader.bindVertexArray();
-
-                    defVertices.bind();
-                    tex2DArrayShader.verticesPointer();
-                    defTexCoords3D.bind();
-                    tex2DArrayShader.texCoordPointer();
-                    defVertices.unbind();
-
-                    defIndex.bind();
-                    glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
-                    defIndex.unbind();
-
-                    tex2DArrayShader.unbindVertexArray();
-                }
-                break;
+        if(shaderType == ShaderType::ST_MAIN) {
+            draw(&mainShader, defVertices, defTexCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
+            draw(&tex2DArrayShader, defVertices, defTexCoords, defIndex);
         }
+    }
+
+
+    void draw(glw::VertexBuffer& texCoords) {
+        if(shaderType == ShaderType::ST_MAIN) {
+            draw(&mainShader, defVertices, texCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
+            draw(&tex2DArrayShader, defVertices, texCoords, defIndex);
+        }
+    }
+
+    // Sending a custom vertices, texCoords, and indencies to 
+    // the render
+    void draw(glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies) {
+        if(shaderType == ShaderType::ST_MAIN) {
+            draw(&mainShader, vertices, texCoords, indencies);
+        } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
+            draw(&tex2DArrayShader, vertices, texCoords, indencies);
+        }
+    }
+
+    // This is a hidden function to simplify the problem.
+    void draw(IShader* shader, glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies) {
+        shader->bindVertexArray();
+        vertices.bind();
+        shader->verticesPointer();
+        texCoords.bind();
+        shader->texCoordPointer();
+        vertices.unbind();
+        indencies.bind();
+        glDrawElements(GL_TRIANGLES, indencies.count(), GL_UNSIGNED_INT, nullptr);
+        indencies.unbind();
+        shader->unbindVertexArray();
     }
 
     /*

@@ -174,7 +174,7 @@ namespace render {
         };
 
         // Texture2DArray
-        class Texture2DArray {
+        struct Texture2DArray {
             uint32_t id = 0;
             uint32_t width = 0;
             uint32_t height = 0;

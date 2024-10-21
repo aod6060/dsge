@@ -15,8 +15,23 @@ namespace render {
         glm::mat4 view;
     };
 
+
+    struct IShader {
+        virtual void init() = 0;
+        virtual void release() = 0;
+        virtual void bind() = 0;
+        virtual void unbind() = 0;
+
+        virtual void setModel(const glm::mat4& m) = 0;
+
+        virtual void bindVertexArray() = 0;
+        virtual void unbindVertexArray() = 0;
+        virtual void verticesPointer() = 0;
+        virtual void texCoordPointer() = 0;
+    };
+
     // Main Shader
-    struct MainShader {
+    struct MainShader : public IShader {
         // Shaders
         glw::Shader vertex_shader;
         glw::Shader fragment_shader;
@@ -24,35 +39,39 @@ namespace render {
         glw::Program program;
 
 
-        void init();
-        void release();
-        void bind();
-        void unbind();
-        void setModel(const glm::mat4& m);
+        virtual void init();
+        virtual void release();
+        virtual void bind();
+        virtual void unbind();
 
-        void bindVertexArray();
-        void unbindVertexArray();
-        void verticesPointer();
-        void texCoordPointer();
+        virtual void setModel(const glm::mat4& m);
+
+        virtual void bindVertexArray();
+        virtual void unbindVertexArray();
+        virtual void verticesPointer();
+        virtual void texCoordPointer();
     };
 
-    struct Texture2DArrayShader {
+    struct Texture2DArrayShader : public IShader {
         glw::Shader vertex_shader;
         glw::Shader fragment_shader;
         glw::Program program;
 
-        void init();
-        void release();
-        void bind();
-        void unbind();
-        void setModel(const glm::mat4& m);
+        virtual void init();
+        virtual void release();
+        virtual void bind();
+        virtual void unbind();
 
-        void bindVertexArray();
-        void unbindVertexArray();
-        void verticesPointer();
-        void texCoordPointer();
+        virtual void setModel(const glm::mat4& m);
+
+        virtual void bindVertexArray();
+        virtual void unbindVertexArray();
+        virtual void verticesPointer();
+        virtual void texCoordPointer();
     };
 
+    // Hidden drawing function
+    void draw(IShader* shader, glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies);
 
 }
 

@@ -12,5 +12,6 @@ env["source_files"] += [
     source("vertex_buffer.cpp"),
     source("index_buffer.cpp"),
     source("texture2d.cpp"),
-    source("uniform_block.cpp")
+    source("uniform_block.cpp"),
+    source("texture2d_array.cpp")
 ]

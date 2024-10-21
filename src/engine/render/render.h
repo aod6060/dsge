@@ -34,6 +34,12 @@ namespace render {
 
     void draw();
 
+    // Sending a custom texCoord buffer to the render
+    void draw(glw::VertexBuffer& texCoords);
+
+    // Sending a custom vertices, texCoords, and indencies to 
+    // the render
+    void draw(glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies);
     /*
         The render will draw at 
         640x480 if w/h * 3 == 4 or standard screen (4:3)
