@@ -1,4 +1,5 @@
 #include "render.h"
+#include "glm/ext/matrix_transform.hpp"
 #include "render_internal.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glw/glw.h"
@@ -8,8 +9,11 @@ namespace render {
     uint32_t width = 640;
     uint32_t height = 480;
 
+    // Shaders
     MainShader mainShader;
     Texture2DArrayShader tex2DArrayShader;
+    // Postprocessing
+    OutputPostprocessor outputPostprocessor;
 
     // Default Vertex Buffer
     glw::VertexBuffer defVertices;
@@ -24,14 +28,20 @@ namespace render {
     // Camera Uniform Buffer
     glw::UniformBuffer<Camera> cameraBuffer;
 
-
     ShaderType shaderType = ShaderType::ST_MAIN;
+
+    glw::Texture2D screen;
+    glw::Framebuffer screen_framebuffer;
+
 
     void init() {
         glDisable(GL_DEPTH_TEST);
 
+        // Init Shaders
         mainShader.init();
         tex2DArrayShader.init();
+        // Init Postprocessors
+        outputPostprocessor.init();
 
         defVertices.init();
         defVertices.add3(0.0f, 0.0f, 0.0f);
@@ -68,9 +78,30 @@ namespace render {
         
         cameraBuffer.update();
         cameraBuffer.bufferRange(0);
+
+        // Initialize Screen
+        screen.init();
+        screen.bind(GL_TEXTURE0);
+        screen.texImage2D(0, GL_RGBA, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        screen.unbind(GL_TEXTURE0);
+
+        // Initialize Screen Framebuffer
+        screen_framebuffer.init();
+        screen_framebuffer.bind();
+        screen_framebuffer.attachTexture2D(GL_COLOR_ATTACHMENT0, &screen, 0);
+        if(!screen_framebuffer.isComplete()) {
+            std::cout << "Framebuffer: wasn't created correctly!\n";
+        }
+        screen_framebuffer.unbind();
     }
 
     void release() {
+        screen_framebuffer.release();
+
+        screen.release();
+
         cameraBuffer.release();
 
         defIndex.release();
@@ -79,21 +110,59 @@ namespace render {
         defTexCoords.release();
         defVertices.release();
 
+        outputPostprocessor.release();
+
         tex2DArrayShader.release();
         mainShader.release();
     }
 
     void startFrame() {
-        // TODO: Add in framebuffer so I can scale to different screen sizes
+        screen_framebuffer.bind();
+        glViewport(0, 0, getWidth(), getHeight());
+
     }
 
     void endFrame() {
-        // TODO: Add in framebuffer so I can scale to different screen sizes
+        screen_framebuffer.unbind();
+
+
+        // Draw to screen...
+        glViewport(0, 0, app::get_width(), app::get_height());
+        clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+        outputPostprocessor.bind();
+
+        outputPostprocessor.setProjection(glm::ortho(0.0f, (float)app::get_width(), 0.0f, (float)app::get_height()));
+        outputPostprocessor.setView(glm::mat4(1.0f));
+        outputPostprocessor.setModel(
+            glm::translate(glm::mat4(1.0f), glm::vec3(0.0f)) *
+            glm::scale(glm::mat4(1.0f), glm::vec3((float)app::get_width(), (float)app::get_height(), 0.0f))
+        );
+
+        screen.bind(GL_TEXTURE0);
+
+        outputPostprocessor.bindVertexArray();
+
+        defVertices.bind();
+        outputPostprocessor.verticesPointer();
+        defTexCoords.bind();
+        outputPostprocessor.texCoordPointer();
+        defVertices.unbind();
+
+        defIndex.bind();
+        glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
+        defIndex.unbind();
+
+        outputPostprocessor.unbindVertexArray();
+        
+        screen.unbind(GL_TEXTURE0);
+
+        outputPostprocessor.unbind();
     }
 
 
     void clear(const glm::vec4& color) {
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 

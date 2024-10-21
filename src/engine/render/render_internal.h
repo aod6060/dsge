@@ -30,6 +30,11 @@ namespace render {
         virtual void texCoordPointer() = 0;
     };
 
+    struct IPostprocess : public IShader {
+        virtual void setProjection(const glm::mat4& m) = 0;
+        virtual void setView(const glm::mat4& m) = 0;
+    };
+
     // Main Shader
     struct MainShader : public IShader {
         // Shaders
@@ -68,6 +73,31 @@ namespace render {
         virtual void unbindVertexArray();
         virtual void verticesPointer();
         virtual void texCoordPointer();
+    };
+
+
+    // Postprocessing
+    struct OutputPostprocessor : public IPostprocess {
+        glw::Shader vertex_shader;
+        glw::Shader fragment_shader;
+        glw::Program program;
+
+        // Added from IShader
+        virtual void init();
+        virtual void release();
+        virtual void bind();
+        virtual void unbind();
+
+        virtual void setModel(const glm::mat4& m);
+
+        virtual void bindVertexArray();
+        virtual void unbindVertexArray();
+        virtual void verticesPointer();
+        virtual void texCoordPointer();
+
+        // Added from IPostprocess
+        virtual void setProjection(const glm::mat4& m);
+        virtual void setView(const glm::mat4& m);
     };
 
     // Hidden drawing function

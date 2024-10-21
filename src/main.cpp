@@ -83,7 +83,7 @@ struct TestApplication : public app::IApplication {
         virtual void render() {
             render::startFrame();
 
-            render::clear(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+            render::clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
             render::setView(glm::mat4(1.0f));
             render::updateCameraBuffer();

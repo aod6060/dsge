@@ -13,5 +13,6 @@ env["source_files"] += [
     source("index_buffer.cpp"),
     source("texture2d.cpp"),
     source("uniform_block.cpp"),
-    source("texture2d_array.cpp")
+    source("texture2d_array.cpp"),
+    source("framebuffer.cpp")
 ]

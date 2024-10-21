@@ -232,7 +232,21 @@ namespace render {
             }
         };
 
+        // Framebuffer
+        struct Framebuffer {
+            uint32_t id = 0;
 
+            void init();
+            void release();
+
+            void bind();
+            void unbind();
+
+            void attachTexture2D(GLenum attachment, Texture2D* tex, uint32_t level);
+
+            bool isComplete();
+
+        };
     }
 }
 #endif

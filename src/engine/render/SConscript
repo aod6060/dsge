@@ -6,7 +6,8 @@ def source(file):
 env["source_files"] += [
     source("render.cpp"),
     source("main_shader.cpp"),
-    source("tex2D_array_shader.cpp")
+    source("tex2D_array_shader.cpp"),
+    source("output_postprocessor.cpp")
 ]
 
 SConscript("#/src/engine/render/glw/SConscript", exports="env")
