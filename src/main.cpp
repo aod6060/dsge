@@ -1,10 +1,15 @@
+#include "engine/app/app.h"
 #include "engine/input/input.h"
 #include "engine/render/glw/glw.h"
 #include "engine/render/render.h"
 #include "engine/sys.h"
 #include "glm/ext/quaternion_geometric.hpp"
 #include "glm/gtc/constants.hpp"
-
+#include "thirdparty/imgui/imgui.h"
+#include "thirdparty/imgui/imgui_impl_sdl2.h"
+#include "thirdparty/imgui/imgui_impl_opengl3.h"
+#include <functional>
+#include <vector>
 
 
 // https://youtube.com/clip/UgkxyCtqY_D6g4ULEyuLwinqERd8N-jTzCWj?si=s1aTiUychjS-6HHu
@@ -23,9 +28,38 @@ struct TestApplication : public app::IApplication {
 
         float speed = 64.0f;
 
+        bool isTextureLinear = true;
+
         bool isArrayTest = false;
 
+        float pixelSize = 2.0f;
+
+        const char* example_items[8] = {
+            "Regular",
+            "Invert",
+            "Greyscale",
+            "Sepia",
+            "Pixelate",
+            "Invert Pixelate",
+            "Greyscale Pixelate",
+            "Sepia Pixelate"
+        };
+
+        const char* current_example_item = "Regular";
+
         virtual void init() {
+
+            IMGUI_CHECKVERSION();
+
+            ImGui::CreateContext();
+
+            ImGuiIO& io = ImGui::GetIO();
+
+            ImGui::StyleColorsDark();
+
+            ImGui_ImplSDL2_InitForOpenGL(app::getWindow(), app::getContext());
+            ImGui_ImplOpenGL3_Init("#version 400");
+
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
 
             render::glw::Texture2DArray::createTexture2DArrayFromFiles(&icon_array, {
@@ -44,7 +78,7 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void handleEvent(SDL_Event* e) {
-            
+            ImGui_ImplSDL2_ProcessEvent(e);
         }
 
         virtual void update(float delta) {
@@ -74,10 +108,74 @@ struct TestApplication : public app::IApplication {
             // Add it to the postion
             this->postion += velocity * speed * delta;
 
-
+            /*
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
                 isArrayTest = !isArrayTest;
             }
+            */
+
+
+        }
+
+
+        void renderMenu() {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplSDL2_NewFrame();
+
+            ImGui::NewFrame();
+
+            ImGui::Begin("Configuration");
+            
+            ImGui::Text("Main Controls");
+
+            if(ImGui::Checkbox("Is Texture Linear", &this->isTextureLinear)) {
+                //std::cout << "Hello, World\n";
+                render::test::setTextureLinear(isTextureLinear);
+            }
+
+            ImGui::Checkbox("Array Test", &isArrayTest);
+
+            if(ImGui::BeginCombo("Example", current_example_item)) {
+                for(int i = 0; i < IM_ARRAYSIZE(this->example_items); i++) {
+                    bool is_selected = (current_example_item == example_items[i]);
+
+                    if(ImGui::Selectable(example_items[i], is_selected)) {
+                        current_example_item = example_items[i];
+                        render::test::setExample((render::test::Example)i);
+                    }
+                    if(is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+
+            std::function<bool()> isPixelActivated = [&]() {
+
+                return 
+                    render::test::getExample() == render::test::Example::PIXELATE ||
+                    render::test::getExample() == render::test::Example::INVERT_PIXELATE ||
+                    render::test::getExample() == render::test::Example::GREYSCALE_PIXELATE ||
+                    render::test::getExample() == render::test::Example::SEPIA_PIXELATE;
+            };
+
+            if(isPixelActivated()) {
+                ImGui::Separator();
+                ImGui::Text("Pixelation Controls");
+                if(ImGui::SliderFloat("Pixel Size", &pixelSize, 1.0, 64.0)) {
+                    std::cout << pixelSize << "\n";
+                    render::test::setPixelSize(pixelSize);
+                }
+            }
+
+            ImGui::End();
+
+            ImGui::EndFrame();
+
+            ImGui::Render();
+
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
         virtual void render() {
@@ -120,6 +218,9 @@ struct TestApplication : public app::IApplication {
                 render::endShader();
             }
             render::endFrame();
+
+            // The menu isn't appart of the frame...
+            renderMenu();
         }
 
         virtual void release() {

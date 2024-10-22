@@ -1,3 +1,4 @@
+#include "render.h"
 #include "render_internal.h"
 
 
@@ -19,6 +20,18 @@ namespace render {
         program.uniform.createUniform("model");
         program.uniform.createUniform("tex0");
         program.uniform.set1i("model", 0);
+        program.uniform.createUniform("example");
+        program.uniform.set1i("example", (int)test::Example::REGULAR);
+        program.uniform.createUniform("screen_width");
+        program.uniform.set1i("screen_width", app::get_width());
+        program.uniform.createUniform("screen_height");
+        program.uniform.set1i("screen_height", app::get_height());
+        program.uniform.createUniform("render_width");
+        program.uniform.set1i("render_width", render::getWidth());
+        program.uniform.createUniform("render_height");
+        program.uniform.set1i("render_height", render::getHeight());
+        program.uniform.createUniform("pixel_size");
+        program.uniform.set1f("pixel_size", 2.0f);
 
         // Attributes
         bindVertexArray();
@@ -72,4 +85,11 @@ namespace render {
         program.uniform.setMatrix4("view", m);
     }
 
+    void OutputPostprocessor::setExample(test::Example example) {
+        program.uniform.set1i("example", (int)example);
+    }
+
+    void OutputPostprocessor::setPixelSize(float size) {
+        program.uniform.set1f("pixel_size", size);
+    }
 }

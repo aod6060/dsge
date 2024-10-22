@@ -3,6 +3,7 @@
 
 #include "../sys.h"
 #include "glw/glw.h"
+#include "render.h"
 
 
 
@@ -81,7 +82,7 @@ namespace render {
         glw::Shader vertex_shader;
         glw::Shader fragment_shader;
         glw::Program program;
-
+        
         // Added from IShader
         virtual void init();
         virtual void release();
@@ -98,6 +99,11 @@ namespace render {
         // Added from IPostprocess
         virtual void setProjection(const glm::mat4& m);
         virtual void setView(const glm::mat4& m);
+
+
+        // Test methods
+        void setExample(test::Example example);
+        void setPixelSize(float size);
     };
 
     // Hidden drawing function

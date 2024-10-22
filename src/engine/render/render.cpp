@@ -266,5 +266,37 @@ namespace render {
         return height;
     }
 
+    namespace test {
+        Example example = Example::REGULAR;
 
+        void setExample(Example _example) {
+            example = _example;
+
+            render::outputPostprocessor.bind();
+            render::outputPostprocessor.setExample(example);
+            render::outputPostprocessor.unbind();
+        }
+
+        Example getExample() {
+            return example;
+        }
+
+        void setTextureLinear(bool isLinear) {
+            render::screen.bind(GL_TEXTURE0);
+            if(isLinear) {
+                render::screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                render::screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            } else {
+                render::screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                render::screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            }
+            render::screen.unbind(GL_TEXTURE0);
+        }
+
+        void setPixelSize(float size) {
+            render::outputPostprocessor.bind();
+            render::outputPostprocessor.setPixelSize(size);
+            render::outputPostprocessor.unbind();
+        }
+    }
 }

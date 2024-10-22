@@ -47,6 +47,29 @@ namespace render {
     */
     uint32_t getWidth();
     uint32_t getHeight();
+
+    namespace test {
+        // This section contains stuff to test the OutputPostprocess
+
+        enum Example {
+            REGULAR = 0,
+            INVERT,
+            GREYSCALE,
+            SEPIA,
+            PIXELATE,
+            INVERT_PIXELATE,
+            GREYSCALE_PIXELATE,
+            SEPIA_PIXELATE
+        };
+
+        void setExample(Example example);
+        Example getExample();
+
+        void setTextureLinear(bool isLinear);
+
+        // Pixelate
+        void setPixelSize(float size);
+    }
 }
 
 #endif
