@@ -8,6 +8,9 @@
 #include "thirdparty/imgui/imgui.h"
 #include "thirdparty/imgui/imgui_impl_sdl2.h"
 #include "thirdparty/imgui/imgui_impl_opengl3.h"
+#include "json/value.h"
+#include <json/json.h>
+#include <fstream>
 #include <functional>
 #include <vector>
 
@@ -230,12 +233,33 @@ struct TestApplication : public app::IApplication {
 
 };
 
+
+void load_config(app::Config* config) {
+    std::ifstream in("config.json");
+    Json::Value root;
+    in >> root;
+    in.close();
+
+    // App
+    Json::Value app = root["app"];
+
+    config->caption = app["caption"].asString();
+    config->width = app["width"].asUInt();
+    config->height = app["height"].asUInt();
+
+    
+}
+
 int main(int argc, char** argv) {    
     TestApplication testApp;
     app::Config config;
+
+    load_config(&config);
+    /*
     config.caption = "Test Application";
     config.width = 640; // 1280
     config.height = 480; // 960
+    */
     config.app = &testApp;
 
     app::init(&config);
