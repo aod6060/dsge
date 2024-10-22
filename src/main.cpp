@@ -234,8 +234,8 @@ int main(int argc, char** argv) {
     TestApplication testApp;
     app::Config config;
     config.caption = "Test Application";
-    config.width = 640 * 2; // 1280
-    config.height = 480 * 2; // 960
+    config.width = 640; // 1280
+    config.height = 480; // 960
     config.app = &testApp;
 
     app::init(&config);
