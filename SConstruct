@@ -96,13 +96,16 @@ elif platform == "linux":
         CPPPATH=[
             "include"
         ],
+        LIBPATH=[
+            "/usr/local/lib"
+        ],
         LIBS=[
             'SDL2',
             'SDL2_image',
             'SDL2_mixer',
             'GL',
             'GLEW',
-            'jsoncpp',
+            ':libjsoncpp.so.1.9.6',
             'freetype',
             'box2d',
             'lua'
