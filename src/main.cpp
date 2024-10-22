@@ -12,7 +12,6 @@
 #include <vector>
 
 
-// https://youtube.com/clip/UgkxyCtqY_D6g4ULEyuLwinqERd8N-jTzCWj?si=s1aTiUychjS-6HHu
 struct TestApplication : public app::IApplication {
         int i = 0;
 
