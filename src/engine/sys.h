@@ -18,6 +18,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+
 #define GLEW_NO_GLU
 #include <GL/glew.h>
 #include <glm/glm.hpp>

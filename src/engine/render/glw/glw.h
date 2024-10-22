@@ -1,6 +1,7 @@
 #ifndef GLW_H
 #define GLW_H
 
+#define GLEW_NO_GLU
 #include <GL/glew.h>
 #include <string>
 #include <vector>
