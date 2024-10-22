@@ -104,6 +104,10 @@ namespace render {
         // Test methods
         void setExample(test::Example example);
         void setPixelSize(float size);
+        void setEnableScanlines(bool b);
+
+        void setScanlineColor(const glm::vec4& color);
+        
     };
 
     // Hidden drawing function

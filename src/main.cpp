@@ -36,6 +36,10 @@ struct TestApplication : public app::IApplication {
 
         float pixelSize = 2.0f;
 
+        bool enableScanlines = false;
+
+        glm::vec4 scanlineColor;
+
         const char* example_items[8] = {
             "Regular",
             "Invert",
@@ -109,16 +113,7 @@ struct TestApplication : public app::IApplication {
 
             // Add it to the postion
             this->postion += velocity * speed * delta;
-
-            /*
-            if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
-                isArrayTest = !isArrayTest;
-            }
-            */
-
-
         }
-
 
         void renderMenu() {
             ImGui_ImplOpenGL3_NewFrame();
@@ -136,6 +131,10 @@ struct TestApplication : public app::IApplication {
             }
 
             ImGui::Checkbox("Array Test", &isArrayTest);
+
+            if(ImGui::Checkbox("Enable Scanlines", &enableScanlines)) {
+                render::test::setEnablescanlines(enableScanlines);
+            }
 
             if(ImGui::BeginCombo("Example", current_example_item)) {
                 for(int i = 0; i < IM_ARRAYSIZE(this->example_items); i++) {
@@ -166,8 +165,17 @@ struct TestApplication : public app::IApplication {
                 ImGui::Separator();
                 ImGui::Text("Pixelation Controls");
                 if(ImGui::SliderFloat("Pixel Size", &pixelSize, 1.0, 64.0)) {
-                    std::cout << pixelSize << "\n";
                     render::test::setPixelSize(pixelSize);
+                }
+            }
+
+            if(enableScanlines) {
+                ImGui::Separator();
+
+                ImGui::Text("Scanline Controls");
+
+                if(ImGui::ColorPicker4("Scanline Color", &scanlineColor[0])) {
+                    render::test::setScanlineColor(this->scanlineColor);
                 }
             }
 
@@ -240,14 +248,13 @@ void load_config(app::Config* config) {
     in >> root;
     in.close();
 
+    
     // App
     Json::Value app = root["app"];
 
     config->caption = app["caption"].asString();
     config->width = app["width"].asUInt();
     config->height = app["height"].asUInt();
-
-    
 }
 
 int main(int argc, char** argv) {    
@@ -255,11 +262,6 @@ int main(int argc, char** argv) {
     app::Config config;
 
     load_config(&config);
-    /*
-    config.caption = "Test Application";
-    config.width = 640; // 1280
-    config.height = 480; // 960
-    */
     config.app = &testApp;
 
     app::init(&config);

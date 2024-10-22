@@ -67,8 +67,12 @@ namespace render {
 
         void setTextureLinear(bool isLinear);
 
+        void setEnablescanlines(bool b);
+
         // Pixelate
         void setPixelSize(float size);
+
+        void setScanlineColor(const glm::vec4& color);
     }
 }
 

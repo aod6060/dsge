@@ -32,6 +32,11 @@ namespace render {
         program.uniform.set1i("render_height", render::getHeight());
         program.uniform.createUniform("pixel_size");
         program.uniform.set1f("pixel_size", 2.0f);
+        program.uniform.createUniform("enableScanlines");
+        program.uniform.set1i("enableScanlines", 0);
+        program.uniform.createUniform("scanlineColor");
+        program.uniform.set4f("scanlineColor", 0.0f, 0.0f, 0.0f, 1.0f);
+
 
         // Attributes
         bindVertexArray();
@@ -91,5 +96,13 @@ namespace render {
 
     void OutputPostprocessor::setPixelSize(float size) {
         program.uniform.set1f("pixel_size", size);
+    }
+
+    void OutputPostprocessor::setEnableScanlines(bool b) {
+        program.uniform.set1i("enableScanlines", b);
+    }
+
+    void OutputPostprocessor::setScanlineColor(const glm::vec4& color) {
+        program.uniform.set4f("scanlineColor", color.x, color.y, color.z, color.w);
     }
 }

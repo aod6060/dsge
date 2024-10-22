@@ -298,5 +298,17 @@ namespace render {
             render::outputPostprocessor.setPixelSize(size);
             render::outputPostprocessor.unbind();
         }
+
+        void setEnablescanlines(bool b) {
+            render::outputPostprocessor.bind();
+            render::outputPostprocessor.setEnableScanlines(b);
+            render::outputPostprocessor.unbind();
+        }
+
+        void setScanlineColor(const glm::vec4& color) {
+            render::outputPostprocessor.bind();
+            render::outputPostprocessor.setScanlineColor(color);
+            render::outputPostprocessor.unbind();
+        }
     }
 }

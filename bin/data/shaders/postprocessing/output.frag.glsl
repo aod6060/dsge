@@ -27,6 +27,9 @@ uniform int render_height;
 // Pixelate Controles
 uniform float pixel_size;
 
+uniform bool enableScanlines;
+uniform vec4 scanlineColor;
+
 in vec2 v_TexCoords;
 out vec4 out_Color;
 
@@ -94,77 +97,44 @@ vec4 sepia_pixelate() {
 
 void main() {
 
+    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
     if(example == REGULAR) {
-        out_Color = regular();
+        color = regular();
     } 
     else if(example == INVERT) {
-        out_Color = invert();
+        color = invert();
     } 
     else if(example == GREYSCALE) {
-        out_Color = greyscale();
+        color = greyscale();
     } 
     else if(example == SEPIA) {
-        out_Color = sepia();
+        color = sepia();
     } 
     else if(example == PIXELATE) {
-        out_Color = pixelate();
+        color = pixelate();
     } 
     else if(example == INVERT_PIXELATE) {
-        out_Color = invert_pixelate();
+        color = invert_pixelate();
     } 
     else if(example == GREYSCALE_PIXELATE) {
-        out_Color = greyscale_pixelate();
+        color = greyscale_pixelate();
     }
     else if(example == SEPIA_PIXELATE) {
-        out_Color = sepia_pixelate();
+        color = sepia_pixelate();
     }
     else {
-        out_Color = regular();
+        color = regular();
     }
 
-    /*
-    float size = 2.0;
+    if(enableScanlines) {
+        int scaled_y = int(v_TexCoords.y * screen_height);
 
-    float div_size = mix(0.5, 5.0, 0.0);
-
-    float width = 1280 / div_size;
-    float height = 960 / div_size;
-
-    float dx = size * (1.0 / width);
-    float dy = size * (1.0 / height);
-
-    vec2 coord;
-
-    coord.x = dx * floor(v_TexCoords.x / dx);
-    coord.y = dy * floor(v_TexCoords.y / dy);
-
-    //out_Color = texture(tex0, v_TexCoords);
-    
-    vec4 color = texture(tex0, coord);
-
-    int scaled_y = int(v_TexCoords.y * 960.0);
-
-
-    //color.rgb = 1.0 - color.rgb;
-    //color.rgb = vec3((color.r + color.g + color.b) / 3.0);
-    //color.rgb *= vec3(1.2, 1.0, 0.8);
-
-    float light = (color.r + color.g + color.b) / 3.0;
-
-    if(light > 0.4) {
-        color.rgb = vec3(1.0);
-    } else {
-        color.rgb = vec3(0.0);
-    }
-    */
-
-    /*
-    if((scaled_y % 2) == 0) {
-        discard;
+        if((scaled_y % 2) == 0) {
+            out_Color = scanlineColor;
+        } else {
+            out_Color = color;
+        }
     } else {
         out_Color = color;
     }
-
-    out_Color = color;
-    */
 }
