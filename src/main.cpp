@@ -4,7 +4,8 @@
 #include "engine/sys.h"
 #include "glm/ext/quaternion_geometric.hpp"
 #include "glm/gtc/constants.hpp"
-
+#include <json/json.h>
+#include "json/value.h"
 
 
 // https://youtube.com/clip/UgkxyCtqY_D6g4ULEyuLwinqERd8N-jTzCWj?si=s1aTiUychjS-6HHu
@@ -130,12 +131,31 @@ struct TestApplication : public app::IApplication {
 
 };
 
+
+void load_config(app::Config* config) {
+    std::ifstream in("config.json");
+    Json::Value root;
+    in >> root;
+    in.close();
+
+    
+    // App
+    Json::Value app = root["app"];
+
+    config->caption = app["caption"].asString();
+    config->width = app["width"].asUInt();
+    config->height = app["height"].asUInt();
+}
+
 int main(int argc, char** argv) {    
     TestApplication testApp;
     app::Config config;
-    config.caption = "Test Application";
-    config.width = 640 * 2; // 1280
-    config.height = 480 * 2; // 960
+    //config.caption = "Test Application";
+    //config.width = 640 * 2; // 1280
+    //config.height = 480 * 2; // 960
+
+    load_config(&config);
+    
     config.app = &testApp;
 
     app::init(&config);

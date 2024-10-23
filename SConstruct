@@ -96,7 +96,11 @@ elif platform == "linux":
         CPPPATH=[
             "include"
         ],
+        LIBPATH=[
+            "lib/linux"
+        ],
         LIBS=[
+            'SDL2main',
             'SDL2',
             'SDL2_image',
             'SDL2_mixer',
