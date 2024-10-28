@@ -11,3 +11,4 @@ env["source_files"] += [
 ]
 
 SConscript("#/src/engine/render/glw/SConscript", exports="env")
+SConscript("#/src/engine/render/font/SConscript", exports="env")

@@ -1,4 +1,5 @@
 #include "render.h"
+#include "font/font.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "render_internal.h"
 #include "glm/ext/matrix_clip_space.hpp"
@@ -95,9 +96,13 @@ namespace render {
             std::cout << "Framebuffer: wasn't created correctly!\n";
         }
         screen_framebuffer.unbind();
+
+        font::init();
     }
 
     void release() {
+        font::release();
+        
         screen_framebuffer.release();
 
         screen.release();
@@ -252,6 +257,16 @@ namespace render {
         indencies.unbind();
         shader->unbindVertexArray();
     }
+
+    void enableBlend() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    void disableBlend() {
+        glDisable(GL_BLEND);
+    }
+
 
     /*
         The render will draw at 

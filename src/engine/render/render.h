@@ -3,6 +3,7 @@
 
 
 #include "glw/glw.h"
+#include "font/font.h"
 
 namespace render {
 
@@ -40,6 +41,11 @@ namespace render {
     // Sending a custom vertices, texCoords, and indencies to 
     // the render
     void draw(glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies);
+
+
+    void enableBlend();
+    void disableBlend();
+    
     /*
         The render will draw at 
         640x480 if w/h * 3 == 4 or standard screen (4:3)

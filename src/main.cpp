@@ -1,12 +1,15 @@
 #include "engine/input/input.h"
+#include "engine/render/font/font.h"
 #include "engine/render/glw/glw.h"
 #include "engine/render/render.h"
 #include "engine/sys.h"
+#include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/quaternion_geometric.hpp"
 #include "glm/gtc/constants.hpp"
 #include <json/json.h>
 #include "json/value.h"
-
+#include <climits>
+#include <sstream>
 
 // https://youtube.com/clip/UgkxyCtqY_D6g4ULEyuLwinqERd8N-jTzCWj?si=s1aTiUychjS-6HHu
 struct TestApplication : public app::IApplication {
@@ -26,6 +29,9 @@ struct TestApplication : public app::IApplication {
 
         bool isArrayTest = false;
 
+        int32_t width;
+        int32_t height;
+
         virtual void init() {
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
 
@@ -42,6 +48,10 @@ struct TestApplication : public app::IApplication {
             icon_array_texCoords.add3(0.0f, 1.0f, 2.0f);
             icon_array_texCoords.add3(1.0f, 1.0f, 3.0f);
             icon_array_texCoords.update();
+
+
+            render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 32);
+
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -120,6 +130,30 @@ struct TestApplication : public app::IApplication {
 
                 render::endShader();
             }
+
+
+            std::stringstream ss;
+
+            ss << "Position: [" << postion.x << ", " << postion.y << "]";
+
+            render::font::getSize("regular", ss.str(), &width, &height);
+            render::font::update("regular", ss.str());
+
+            render::startShader(render::ShaderType::ST_MAIN);
+            render::enableBlend();
+
+            render::setModel(
+                glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0f, 0.0f)) *
+                glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
+            );
+
+            render::font::bind(GL_TEXTURE0);
+            render::draw();
+            render::font::unbind(GL_TEXTURE0);
+
+            render::disableBlend();
+            render::endShader();
+
             render::endFrame();
         }
 
@@ -147,7 +181,7 @@ void load_config(app::Config* config) {
     config->height = app["height"].asUInt();
 }
 
-int main(int argc, char** argv) {    
+int main(int argc, char** argv) { 
     TestApplication testApp;
     app::Config config;
     //config.caption = "Test Application";

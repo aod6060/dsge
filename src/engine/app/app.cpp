@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "SDL_pixels.h"
 #include "SDL_video.h"
+#include <fstream>
 
 
 namespace app {
@@ -16,7 +17,22 @@ namespace app {
 
     void init(Config* _config) {
         config = _config;
-        std::cout << VERSION_FULL_NAME << "\n";
+
+
+        /*
+            Load print logo
+        */
+        std::ifstream in("data/startup/logo.txt");
+
+        std::string line;
+        while(std::getline(in, line)) {
+            std::cout << line << "\n";
+        }
+
+        in.close();
+
+        std::cout << VERSION_FULL_NAME << "\n\n";
+
 
         SDL_Init(SDL_INIT_EVERYTHING);
 

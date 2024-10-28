@@ -1,0 +1,10 @@
+Import("env")
+
+
+def source(file):
+    return "#/src/engine/render/font/" + file
+
+env["source_files"] += [
+    source("font.cpp"),
+    source("font_face.cpp")
+]
