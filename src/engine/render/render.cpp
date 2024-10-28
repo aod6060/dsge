@@ -13,6 +13,8 @@ namespace render {
     // Shaders
     MainShader mainShader;
     Texture2DArrayShader tex2DArrayShader;
+    FontShader fontShader;
+
     // Postprocessing
     OutputPostprocessor outputPostprocessor;
 
@@ -41,6 +43,8 @@ namespace render {
         // Init Shaders
         mainShader.init();
         tex2DArrayShader.init();
+        fontShader.init();
+
         // Init Postprocessors
         outputPostprocessor.init();
 
@@ -117,6 +121,7 @@ namespace render {
 
         outputPostprocessor.release();
 
+        fontShader.release();
         tex2DArrayShader.release();
         mainShader.release();
     }
@@ -182,6 +187,9 @@ namespace render {
             case ShaderType::ST_TEXTURE2D_ARRAY:
                 tex2DArrayShader.bind();
                 break;
+            case render::ShaderType::ST_FONT:
+                fontShader.bind();
+                break;
         }
     }
 
@@ -192,6 +200,9 @@ namespace render {
                 break;
             case ShaderType::ST_TEXTURE2D_ARRAY:
                 tex2DArrayShader.unbind();
+                break;
+            case ShaderType::ST_FONT:
+                fontShader.unbind();
                 break;
         }
     }
@@ -214,6 +225,9 @@ namespace render {
             case ShaderType::ST_TEXTURE2D_ARRAY:
                 tex2DArrayShader.setModel(m);
                 break;
+            case ShaderType::ST_FONT:
+                fontShader.setModel(m);
+                break;
         }
     }
 
@@ -222,6 +236,8 @@ namespace render {
             draw(&mainShader, defVertices, defTexCoords, defIndex);
         } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
             draw(&tex2DArrayShader, defVertices, defTexCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_FONT) {
+            draw(&fontShader, defVertices, defTexCoords, defIndex);
         }
     }
 
@@ -231,6 +247,8 @@ namespace render {
             draw(&mainShader, defVertices, texCoords, defIndex);
         } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
             draw(&tex2DArrayShader, defVertices, texCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_FONT) {
+            draw(&fontShader, defVertices, texCoords, defIndex);
         }
     }
 
@@ -241,6 +259,8 @@ namespace render {
             draw(&mainShader, vertices, texCoords, indencies);
         } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
             draw(&tex2DArrayShader, vertices, texCoords, indencies);
+        } else if(shaderType == ShaderType::ST_FONT) {
+            draw(&fontShader, vertices, texCoords, indencies);
         }
     }
 
@@ -281,5 +301,11 @@ namespace render {
         return height;
     }
 
+
+    namespace font_shader {
+        void setColor(glm::vec3 color) {
+            fontShader.setColor(color);
+        }
+    }
 
 }

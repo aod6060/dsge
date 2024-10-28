@@ -9,7 +9,7 @@ namespace render {
         void FontFace::init(FT_Library library, std::string path, int32_t size) {
             this->font_face_path = path;
             this->size = size;
-            this->glyph_space = this->size / 8;
+            this->glyph_space = this->size / 16;
             this->space = this->size / 4;
             this->tab = this->size / 2;
 

@@ -139,7 +139,7 @@ struct TestApplication : public app::IApplication {
             render::font::getSize("regular", ss.str(), &width, &height);
             render::font::update("regular", ss.str());
 
-            render::startShader(render::ShaderType::ST_MAIN);
+            render::startShader(render::ShaderType::ST_FONT);
             render::enableBlend();
 
             render::setModel(
@@ -147,6 +147,8 @@ struct TestApplication : public app::IApplication {
                 glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
             );
 
+            render::font_shader::setColor(glm::vec3(1.0f, 0.0f, 0.0f));
+            
             render::font::bind(GL_TEXTURE0);
             render::draw();
             render::font::unbind(GL_TEXTURE0);

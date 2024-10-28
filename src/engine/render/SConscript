@@ -7,6 +7,7 @@ env["source_files"] += [
     source("render.cpp"),
     source("main_shader.cpp"),
     source("tex2D_array_shader.cpp"),
+    source("font_shader.cpp"),
     source("output_postprocessor.cpp")
 ]
 

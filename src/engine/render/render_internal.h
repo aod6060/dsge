@@ -75,6 +75,24 @@ namespace render {
         virtual void texCoordPointer();
     };
 
+    struct FontShader : public IShader {
+        glw::Shader vertex_shader;
+        glw::Shader fragment_shader;
+        glw::Program program;
+
+        virtual void init();
+        virtual void release();
+        virtual void bind();
+        virtual void unbind();
+
+        virtual void setModel(const glm::mat4& m);
+        void setColor(glm::vec3 color);
+        
+        virtual void bindVertexArray();
+        virtual void unbindVertexArray();
+        virtual void verticesPointer();
+        virtual void texCoordPointer();
+    };
 
     // Postprocessing
     struct OutputPostprocessor : public IPostprocess {

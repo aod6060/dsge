@@ -9,7 +9,8 @@ namespace render {
 
     enum ShaderType {
         ST_MAIN = 0,
-        ST_TEXTURE2D_ARRAY
+        ST_TEXTURE2D_ARRAY,
+        ST_FONT
     };
 
     void init();
@@ -45,7 +46,7 @@ namespace render {
 
     void enableBlend();
     void disableBlend();
-    
+
     /*
         The render will draw at 
         640x480 if w/h * 3 == 4 or standard screen (4:3)
@@ -53,6 +54,11 @@ namespace render {
     */
     uint32_t getWidth();
     uint32_t getHeight();
+
+    namespace font_shader {
+        void setColor(glm::vec3 color);
+    }
+
 }
 
 #endif
