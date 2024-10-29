@@ -8,7 +8,8 @@ env["source_files"] += [
     source("main_shader.cpp"),
     source("tex2D_array_shader.cpp"),
     source("font_shader.cpp"),
-    source("output_postprocessor.cpp")
+    source("output_postprocessor.cpp"),
+    source("font_postprocessing.cpp")
 ]
 
 SConscript("#/src/engine/render/glw/SConscript", exports="env")

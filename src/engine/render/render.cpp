@@ -17,6 +17,7 @@ namespace render {
 
     // Postprocessing
     OutputPostprocessor outputPostprocessor;
+    FontPostprocessing fontPostprocessing;
 
     // Default Vertex Buffer
     glw::VertexBuffer defVertices;
@@ -47,6 +48,7 @@ namespace render {
 
         // Init Postprocessors
         outputPostprocessor.init();
+        fontPostprocessing.init();
 
         defVertices.init();
         defVertices.add3(0.0f, 0.0f, 0.0f);
@@ -119,6 +121,7 @@ namespace render {
         defTexCoords.release();
         defVertices.release();
 
+        fontPostprocessing.release();
         outputPostprocessor.release();
 
         fontShader.release();
@@ -306,6 +309,50 @@ namespace render {
         void setColor(glm::vec3 color) {
             fontShader.setColor(color);
         }
+    }
+
+    namespace font_postprocess {
+        void bind() {
+            fontPostprocessing.bind();
+        }
+
+        void unbind() {
+            fontPostprocessing.unbind();
+        }
+
+        void setProjection(const glm::mat4& m) {
+            fontPostprocessing.setProjection(m);
+        }
+
+        void setView(const glm::mat4& m) {
+            fontPostprocessing.setView(m);
+        }
+
+        void setModel(const glm::mat4& m) {
+            fontPostprocessing.setModel(m);
+        }
+
+        void setColor(const glm::vec3& color) {
+            fontPostprocessing.setColor(color);
+        }
+
+        void render() {
+            //draw(&fontPostprocessing, defVertices, defTexCoords, defIndex);
+            fontPostprocessing.bindVertexArray();
+
+            defVertices.bind();
+            fontPostprocessing.verticesPointer();
+            defTexCoords.bind();
+            fontPostprocessing.texCoordPointer();
+            defVertices.unbind();
+
+            defIndex.bind();
+            glDrawElements(GL_TRIANGLES, defIndex.count(), GL_UNSIGNED_INT, nullptr);
+            defIndex.unbind();
+
+            fontPostprocessing.unbindVertexArray();
+        }
+
     }
 
 }

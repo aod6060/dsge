@@ -1,3 +1,4 @@
+#include "engine/app/app.h"
 #include "engine/input/input.h"
 #include "engine/render/font/font.h"
 #include "engine/render/glw/glw.h"
@@ -11,7 +12,6 @@
 #include <climits>
 #include <sstream>
 
-// https://youtube.com/clip/UgkxyCtqY_D6g4ULEyuLwinqERd8N-jTzCWj?si=s1aTiUychjS-6HHu
 struct TestApplication : public app::IApplication {
         int i = 0;
 
@@ -131,7 +131,7 @@ struct TestApplication : public app::IApplication {
                 render::endShader();
             }
 
-
+            
             std::stringstream ss;
 
             ss << "Position: [" << postion.x << ", " << postion.y << "]";
@@ -148,15 +148,44 @@ struct TestApplication : public app::IApplication {
             );
 
             render::font_shader::setColor(glm::vec3(1.0f, 0.0f, 0.0f));
-            
+
             render::font::bind(GL_TEXTURE0);
             render::draw();
             render::font::unbind(GL_TEXTURE0);
 
             render::disableBlend();
             render::endShader();
-
+            
             render::endFrame();
+
+            /*
+            std::stringstream ss;
+
+            ss << "Position: [" << postion.x << ", " << postion.y << "]";
+
+            render::font::getSize("regular", ss.str(), &width, &height);
+            render::font::update("regular", ss.str());
+
+            render::font_postprocess::bind();
+            render::enableBlend();
+
+            render::font_postprocess::setProjection(glm::ortho(0.0f, (float)app::get_width(), (float)app::get_height(), 0.0f));
+            render::font_postprocess::setView(glm::mat4(1.0f));
+            render::font_postprocess::setModel(
+                glm::translate(glm::mat4(1.0f), glm::vec3(1.0, 1.0f, 0.0f)) *
+                glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
+            );
+
+            render::font_postprocess::setColor(glm::vec3(0.0f, 1.0f, 0.0f));
+
+            render::font::bind(GL_TEXTURE0);
+            render::font_postprocess::render();
+            render::font::unbind(GL_TEXTURE0);
+
+            render::disableBlend();
+            render::font_postprocess::unbind();
+            */
+
         }
 
         virtual void release() {

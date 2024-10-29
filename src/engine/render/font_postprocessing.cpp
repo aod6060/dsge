@@ -1,11 +1,12 @@
 #include "render_internal.h"
 
-
 namespace render {
+
+
     // Added from IShader
-    void OutputPostprocessor::init() {
-        this->vertex_shader.init(GL_VERTEX_SHADER, "data/shaders/postprocessing/output.vert.glsl");
-        this->fragment_shader.init(GL_FRAGMENT_SHADER, "data/shaders/postprocessing/output.frag.glsl");
+    void FontPostprocessing::init() {
+        this->vertex_shader.init(GL_VERTEX_SHADER, "data/shaders/postprocessing/font.vert.glsl");
+        this->fragment_shader.init(GL_FRAGMENT_SHADER, "data/shaders/postprocessing/font.frag.glsl");
 
         this->program.init({&this->vertex_shader, &this->fragment_shader});
 
@@ -19,6 +20,8 @@ namespace render {
         program.uniform.createUniform("model");
         program.uniform.createUniform("tex0");
         program.uniform.set1i("tex0", 0);
+        program.uniform.createUniform("color");
+        program.uniform.set3i("color", 1.0f, 1.0f, 1.0f);
 
         // Attributes
         bindVertexArray();
@@ -29,47 +32,53 @@ namespace render {
         this->unbind();
     }
 
-    void OutputPostprocessor::release() {
+    void FontPostprocessing::release() {
         this->program.release();
         this->vertex_shader.release();
         this->fragment_shader.release();
     }
 
-    void OutputPostprocessor::bind() {
+    void FontPostprocessing::bind() {
         program.bind();
     }
 
-    void OutputPostprocessor::unbind() {
+    void FontPostprocessing::unbind() {
         program.unbind();
     }
 
-    void OutputPostprocessor::setModel(const glm::mat4& m) {
+
+    void FontPostprocessing::setModel(const glm::mat4& m) {
         program.uniform.setMatrix4("model", m);
     }
 
-    void OutputPostprocessor::bindVertexArray() {
+
+    void FontPostprocessing::bindVertexArray() {
         program.vertexArray.bind();
     }
 
-    void OutputPostprocessor::unbindVertexArray() {
+    void FontPostprocessing::unbindVertexArray() {
         program.vertexArray.unbind();
     }
 
-    void OutputPostprocessor::verticesPointer() {
+    void FontPostprocessing::verticesPointer() {
         program.vertexArray.pointer("vertices", 3, GL_FLOAT);
     }
 
-    void OutputPostprocessor::texCoordPointer() {
+    void FontPostprocessing::texCoordPointer() {
         program.vertexArray.pointer("texCoords", 2, GL_FLOAT);
     }
 
     // Added from IPostprocess
-    void OutputPostprocessor::setProjection(const glm::mat4& m) {
+    void FontPostprocessing::setProjection(const glm::mat4& m) {
         program.uniform.setMatrix4("proj", m);
     }
 
-    void OutputPostprocessor::setView(const glm::mat4& m) {
+    void FontPostprocessing::setView(const glm::mat4& m) {
         program.uniform.setMatrix4("view", m);
+    }
+
+    void FontPostprocessing::setColor(const glm::vec3& color) {
+        program.uniform.set3f("color", color.r, color.g, color.b);
     }
 
 }

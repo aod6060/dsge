@@ -59,6 +59,15 @@ namespace render {
         void setColor(glm::vec3 color);
     }
 
+    namespace font_postprocess {
+        void bind();
+        void unbind();
+        void setProjection(const glm::mat4& m);
+        void setView(const glm::mat4& m);
+        void setModel(const glm::mat4& m);
+        void setColor(const glm::vec3& color);
+        void render();
+    }
 }
 
 #endif

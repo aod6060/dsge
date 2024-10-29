@@ -87,7 +87,7 @@ namespace render {
 
         virtual void setModel(const glm::mat4& m);
         void setColor(glm::vec3 color);
-        
+
         virtual void bindVertexArray();
         virtual void unbindVertexArray();
         virtual void verticesPointer();
@@ -116,6 +116,31 @@ namespace render {
         // Added from IPostprocess
         virtual void setProjection(const glm::mat4& m);
         virtual void setView(const glm::mat4& m);
+    };
+    
+    struct FontPostprocessing : public IPostprocess {
+        glw::Shader vertex_shader;
+        glw::Shader fragment_shader;
+        glw::Program program;
+
+        // Added from IShader
+        virtual void init();
+        virtual void release();
+        virtual void bind();
+        virtual void unbind();
+
+        virtual void setModel(const glm::mat4& m);
+
+        virtual void bindVertexArray();
+        virtual void unbindVertexArray();
+        virtual void verticesPointer();
+        virtual void texCoordPointer();
+
+        // Added from IPostprocess
+        virtual void setProjection(const glm::mat4& m);
+        virtual void setView(const glm::mat4& m);
+
+        void setColor(const glm::vec3& color);
     };
 
     // Hidden drawing function
