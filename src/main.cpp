@@ -50,7 +50,7 @@ struct TestApplication : public app::IApplication {
             icon_array_texCoords.update();
 
 
-            render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 32);
+            render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
 
         }
 
@@ -131,7 +131,7 @@ struct TestApplication : public app::IApplication {
                 render::endShader();
             }
 
-            
+            /*
             std::stringstream ss;
 
             ss << "Position: [" << postion.x << ", " << postion.y << "]";
@@ -155,10 +155,11 @@ struct TestApplication : public app::IApplication {
 
             render::disableBlend();
             render::endShader();
-            
+            */
+
             render::endFrame();
 
-            /*
+            
             std::stringstream ss;
 
             ss << "Position: [" << postion.x << ", " << postion.y << "]";
@@ -184,8 +185,6 @@ struct TestApplication : public app::IApplication {
 
             render::disableBlend();
             render::font_postprocess::unbind();
-            */
-
         }
 
         virtual void release() {

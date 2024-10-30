@@ -29,5 +29,7 @@
 #include "app/app.h"
 #include "input/input.h"
 #include "render/render.h"
+#include "sound/sound.h"
+
 
 #endif
