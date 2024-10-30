@@ -3,6 +3,24 @@
 
 
 #include "../sys.h"
+#include "SDL_mixer.h"
 
+
+
+namespace sound {
+
+    struct Music {
+        Mix_Music* music;
+        bool isLooping = true;
+    };
+
+    struct SoundFX {
+
+    }
+
+    struct SoundFXPositional {
+        
+    }
+}
 
 #endif

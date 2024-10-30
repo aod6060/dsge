@@ -3,10 +3,14 @@
 #include "engine/render/font/font.h"
 #include "engine/render/glw/glw.h"
 #include "engine/render/render.h"
+#include "engine/sound/sound.h"
 #include "engine/sys.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/quaternion_geometric.hpp"
+#include "glm/ext/vector_common.hpp"
 #include "glm/gtc/constants.hpp"
+#include "glm/trigonometric.hpp"
+#include <cmath>
 #include <json/json.h>
 #include "json/value.h"
 #include <climits>
@@ -27,11 +31,15 @@ struct TestApplication : public app::IApplication {
 
         float speed = 64.0f;
 
+
+        glm::vec2 soundPosition;
+
         bool isArrayTest = false;
 
         int32_t width;
         int32_t height;
 
+        
         virtual void init() {
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
 
@@ -51,6 +59,13 @@ struct TestApplication : public app::IApplication {
 
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
+
+
+
+            sound::addMusic("jungle", "data/sound/music/jungle.mp3");
+            //sound::playMusic("jungle");
+
+            this->soundPosition = glm::vec2(render::getWidth() / 2, render::getHeight() / 2);
 
         }
 
@@ -89,6 +104,23 @@ struct TestApplication : public app::IApplication {
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
                 isArrayTest = !isArrayTest;
             }
+
+            glm::vec2 v = this->postion - this->soundPosition;
+            float dist = glm::abs(glm::length(v));
+            dist = glm::clamp(dist, 0.0f, 1024.0f);
+
+
+            float actualDistance = glm::mix(0.0f, 255.0f, dist / 1024.0f);
+            //float d = glm::dot(postion, soundPosition);
+            glm::vec2 nv = glm::normalize(v);
+            float angle = glm::degrees(atan2(-nv.x, nv.y)) + 180.0f;
+
+            
+            std::cout << "Direction: " << v.x << ", " << v.y << "\n";
+            std::cout << "Distance: " << (int)(dist) << "\n";
+            std::cout << "Acutal Distance: " << (int)(actualDistance) << "\n";
+            std::cout << "Angle: " << (int)(angle) << "\n";
+            
         }
 
         virtual void render() {
