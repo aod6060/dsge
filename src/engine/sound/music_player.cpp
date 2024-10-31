@@ -1,5 +1,7 @@
 #include "SDL_mixer.h"
 #include "sound_hidden.h"
+#include <iomanip>
+#include <sstream>
 
 
 namespace sound {
@@ -50,5 +52,47 @@ namespace sound {
 
         double MusicPlayer::getPosition() {
             return Mix_GetMusicPosition(sound::getMusicStream(this->name));
+        }
+
+        double MusicPlayer::getMusicDuration() {
+            return Mix_MusicDuration(sound::getMusicStream(this->name));
+        }
+
+        void MusicPlayer::setName(std::string name) {
+            this->name = name;
+        }
+
+        std::string MusicPlayer::getName() {
+            return this->name;
+        }
+
+        std::string MusicPlayer::toMaxTimeString() {
+            double maxTime = this->getMusicDuration();
+
+            int maxTimeInt = (int)maxTime;
+
+
+            int minute = maxTimeInt / 60;
+            int second = maxTimeInt % 60;
+
+            std::stringstream ss;
+            ss << minute << ":" << std::setw(2) << std::setfill('0') << second;
+
+            return ss.str();
+        }
+
+        std::string MusicPlayer::toCurrentPositionString() {
+            double maxTime = this->getPosition();
+
+            int maxTimeInt = (int)maxTime;
+
+
+            int minute = maxTimeInt / 60;
+            int second = maxTimeInt % 60;
+
+            std::stringstream ss;
+            ss << minute << ":" << std::setw(2) << std::setfill('0') << second;
+
+            return ss.str();
         }
 }

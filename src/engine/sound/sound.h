@@ -39,6 +39,13 @@ namespace sound {
 
         double getPosition();
 
+        double getMusicDuration();
+
+        void setName(std::string name);
+        std::string getName();
+
+        std::string toMaxTimeString();
+        std::string toCurrentPositionString();
     };
 
     struct SoundFXPlayer {
@@ -68,7 +75,7 @@ namespace sound {
     void setMasterVolume(float volume);
     
     void setMusicVolume(float volume);
-    
+
     void setSoundFXVolume(float volume);
 }
 

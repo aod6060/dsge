@@ -14,6 +14,7 @@ namespace sound {
 
     // Positional SoundFX
     glm::vec2 listener_pos = glm::vec2(0.0f);
+    float masterVolume = 1.0f;
 
     void init() {
         // TODO: Figure out how Mix_Init and Mix_Quit works and if I need it.
@@ -76,18 +77,18 @@ namespace sound {
         return listener_pos;
     }
     
+    // It works as intended :)! Number between 0.0 and 1.0 are the best set of number ever :D
     void setMasterVolume(float volume) {
-        int v = (int)(volume * MIX_MAX_VOLUME);
-        Mix_MasterVolume(v);
+        masterVolume = volume;
     }
     
     void setMusicVolume(float volume) {
-        int v = (int)(volume * MIX_MAX_VOLUME);
+        int v = (int)((volume * masterVolume) * MIX_MAX_VOLUME);
         Mix_VolumeMusic(v);
     }
     
     void setSoundFXVolume(float volume) {
-        int v = (int)(volume * MIX_MAX_VOLUME);
+        int v = (int)((volume * masterVolume) * MIX_MAX_VOLUME);
         Mix_Volume(-1, v);
     }
 }

@@ -43,13 +43,26 @@ struct TestApplication : public app::IApplication {
         int32_t width;
         int32_t height;
 
-        sound::MusicPlayer jungleMusicPlayer;
-        sound::MusicPlayer happyMusicPlayer;
-        sound::MusicPlayer levelMusicPlayer;
-        sound::MusicPlayer menuMusicPlayer;
-        sound::MusicPlayer* current = &jungleMusicPlayer;
+        sound::MusicPlayer musicPlayer;
 
-        std::vector<sound::MusicPlayer*> musicPlayers;
+        struct PositioningTest {
+            glm::vec2 direction;
+            float distance;
+            float actualDistance;
+            float angle;
+            float maxDistance = 1024.0f;
+        } positioningTest;
+
+        struct VolumeControls {
+            float masterVolume = 1.0f;
+            float musicVolume = 1.0f;
+            float soundFXVolume = 1.0f;
+        } volumeControls;
+
+        std::vector<std::string> musicNamesMenuItems;
+        std::string currentName = "jungle";
+
+        float musicPosition = 0.0f;
 
         virtual void init() {
 
@@ -92,13 +105,11 @@ struct TestApplication : public app::IApplication {
             sound::addMusicStream("level", "data/sound/music/level.mp3");
             sound::addMusicStream("menu", "data/sound/music/menu.mp3");
 
+            sound::getMusicStreamNames(musicNamesMenuItems);
 
+            musicPlayer.init("jungle");
 
-            jungleMusicPlayer.init("jungle");
-            happyMusicPlayer.init("happy");
-            levelMusicPlayer.init("level");
-            menuMusicPlayer.init("menu");
-
+            musicPlayer.play(-1);
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -137,22 +148,20 @@ struct TestApplication : public app::IApplication {
                 isArrayTest = !isArrayTest;
             }
 
-            glm::vec2 v = this->postion - this->soundPosition;
-            float dist = glm::abs(glm::length(v));
-            dist = glm::clamp(dist, 0.0f, 1024.0f);
+            positioningTest.direction = this->postion - this->soundPosition;
+            positioningTest.distance = glm::abs(glm::length(positioningTest.direction));
+            positioningTest.distance = glm::clamp(positioningTest.distance, 0.0f, positioningTest.maxDistance);
 
 
-            float actualDistance = glm::mix(0.0f, 255.0f, dist / 1024.0f);
+            positioningTest.actualDistance = glm::mix(0.0f, 255.0f,  positioningTest.distance / positioningTest.maxDistance);
             //float d = glm::dot(postion, soundPosition);
-            glm::vec2 nv = glm::normalize(v);
-            float angle = glm::degrees(atan2(-nv.x, nv.y)) + 180.0f;
+            glm::vec2 nv = glm::normalize(positioningTest.direction);
+            positioningTest.angle = glm::degrees(atan2(-nv.x, nv.y)) + 180.0f;  
 
-            
-            std::cout << "Direction: " << v.x << ", " << v.y << "\n";
-            std::cout << "Distance: " << (int)(dist) << "\n";
-            std::cout << "Acutal Distance: " << (int)(actualDistance) << "\n";
-            std::cout << "Angle: " << (int)(angle) << "\n";
-            
+
+            sound::setMasterVolume(volumeControls.masterVolume);
+            sound::setMusicVolume(volumeControls.musicVolume);
+            sound::setSoundFXVolume(volumeControls.soundFXVolume);
         }
 
         void renderMenu() {
@@ -162,8 +171,78 @@ struct TestApplication : public app::IApplication {
             ImGui::NewFrame();
             ImGui::Begin("Configuration");
 
+            ImGui::Text("Position Test");
+
+            ImGui::Text("Direction: [%f, %f]", this->positioningTest.direction.x, this->positioningTest.direction.y);
+            ImGui::Text("Distance: %f", this->positioningTest.distance);
+            ImGui::Text("Actual Distance: %f", this->positioningTest.actualDistance);
+            ImGui::Text("Angle: %f", this->positioningTest.angle);
+            ImGui::Separator();
+            ImGui::Text("Music Test");
+
+
+            // Yes this works :)
+            if(ImGui::BeginCombo("Music Player Names", currentName.data())) {
+                for(int i = 0; i < musicNamesMenuItems.size(); i++) {
+                    bool is_selected = (currentName == musicNamesMenuItems[i]);
+
+                    if(ImGui::Selectable(musicNamesMenuItems[i].data(), is_selected)) {
+                        currentName = musicNamesMenuItems[i];
+                        musicPlayer.stop();
+                        //musicPlayer.name = currentName;
+                        musicPlayer.setName(currentName);
+                        musicPlayer.play(-1);
+                    }
+
+                    if(is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+
+            if(musicPlayer.isPlaying()) {
+                if(ImGui::Button("Stop")) {
+                    musicPlayer.stop();
+                }
+
+                if(ImGui::Button("Rewind")) {
+                    musicPlayer.rewind();
+                }
+
+                if(musicPlayer.isPaused()) {
+                    if(ImGui::Button("Resume")) {
+                        musicPlayer.resume();
+                    }
+                } else {
+                    if(ImGui::Button("Pause")) {
+                        musicPlayer.pause();
+                    }
+                }
+
+                this->musicPosition = musicPlayer.getPosition();
+
+                ImGui::Text("%s/%s", musicPlayer.toCurrentPositionString().c_str(), musicPlayer.toMaxTimeString().c_str());
+                ImGui::SameLine();
+                if(ImGui::SliderFloat("Music Position", &this->musicPosition, 0.0f, musicPlayer.getMusicDuration(), "")) {
+                    // Do something
+                    musicPlayer.setPosition(this->musicPosition);
+                }
+            } else {
+                if(ImGui::Button("Play")) {
+                    musicPlayer.play(-1);
+                }
+            }
+
+            ImGui::Separator();
+            ImGui::Text("Sound Controls");
+            ImGui::SliderFloat("Master Volume", &volumeControls.masterVolume, 0.0f, 1.0f);
+            ImGui::SliderFloat("Music Volume", &volumeControls.musicVolume, 0.0f, 1.0f);
+            ImGui::SliderFloat("Sound FX Volume", &volumeControls.soundFXVolume, 0.0f, 1.0f);
+
             ImGui::End();
-            
+
             ImGui::EndFrame();
 
             ImGui::Render();
@@ -272,10 +351,9 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void release() {
-            jungleMusicPlayer.release();
-            happyMusicPlayer.release();
-            levelMusicPlayer.release();
-            menuMusicPlayer.release();
+
+            musicPlayer.stop();
+            musicPlayer.release();
 
             icon_array_texCoords.release();
             icon_array.release();
