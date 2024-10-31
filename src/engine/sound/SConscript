@@ -4,5 +4,8 @@ def source(file):
     return "#/src/engine/sound/" + file
 
 env["source_files"] += [
-    source("sound.cpp")
+    source("sound.cpp"),
+    source("music_player.cpp"),
+    source("sound_fx_player.cpp"),
+    source("sound_fx_player_2d.cpp")
 ]

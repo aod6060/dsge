@@ -9,6 +9,8 @@
 
 namespace sound {
 
+    // I'm not feelling this...
+    /*
     struct Music {
         Mix_Music* music;
         bool isLooping = true;
@@ -21,6 +23,13 @@ namespace sound {
     struct SoundFXPositional {
         
     }
+    */
+
+    Mix_Music* getMusicStream(std::string name);
+
+    Mix_Chunk* getSoundFXStream(std::string name);
+
+    glm::vec2 getListenerPosition();
 }
 
 #endif

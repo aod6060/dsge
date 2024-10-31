@@ -151,4 +151,14 @@ namespace app {
     void exit() {
         is_running = false;
     }
+
+    SDL_Window* getWindow() {
+        return window;
+    }
+    
+    SDL_GLContext getContext() {
+        return context;
+    }
+    
+
 }

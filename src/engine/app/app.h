@@ -2,6 +2,7 @@
 #define APP_H
 
 
+#include "SDL_video.h"
 #include <SDL.h>
 #include <string>
 
@@ -31,6 +32,10 @@ namespace app {
     uint32_t get_height();
 
     void exit();
+
+    SDL_Window* getWindow();
+    SDL_GLContext getContext();
+    
 }
 
 #endif

@@ -15,6 +15,10 @@
 #include "json/value.h"
 #include <climits>
 #include <sstream>
+#include <vector>
+#include "thirdparty/imgui/imgui.h"
+#include "thirdparty/imgui/imgui_impl_sdl2.h"
+#include "thirdparty/imgui/imgui_impl_opengl3.h"
 
 struct TestApplication : public app::IApplication {
         int i = 0;
@@ -39,8 +43,29 @@ struct TestApplication : public app::IApplication {
         int32_t width;
         int32_t height;
 
-        
+        sound::MusicPlayer jungleMusicPlayer;
+        sound::MusicPlayer happyMusicPlayer;
+        sound::MusicPlayer levelMusicPlayer;
+        sound::MusicPlayer menuMusicPlayer;
+        sound::MusicPlayer* current = &jungleMusicPlayer;
+
+        std::vector<sound::MusicPlayer*> musicPlayers;
+
         virtual void init() {
+
+            IMGUI_CHECKVERSION();
+
+            ImGui::CreateContext();
+            
+            // If I need it
+            ImGuiIO& io = ImGui::GetIO();
+
+            ImGui::StyleColorsDark();
+
+            ImGui_ImplSDL2_InitForOpenGL(app::getWindow(), app::getContext());
+            ImGui_ImplOpenGL3_Init("#version 400");
+
+
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
 
             render::glw::Texture2DArray::createTexture2DArrayFromFiles(&icon_array, {
@@ -59,18 +84,25 @@ struct TestApplication : public app::IApplication {
 
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
-
-
-
-            sound::addMusic("jungle", "data/sound/music/jungle.mp3");
-            //sound::playMusic("jungle");
-
             this->soundPosition = glm::vec2(render::getWidth() / 2, render::getHeight() / 2);
+
+
+            sound::addMusicStream("jungle", "data/sound/music/jungle.mp3");
+            sound::addMusicStream("happy", "data/sound/music/happyHeavenTrance.mp3");
+            sound::addMusicStream("level", "data/sound/music/level.mp3");
+            sound::addMusicStream("menu", "data/sound/music/menu.mp3");
+
+
+
+            jungleMusicPlayer.init("jungle");
+            happyMusicPlayer.init("happy");
+            levelMusicPlayer.init("level");
+            menuMusicPlayer.init("menu");
 
         }
 
         virtual void handleEvent(SDL_Event* e) {
-            
+            ImGui_ImplSDL2_ProcessEvent(e);
         }
 
         virtual void update(float delta) {
@@ -121,6 +153,22 @@ struct TestApplication : public app::IApplication {
             std::cout << "Acutal Distance: " << (int)(actualDistance) << "\n";
             std::cout << "Angle: " << (int)(angle) << "\n";
             
+        }
+
+        void renderMenu() {
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplSDL2_NewFrame();
+
+            ImGui::NewFrame();
+            ImGui::Begin("Configuration");
+
+            ImGui::End();
+            
+            ImGui::EndFrame();
+
+            ImGui::Render();
+
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
         virtual void render() {
@@ -217,9 +265,18 @@ struct TestApplication : public app::IApplication {
 
             render::disableBlend();
             render::font_postprocess::unbind();
+
+
+
+            renderMenu();
         }
 
         virtual void release() {
+            jungleMusicPlayer.release();
+            happyMusicPlayer.release();
+            levelMusicPlayer.release();
+            menuMusicPlayer.release();
+
             icon_array_texCoords.release();
             icon_array.release();
             icon_32.release();
