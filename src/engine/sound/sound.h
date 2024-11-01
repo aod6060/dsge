@@ -50,14 +50,31 @@ namespace sound {
 
     struct SoundFXPlayer {
         std::string name;
-    };
-
-    struct SoundFXPlayer2D {
-        std::string name;
-        glm::vec2 postion;
         int channel;
+        glm::vec2 postion;
+        float scaledDistance;
+        bool is2D = false;
+        
+        void init(std::string name);
+        void release();
 
+        void play(int channel, int loop, bool is2D = false);
+        void stop();
 
+        void resume();
+        void pause();
+        void rewind();
+
+        bool isPlaying();
+        bool isPaused();
+
+        void setName(std::string name);
+        std::string getName();
+
+        void setPosition(const glm::vec2& position);
+        void setScaledDistance(float scaledDistance);
+
+        void update();
     };
 
     // Functions
