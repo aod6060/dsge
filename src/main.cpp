@@ -1,3 +1,4 @@
+#include "SDL_mixer.h"
 #include "engine/app/app.h"
 #include "engine/input/input.h"
 #include "engine/render/font/font.h"
@@ -14,11 +15,13 @@
 #include <json/json.h>
 #include "json/value.h"
 #include <climits>
+#include <random>
 #include <sstream>
 #include <vector>
 #include "thirdparty/imgui/imgui.h"
 #include "thirdparty/imgui/imgui_impl_sdl2.h"
 #include "thirdparty/imgui/imgui_impl_opengl3.h"
+#include <chrono>
 
 struct TestApplication : public app::IApplication {
         int i = 0;
@@ -78,7 +81,25 @@ struct TestApplication : public app::IApplication {
         bool isSoundFXLooping = false;
         int32_t soundFXAmountOfRepeats = 1; // 1 -> 255
         
+        // Player Section
+        bool isPlayerWarp = false;
+
+        std::mt19937 mrand;
+
+        static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
+            //std::cout << len << "\n";
+            TestApplication* app = (TestApplication*)userdata;
+
+            for(int i = 0; i < len; i++) {
+                //stream[i] = (uint8_t)(app->mrand() % 255);
+                //stream[i] = (uint8_t)(glm::sin(glm::radians((float)(i % 360))) * 255);
+                //stream[i] = (uint8_t)(2.0f * glm::atan((glm::radians((float)(i % 360)) / 2.0f)) * 255) * 0.1f;
+            }
+        }
+
         virtual void init() {
+
+            mrand = std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count());
 
             IMGUI_CHECKVERSION();
 
@@ -144,6 +165,8 @@ struct TestApplication : public app::IApplication {
             soundFXPlayer.setPosition(this->soundPosition);
 
             //soundFXPlayer.play(-1, 0);
+
+            Mix_SetPostMix(TestApplication::sound_visual_fx, this);
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -177,10 +200,12 @@ struct TestApplication : public app::IApplication {
             // Add it to the postion
             this->postion += velocity * speed * delta;
 
-
+            /*
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
                 isArrayTest = !isArrayTest;
             }
+            */
+
 
             positioningTest.direction = this->postion - this->soundPosition;
             positioningTest.distance = glm::abs(glm::length(positioningTest.direction));
@@ -203,6 +228,28 @@ struct TestApplication : public app::IApplication {
             if(soundFXPlayer.isPlaying()) {
                 soundFXPlayer.setPosition(this->soundPosition);
                 soundFXPlayer.update();
+            }
+
+            if(this->isPlayerWarp) {
+                if(input::isMouseButtonPressedOnce(input::MouseButtons::MBS_LEFT) && !input::isKeyPressed(input::Keyboard::KEYS_LCTRL)) {
+                    //this->postion = input::getPosition();
+
+                    glm::vec2 pos = input::getPosition();
+
+                    glm::vec2 screenSize = glm::vec2((float)app::get_width(), (float)app::get_height());
+
+                    glm::vec2 unit_pos = pos / screenSize;
+
+                    glm::vec2 render_pos = unit_pos * glm::vec2(render::getWidth(), render::getHeight());
+
+
+                    std::cout << "Position: " << pos.x << ", " << pos.y << "\n";
+                    std::cout << "ScreenSize: " << screenSize.x << ", " << screenSize.y << "\n";
+                    std::cout << "UnitPos: " << unit_pos.x << ", " << unit_pos.y << "\n";
+                    std::cout << "RenderPos: " << render_pos.x << ", " << render_pos.y << "\n";
+
+                    this->postion = render_pos;
+                }
             }
         }
 
@@ -396,7 +443,15 @@ struct TestApplication : public app::IApplication {
         }
 
         void font_player_configuration() {
+            // Player Sections
 
+            ImGui::Text("Player Configuration");
+            ImGui::PushID("player_section");
+
+            ImGui::Checkbox("Array Test", &this->isArrayTest);
+            ImGui::Checkbox("Player Warp: (hold left ctrl to prevent teleport)", &this->isPlayerWarp);
+            ImGui::PopID();
+            ImGui::Separator();
         }
 
         void renderMenu() {
@@ -413,7 +468,7 @@ struct TestApplication : public app::IApplication {
                 ImGui::EndTabItem();
             }
 
-            if(ImGui::BeginTabItem("Font/Player Configuration")) {
+            if(ImGui::BeginTabItem("Player/Font Configuration")) {
                 font_player_configuration();
                 ImGui::EndTabItem();
             }
