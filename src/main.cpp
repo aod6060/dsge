@@ -214,6 +214,191 @@ struct TestApplication : public app::IApplication {
             }
         }
 
+        void sound_configuration() {
+                ImGui::Text("Sound Controls");
+                ImGui::SliderFloat("Master Volume", &volumeControls.masterVolume, 0.0f, 1.0f);
+                ImGui::SliderFloat("Music Volume", &volumeControls.musicVolume, 0.0f, 1.0f);
+                ImGui::SliderFloat("Sound FX Volume", &volumeControls.soundFXVolume, 0.0f, 1.0f);
+                ImGui::Separator();
+
+                ImGui::Text("Position Test");
+
+                ImGui::Text("Direction: [%f, %f]", this->positioningTest.direction.x, this->positioningTest.direction.y);
+                ImGui::Text("Distance: %f", this->positioningTest.distance);
+                ImGui::Text("Actual Distance: %f", this->positioningTest.actualDistance);
+                ImGui::Text("Angle: %f", this->positioningTest.angle);
+                ImGui::Separator();
+                
+
+                ImGui::PushID("music_test");
+
+                ImGui::Text("Music Test");
+                // Yes this works :)
+                if(ImGui::BeginCombo("Music Player Names", currentName.data())) {
+                    for(int i = 0; i < musicNamesMenuItems.size(); i++) {
+                        bool is_selected = (currentName == musicNamesMenuItems[i]);
+
+                        if(ImGui::Selectable(musicNamesMenuItems[i].data(), is_selected)) {
+                            currentName = musicNamesMenuItems[i];
+                            musicPlayer.stop();
+                            //musicPlayer.name = currentName;
+                            musicPlayer.setName(currentName);
+                            //musicPlayer.play(-1);
+
+                            if(this->isAutoPlay) {
+                                this->playMusic();
+                            }
+                        }
+
+                        if(is_selected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+
+                    ImGui::EndCombo();
+                }
+
+                ImGui::Checkbox("Is Auto Play", &this->isAutoPlay);
+                ImGui::SameLine();
+                ImGui::Checkbox("Is Looping", &this->isMusicLooping);
+
+                if(!this->isMusicLooping) {
+                    ImGui::SliderInt("Amount of Repeats", &this->musicAmountOfRepeats, 1, 255);
+                    ImGui::InputInt("Amount of Repeats: Input", &this->musicAmountOfRepeats);
+
+                    if(this->musicAmountOfRepeats < 1) {
+                        this->musicAmountOfRepeats = 1;
+                    }
+                    if(this->musicAmountOfRepeats > 255) {
+                        this->musicAmountOfRepeats = 255;
+                    }
+                }
+
+                if(musicPlayer.isPlaying()) {
+                    if(ImGui::Button("Stop")) {
+                        musicPlayer.stop();
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Button("Rewind")) {
+                        musicPlayer.rewind();
+                    }
+                    ImGui::SameLine();
+                    if(musicPlayer.isPaused()) {
+                        if(ImGui::Button("Resume")) {
+                            musicPlayer.resume();
+                        }
+                    } else {
+                        if(ImGui::Button("Pause")) {
+                            musicPlayer.pause();
+                        }
+                    }
+
+                    this->musicPosition = musicPlayer.getPosition();
+
+                    float grab_temp = ImGui::GetStyle().GrabRounding;
+                    ImVec4 slider_grab = ImGui::GetStyle().Colors[ImGuiCol_SliderGrab];
+                    ImVec4 slider_grab_active = ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive];
+
+                    ImGui::GetStyle().GrabRounding = 0.0f;
+                    ImGui::GetStyle().Colors[ImGuiCol_SliderGrab]            = ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
+                    ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive]      = ImVec4(0.5f, 0.5f, 1.0f, 1.0f);
+
+                    ImGui::Text("%s/%s", musicPlayer.toCurrentPositionString().c_str(), musicPlayer.toMaxTimeString().c_str());
+                    ImGui::SameLine();
+                    if(ImGui::SliderFloat("Music Position", &this->musicPosition, 0.0f, musicPlayer.getMusicDuration(), "")) {
+                        // Do something
+                        musicPlayer.setPosition(this->musicPosition);
+                    }
+
+                    ImGui::GetStyle().GrabRounding = grab_temp;
+                    ImGui::GetStyle().Colors[ImGuiCol_SliderGrab]            = slider_grab;
+                    ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive]      = slider_grab_active;
+                } else {
+                    if(ImGui::Button("Play")) {
+                        this->playMusic();
+                    }
+                }
+
+
+                ImGui::PopID();
+
+                ImGui::Separator();
+
+                ImGui::PushID("sound_fx_test");
+
+                ImGui::Text("Sound FX Test");
+                if(ImGui::BeginCombo("Sound FX Names", this->currentSFXName.data())) {
+                    for(int i = 0; i < this->soundFXNamesMenuItems.size(); i++) {
+                        bool is_selected = (this->currentSFXName == this->soundFXNamesMenuItems[i]);
+
+                        if(ImGui::Selectable(soundFXNamesMenuItems[i].data(), is_selected)) {
+                            currentSFXName = soundFXNamesMenuItems[i];
+                            soundFXPlayer.stop();
+                            //musicPlayer.name = currentName;
+                            soundFXPlayer.setName(currentSFXName);
+                            //musicPlayer.play(-1);
+
+                            if(this->isSoundFXAutoPlay) {
+                                if(this->isSoundFXAutoPlay2D) {
+                                    if(isSoundFXLooping) {
+                                        soundFXPlayer.play(-1, -1, true);
+                                    } else {
+                                        soundFXPlayer.play(-1, 0, true);
+                                    }
+                                } else {
+                                    if(isSoundFXLooping) {
+                                        soundFXPlayer.play(-1, -1);
+                                    } else {
+                                        soundFXPlayer.play(-1, 0);
+                                    }
+                                }
+                            }
+                        }
+
+                        if(is_selected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                ImGui::Checkbox("Sound FX Auto Play", &this->isSoundFXAutoPlay);
+                ImGui::SameLine();
+                if(this->isSoundFXAutoPlay) {
+                    ImGui::Checkbox("Is Sound FX Auto Play 2D?", &this->isSoundFXAutoPlay2D);
+                    ImGui::SameLine();
+                }
+                ImGui::Checkbox("Sound FX Looping", &this->isSoundFXLooping);
+
+                if(!soundFXPlayer.isPlaying()) {
+                    if(ImGui::Button("Play")) {
+                        if(isSoundFXLooping) {
+                            soundFXPlayer.play(-1, -1);
+                        } else {
+                            soundFXPlayer.play(-1, 0);
+                        }
+                    }
+                    ImGui::SameLine();
+                    if(ImGui::Button("Play 2D")) {
+                        if(isSoundFXLooping) {
+                            soundFXPlayer.play(-1, -1, true);
+                        } else {
+                            soundFXPlayer.play(-1, 0, true);
+                        }
+                    }
+                } else {
+                    if(ImGui::Button("Stop")) {
+                        soundFXPlayer.stop();
+                    }
+                }
+
+                ImGui::PopID();
+        }
+
+        void font_player_configuration() {
+
+        }
+
         void renderMenu() {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplSDL2_NewFrame();
@@ -221,186 +406,20 @@ struct TestApplication : public app::IApplication {
             ImGui::NewFrame();
             ImGui::Begin("Configuration");
 
-            ImGui::Text("Sound Controls");
-            ImGui::SliderFloat("Master Volume", &volumeControls.masterVolume, 0.0f, 1.0f);
-            ImGui::SliderFloat("Music Volume", &volumeControls.musicVolume, 0.0f, 1.0f);
-            ImGui::SliderFloat("Sound FX Volume", &volumeControls.soundFXVolume, 0.0f, 1.0f);
-            ImGui::Separator();
+            ImGui::BeginTabBar("Configuration Tab Bar");
 
-            ImGui::Text("Position Test");
-
-            ImGui::Text("Direction: [%f, %f]", this->positioningTest.direction.x, this->positioningTest.direction.y);
-            ImGui::Text("Distance: %f", this->positioningTest.distance);
-            ImGui::Text("Actual Distance: %f", this->positioningTest.actualDistance);
-            ImGui::Text("Angle: %f", this->positioningTest.angle);
-            ImGui::Separator();
-            
-
-            ImGui::PushID("music_test");
-
-            ImGui::Text("Music Test");
-            // Yes this works :)
-            if(ImGui::BeginCombo("Music Player Names", currentName.data())) {
-                for(int i = 0; i < musicNamesMenuItems.size(); i++) {
-                    bool is_selected = (currentName == musicNamesMenuItems[i]);
-
-                    if(ImGui::Selectable(musicNamesMenuItems[i].data(), is_selected)) {
-                        currentName = musicNamesMenuItems[i];
-                        musicPlayer.stop();
-                        //musicPlayer.name = currentName;
-                        musicPlayer.setName(currentName);
-                        //musicPlayer.play(-1);
-
-                        if(this->isAutoPlay) {
-                            this->playMusic();
-                        }
-                    }
-
-                    if(is_selected) {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-
-                ImGui::EndCombo();
+            if(ImGui::BeginTabItem("Sound Configuration")) {
+                sound_configuration();
+                ImGui::EndTabItem();
             }
 
-            ImGui::Checkbox("Is Auto Play", &this->isAutoPlay);
-            ImGui::SameLine();
-            ImGui::Checkbox("Is Looping", &this->isMusicLooping);
-
-            if(!this->isMusicLooping) {
-                ImGui::SliderInt("Amount of Repeats", &this->musicAmountOfRepeats, 1, 255);
-                ImGui::InputInt("Amount of Repeats: Input", &this->musicAmountOfRepeats);
-
-                if(this->musicAmountOfRepeats < 1) {
-                    this->musicAmountOfRepeats = 1;
-                }
-                if(this->musicAmountOfRepeats > 255) {
-                    this->musicAmountOfRepeats = 255;
-                }
+            if(ImGui::BeginTabItem("Font/Player Configuration")) {
+                font_player_configuration();
+                ImGui::EndTabItem();
             }
 
-            if(musicPlayer.isPlaying()) {
-                if(ImGui::Button("Stop")) {
-                    musicPlayer.stop();
-                }
-                ImGui::SameLine();
-                if(ImGui::Button("Rewind")) {
-                    musicPlayer.rewind();
-                }
-                ImGui::SameLine();
-                if(musicPlayer.isPaused()) {
-                    if(ImGui::Button("Resume")) {
-                        musicPlayer.resume();
-                    }
-                } else {
-                    if(ImGui::Button("Pause")) {
-                        musicPlayer.pause();
-                    }
-                }
+            ImGui::EndTabBar();
 
-                this->musicPosition = musicPlayer.getPosition();
-
-                float grab_temp = ImGui::GetStyle().GrabRounding;
-                ImVec4 slider_grab = ImGui::GetStyle().Colors[ImGuiCol_SliderGrab];
-                ImVec4 slider_grab_active = ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive];
-
-                ImGui::GetStyle().GrabRounding = 0.0f;
-                ImGui::GetStyle().Colors[ImGuiCol_SliderGrab]            = ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
-                ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive]      = ImVec4(0.5f, 0.5f, 1.0f, 1.0f);
-
-                ImGui::Text("%s/%s", musicPlayer.toCurrentPositionString().c_str(), musicPlayer.toMaxTimeString().c_str());
-                ImGui::SameLine();
-                if(ImGui::SliderFloat("Music Position", &this->musicPosition, 0.0f, musicPlayer.getMusicDuration(), "")) {
-                    // Do something
-                    musicPlayer.setPosition(this->musicPosition);
-                }
-
-                ImGui::GetStyle().GrabRounding = grab_temp;
-                ImGui::GetStyle().Colors[ImGuiCol_SliderGrab]            = slider_grab;
-                ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive]      = slider_grab_active;
-
-            } else {
-                if(ImGui::Button("Play")) {
-                    this->playMusic();
-                }
-            }
-
-
-            ImGui::PopID();
-
-            ImGui::Separator();
-
-            ImGui::PushID("sound_fx_test");
-
-            ImGui::Text("Sound FX Test");
-            if(ImGui::BeginCombo("Sound FX Names", this->currentSFXName.data())) {
-                for(int i = 0; i < this->soundFXNamesMenuItems.size(); i++) {
-                    bool is_selected = (this->currentSFXName == this->soundFXNamesMenuItems[i]);
-
-                    if(ImGui::Selectable(soundFXNamesMenuItems[i].data(), is_selected)) {
-                        currentSFXName = soundFXNamesMenuItems[i];
-                        soundFXPlayer.stop();
-                        //musicPlayer.name = currentName;
-                        soundFXPlayer.setName(currentSFXName);
-                        //musicPlayer.play(-1);
-
-                        if(this->isSoundFXAutoPlay) {
-                            if(this->isSoundFXAutoPlay2D) {
-                                if(isSoundFXLooping) {
-                                    soundFXPlayer.play(-1, -1, true);
-                                } else {
-                                    soundFXPlayer.play(-1, 0, true);
-                                }
-                            } else {
-                                if(isSoundFXLooping) {
-                                    soundFXPlayer.play(-1, -1);
-                                } else {
-                                    soundFXPlayer.play(-1, 0);
-                                }
-                            }
-                        }
-                    }
-
-                    if(is_selected) {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            ImGui::Checkbox("Sound FX Auto Play", &this->isSoundFXAutoPlay);
-            ImGui::SameLine();
-            if(this->isSoundFXAutoPlay) {
-                ImGui::Checkbox("Is Sound FX Auto Play 2D?", &this->isSoundFXAutoPlay2D);
-                ImGui::SameLine();
-            }
-            ImGui::Checkbox("Sound FX Looping", &this->isSoundFXLooping);
-
-            if(!soundFXPlayer.isPlaying()) {
-                if(ImGui::Button("Play")) {
-                    if(isSoundFXLooping) {
-                        soundFXPlayer.play(-1, -1);
-                    } else {
-                        soundFXPlayer.play(-1, 0);
-                    }
-                }
-                ImGui::SameLine();
-                if(ImGui::Button("Play 2D")) {
-                    if(isSoundFXLooping) {
-                        soundFXPlayer.play(-1, -1, true);
-                    } else {
-                        soundFXPlayer.play(-1, 0, true);
-                    }
-                }
-            } else {
-                if(ImGui::Button("Stop")) {
-                    soundFXPlayer.stop();
-                }
-            }
-
-            ImGui::PopID();
-            
             ImGui::End();
 
             ImGui::EndFrame();
