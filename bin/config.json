@@ -1,7 +1,7 @@
 {
     "app": {
         "caption": "DSGE: Engine",
-        "width": 1280,
-        "height": 960
+        "width": 640,
+        "height": 480
     }
 }
