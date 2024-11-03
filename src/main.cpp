@@ -86,6 +86,7 @@ struct TestApplication : public app::IApplication {
 
         std::mt19937 mrand;
 
+        
         static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
             //std::cout << len << "\n";
             TestApplication* app = (TestApplication*)userdata;
@@ -94,6 +95,8 @@ struct TestApplication : public app::IApplication {
                 //stream[i] = (uint8_t)(app->mrand() % 255);
                 //stream[i] = (uint8_t)(glm::sin(glm::radians((float)(i % 360))) * 255);
                 //stream[i] = (uint8_t)(2.0f * glm::atan((glm::radians((float)(i % 360)) / 2.0f)) * 255) * 0.1f;
+
+
             }
         }
 
@@ -200,12 +203,6 @@ struct TestApplication : public app::IApplication {
             // Add it to the postion
             this->postion += velocity * speed * delta;
 
-            /*
-            if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
-                isArrayTest = !isArrayTest;
-            }
-            */
-
 
             positioningTest.direction = this->postion - this->soundPosition;
             positioningTest.distance = glm::abs(glm::length(positioningTest.direction));
@@ -258,6 +255,22 @@ struct TestApplication : public app::IApplication {
                 musicPlayer.play(-1);
             } else {
                 musicPlayer.play(this->musicAmountOfRepeats);
+            }
+        }
+
+        void playSoundFX() {
+            if(this->isSoundFXAutoPlay2D) {
+                if(isSoundFXLooping) {
+                    soundFXPlayer.play(-1, -1, true);
+                } else {
+                    soundFXPlayer.play(-1, this->soundFXAmountOfRepeats - 1, true);
+                }
+            } else {
+                if(isSoundFXLooping) {
+                    soundFXPlayer.play(-1, -1);
+                } else {
+                    soundFXPlayer.play(-1, this->soundFXAmountOfRepeats - 1);
+                }
             }
         }
 
@@ -386,19 +399,7 @@ struct TestApplication : public app::IApplication {
                             //musicPlayer.play(-1);
 
                             if(this->isSoundFXAutoPlay) {
-                                if(this->isSoundFXAutoPlay2D) {
-                                    if(isSoundFXLooping) {
-                                        soundFXPlayer.play(-1, -1, true);
-                                    } else {
-                                        soundFXPlayer.play(-1, 0, true);
-                                    }
-                                } else {
-                                    if(isSoundFXLooping) {
-                                        soundFXPlayer.play(-1, -1);
-                                    } else {
-                                        soundFXPlayer.play(-1, 0);
-                                    }
-                                }
+                                this->playSoundFX();
                             }
                         }
 
@@ -417,12 +418,24 @@ struct TestApplication : public app::IApplication {
                 }
                 ImGui::Checkbox("Sound FX Looping", &this->isSoundFXLooping);
 
+                if(!this->isSoundFXLooping) {
+                    ImGui::SliderInt("Amount of Repeats", &this->soundFXAmountOfRepeats, 1, 255);
+                    ImGui::InputInt("Amount of Repeats: Input", &this->soundFXAmountOfRepeats);
+
+                    if(this->soundFXAmountOfRepeats < 1) {
+                        this->soundFXAmountOfRepeats = 1;
+                    }
+                    if(this->soundFXAmountOfRepeats > 255) {
+                        this->soundFXAmountOfRepeats = 255;
+                    }
+                }
+
                 if(!soundFXPlayer.isPlaying()) {
                     if(ImGui::Button("Play")) {
                         if(isSoundFXLooping) {
                             soundFXPlayer.play(-1, -1);
                         } else {
-                            soundFXPlayer.play(-1, 0);
+                            soundFXPlayer.play(-1, this->soundFXAmountOfRepeats - 1);
                         }
                     }
                     ImGui::SameLine();
@@ -430,7 +443,7 @@ struct TestApplication : public app::IApplication {
                         if(isSoundFXLooping) {
                             soundFXPlayer.play(-1, -1, true);
                         } else {
-                            soundFXPlayer.play(-1, 0, true);
+                            soundFXPlayer.play(-1, this->soundFXAmountOfRepeats - 1, true);
                         }
                     }
                 } else {
