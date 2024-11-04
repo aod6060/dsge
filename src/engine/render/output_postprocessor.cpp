@@ -19,6 +19,8 @@ namespace render {
         program.uniform.createUniform("model");
         program.uniform.createUniform("tex0");
         program.uniform.set1i("tex0", 0);
+        program.uniform.createUniform("circle");
+        program.uniform.createUniform("beat");
 
         // Attributes
         bindVertexArray();
@@ -72,4 +74,11 @@ namespace render {
         program.uniform.setMatrix4("view", m);
     }
 
+    void OutputPostprocessor::setCircle(const glm::vec2& circle) {
+        program.uniform.set2f("circle", circle.x, circle.y);
+    }
+
+    void OutputPostprocessor::setBeat(float beat) {
+        program.uniform.set1f("beat", beat);
+    }
 }

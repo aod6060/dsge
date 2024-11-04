@@ -7,14 +7,11 @@
 #include "engine/sound/sound.h"
 #include "engine/sys.h"
 #include "glm/ext/matrix_transform.hpp"
-#include "glm/ext/quaternion_geometric.hpp"
-#include "glm/ext/vector_common.hpp"
 #include "glm/gtc/constants.hpp"
 #include "glm/trigonometric.hpp"
 #include <cmath>
 #include <json/json.h>
 #include "json/value.h"
-#include <climits>
 #include <random>
 #include <sstream>
 #include <vector>
@@ -90,6 +87,9 @@ struct TestApplication : public app::IApplication {
 
         bool isFontColorBasedOnDistance = false;
 
+        float rotation = 0.0f;
+        float test = 0.0f;
+
         static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
             //std::cout << len << "\n";
             TestApplication* app = (TestApplication*)userdata;
@@ -99,8 +99,10 @@ struct TestApplication : public app::IApplication {
                 //stream[i] = (uint8_t)(glm::sin(glm::radians((float)(i % 360))) * 255);
                 //stream[i] = (uint8_t)(2.0f * glm::atan((glm::radians((float)(i % 360)) / 2.0f)) * 255) * 0.1f;
 
-
+                app->test += stream[i] / 255.0f;
             }
+
+            app->test /= (float)(len);
         }
 
         virtual void init() {
@@ -173,6 +175,10 @@ struct TestApplication : public app::IApplication {
             //soundFXPlayer.play(-1, 0);
 
             Mix_SetPostMix(TestApplication::sound_visual_fx, this);
+
+            render::extension::bind();
+            render::extension::setBeat(0.0f);
+            render::extension::unbind();
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -251,6 +257,18 @@ struct TestApplication : public app::IApplication {
                     this->postion = render_pos;
                 }
             }
+
+
+            rotation += 720.0f * delta;
+
+            if(rotation > 360.0f) {
+                rotation -= 360.0f;
+            }
+
+            render::extension::bind();
+            render::extension::setBeat(test);
+            render::extension::setCircle(glm::normalize(glm::vec2(glm::cos(glm::radians(rotation)), glm::sin(glm::radians(rotation)))));
+            render::extension::unbind();
         }
 
         void playMusic() {

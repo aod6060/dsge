@@ -355,4 +355,23 @@ namespace render {
 
     }
 
+    namespace extension {
+        void bind() {
+            outputPostprocessor.bind();
+        }
+
+        void unbind() {
+            outputPostprocessor.unbind();
+        }
+
+        void setCircle(const glm::vec2& circle) {
+            outputPostprocessor.setCircle(circle);
+        }
+
+        void setBeat(float beat) {
+            outputPostprocessor.setBeat(beat);
+        }
+
+    }
+
 }

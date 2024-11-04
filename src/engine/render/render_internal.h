@@ -107,6 +107,8 @@ namespace render {
         virtual void unbind();
 
         virtual void setModel(const glm::mat4& m);
+        void setCircle(const glm::vec2& circle);
+        void setBeat(float beat);
 
         virtual void bindVertexArray();
         virtual void unbindVertexArray();

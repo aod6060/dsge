@@ -5,30 +5,22 @@
 
 
 uniform sampler2D tex0;
+uniform vec2 circle;
+uniform float beat; // 0.0 -> 1.0
 
 in vec2 v_TexCoords;
 out vec4 out_Color;
 
 void main() {
-    //out_Color = texture(tex0, v_TexCoords);
-    
+    float dist = mix(0.0001, 0.01, beat);
+
     vec4 color = texture(tex0, v_TexCoords);
 
-    //int scaled_y = int(v_TexCoords.y * 960.0);
 
+    float r = texture(tex0, vec2(v_TexCoords.x, v_TexCoords.y + -dist)).r;
+    float g = texture(tex0, vec2(v_TexCoords.x + -dist, v_TexCoords.y + dist)).g;
+    float b = texture(tex0, vec2(v_TexCoords.x + dist, v_TexCoords.y + dist)).b;
 
-    //color.rgb = 1.0 - color.rgb;
-    //color.rgb = vec3((color.r + color.g + color.b) / 3.0);
-    //color.rgb *= vec3(1.2, 1.0, 0.8);
-
-    /*
-    if((scaled_y % 2) == 0) {
-        discard;
-    } else {
-        out_Color = color;
-    }
-    */
-    
-
+    color.rgb = color.rgb + mix(vec3(0.0), vec3(r, g, b), beat);
     out_Color = color;
 }
