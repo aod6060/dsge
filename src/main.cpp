@@ -430,6 +430,9 @@ struct TestApplication : public app::IApplication {
                     }
                 }
 
+                // distanceScaled slider
+                ImGui::SliderFloat("Distance Scaled", &soundFXPlayer.scaledDistance, 255.0f, 4096.0f);
+                
                 if(!soundFXPlayer.isPlaying()) {
                     if(ImGui::Button("Play")) {
                         if(isSoundFXLooping) {
