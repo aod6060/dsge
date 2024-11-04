@@ -86,7 +86,8 @@ struct TestApplication : public app::IApplication {
 
         std::mt19937 mrand;
 
-        
+        glm::vec3 fontColor = glm::vec3(1.0f);
+
         static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
             //std::cout << len << "\n";
             TestApplication* app = (TestApplication*)userdata;
@@ -432,7 +433,7 @@ struct TestApplication : public app::IApplication {
 
                 // distanceScaled slider
                 ImGui::SliderFloat("Distance Scaled", &soundFXPlayer.scaledDistance, 255.0f, 4096.0f);
-                
+
                 if(!soundFXPlayer.isPlaying()) {
                     if(ImGui::Button("Play")) {
                         if(isSoundFXLooping) {
@@ -468,6 +469,10 @@ struct TestApplication : public app::IApplication {
             ImGui::Checkbox("Player Warp: (hold left ctrl to prevent teleport)", &this->isPlayerWarp);
             ImGui::PopID();
             ImGui::Separator();
+            ImGui::Text("Font Configuration");
+            ImGui::PushID("font_section");
+            ImGui::ColorEdit3("Font Color", &this->fontColor[0]);
+            ImGui::PopID();
         }
 
         void renderMenu() {
@@ -586,7 +591,7 @@ struct TestApplication : public app::IApplication {
                 glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
             );
 
-            render::font_postprocess::setColor(glm::vec3(0.0f, 1.0f, 0.0f));
+            render::font_postprocess::setColor(this->fontColor);
 
             render::font::bind(GL_TEXTURE0);
             render::font_postprocess::render();
