@@ -88,6 +88,8 @@ struct TestApplication : public app::IApplication {
 
         glm::vec3 fontColor = glm::vec3(1.0f);
 
+        bool isFontColorBasedOnDistance = false;
+
         static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
             //std::cout << len << "\n";
             TestApplication* app = (TestApplication*)userdata;
@@ -471,7 +473,12 @@ struct TestApplication : public app::IApplication {
             ImGui::Separator();
             ImGui::Text("Font Configuration");
             ImGui::PushID("font_section");
-            ImGui::ColorEdit3("Font Color", &this->fontColor[0]);
+
+            if(!this->isFontColorBasedOnDistance) {
+                ImGui::ColorEdit3("Font Color", &this->fontColor[0]);
+            }
+
+            ImGui::Checkbox("Is font color based on distance?", &this->isFontColorBasedOnDistance);
             ImGui::PopID();
         }
 
@@ -591,7 +598,26 @@ struct TestApplication : public app::IApplication {
                 glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
             );
 
-            render::font_postprocess::setColor(this->fontColor);
+            
+
+            if(!this->isFontColorBasedOnDistance) {
+                render::font_postprocess::setColor(this->fontColor);
+            } else {
+                float actualDistance = positioningTest.actualDistance;
+
+                if(actualDistance >= 0.0f && actualDistance < (255.0f * 0.25f)) {
+                    render::font_postprocess::setColor(glm::vec3(1.0f));
+                } else if(actualDistance >= (255.0f * 0.25f) && actualDistance < (255.0f * 0.5f)) {
+                    render::font_postprocess::setColor(glm::vec3(0.0f, 0.0f, 1.0f));
+                } else if(actualDistance >= (255.0f * 0.5f) && actualDistance < (255.0f * 0.75f)) {
+                    render::font_postprocess::setColor(glm::vec3(0.0f, 1.0f, 0.0f));
+                } else if(actualDistance >= (255.0f * 0.75f) && actualDistance < 255.0f) {
+                    render::font_postprocess::setColor(glm::vec3(1.0f, 0.0f, 0.0f));
+                } else {
+                    render::font_postprocess::setColor(glm::vec3(1.0f, 0.0f, 1.0f));
+                }
+            }
+
 
             render::font::bind(GL_TEXTURE0);
             render::font_postprocess::render();
