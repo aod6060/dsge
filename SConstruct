@@ -97,7 +97,8 @@ elif platform == "linux":
             "include"
         ],
         LIBPATH=[
-            "lib/linux"
+            "lib/linux",
+            'bin/linux'
         ],
         LIBS=[
             'SDL2main',
@@ -108,6 +109,15 @@ elif platform == "linux":
             'GLEW',
             'jsoncpp',
             'freetype',
+            'png16',
+            'z',
+            'convert_woff2ttf_fuzzer',
+            'convert_woff2ttf_fuzzer_new_entry',
+            'harfbuzz',
+            'harfbuzz-subset',
+            'brotlicommon',
+            'brotlidec',
+            'brotlienc',
             'box2d',
             'lua'
         ],
