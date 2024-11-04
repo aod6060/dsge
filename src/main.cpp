@@ -206,10 +206,10 @@ struct TestApplication : public app::IApplication {
 
             positioningTest.direction = this->postion - this->soundPosition;
             positioningTest.distance = glm::abs(glm::length(positioningTest.direction));
-            positioningTest.distance = glm::clamp(positioningTest.distance, 0.0f, positioningTest.maxDistance);
+            positioningTest.distance = glm::clamp(positioningTest.distance, 0.0f, soundFXPlayer.scaledDistance);
 
 
-            positioningTest.actualDistance = glm::mix(0.0f, 255.0f,  positioningTest.distance / positioningTest.maxDistance);
+            positioningTest.actualDistance = glm::mix(0.0f, 255.0f,  positioningTest.distance / soundFXPlayer.scaledDistance);
             //float d = glm::dot(postion, soundPosition);
             glm::vec2 nv = glm::normalize(positioningTest.direction);
             positioningTest.angle = glm::degrees(atan2(-nv.x, nv.y)) + 180.0f;  
