@@ -30,6 +30,6 @@
 #include "input/input.h"
 #include "render/render.h"
 #include "sound/sound.h"
-
+#include "physics/physics.h"
 
 #endif
