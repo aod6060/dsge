@@ -92,6 +92,8 @@ namespace render {
         screen.texImage2D(0, GL_RGBA, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        screen.texParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        screen.texParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         screen.unbind(GL_TEXTURE0);
 
         // Initialize Screen Framebuffer
@@ -351,6 +353,38 @@ namespace render {
             defIndex.unbind();
 
             fontPostprocessing.unbindVertexArray();
+        }
+
+    }
+
+    namespace extension {
+        void bind() {
+            outputPostprocessor.bind();
+        }
+
+        void unbind() {
+            outputPostprocessor.unbind();
+        }
+
+        void setCircle(const glm::vec2& circle) {
+            outputPostprocessor.setCircle(circle);
+        }
+        /*
+        void setBeat(float beat) {
+            outputPostprocessor.setBeat(beat);
+        }
+        */
+
+        void setBeat(int index, float beat) {
+            outputPostprocessor.setBeat(index, beat);
+        }
+
+        void setIsFX(bool fx) {
+            outputPostprocessor.setIsFX(fx);
+        }
+
+        void setMaxFX(float fx) {
+            outputPostprocessor.setMaxFX(fx);
         }
 
     }

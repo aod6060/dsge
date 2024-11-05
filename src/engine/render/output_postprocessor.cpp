@@ -1,4 +1,5 @@
 #include "render_internal.h"
+#include <sstream>
 
 
 namespace render {
@@ -19,7 +20,18 @@ namespace render {
         program.uniform.createUniform("model");
         program.uniform.createUniform("tex0");
         program.uniform.set1i("tex0", 0);
+        program.uniform.createUniform("circle");
+        //program.uniform.createUniform("beat");
 
+        for(int i = 0; i < 8; i++) {
+            std::stringstream ss;
+            ss << "beat["<<i<<"]";
+            program.uniform.createUniform(ss.str());
+        }
+
+        program.uniform.createUniform("isFX");
+        program.uniform.createUniform("maxFX");
+        
         // Attributes
         bindVertexArray();
         program.vertexArray.enable("vertices");
@@ -72,4 +84,27 @@ namespace render {
         program.uniform.setMatrix4("view", m);
     }
 
+    void OutputPostprocessor::setCircle(const glm::vec2& circle) {
+        program.uniform.set2f("circle", circle.x, circle.y);
+    }
+
+    /*
+    void OutputPostprocessor::setBeat(float beat) {
+        program.uniform.set1f("beat", beat);
+    }
+    */
+
+    void OutputPostprocessor::setBeat(int index, float beat) {
+        std::stringstream ss;
+        ss << "beat["<<index<<"]";
+        program.uniform.set1f(ss.str(), beat);
+    }
+
+    void OutputPostprocessor::setIsFX(bool fx) {
+        program.uniform.set1i("isFX", (int)fx);
+    }
+
+    void OutputPostprocessor::setMaxFX(float m) {
+        program.uniform.set1f("maxFX", m);
+    }
 }

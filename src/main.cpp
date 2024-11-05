@@ -7,14 +7,11 @@
 #include "engine/sound/sound.h"
 #include "engine/sys.h"
 #include "glm/ext/matrix_transform.hpp"
-#include "glm/ext/quaternion_geometric.hpp"
-#include "glm/ext/vector_common.hpp"
 #include "glm/gtc/constants.hpp"
 #include "glm/trigonometric.hpp"
 #include <cmath>
 #include <json/json.h>
 #include "json/value.h"
-#include <climits>
 #include <random>
 #include <sstream>
 #include <vector>
@@ -86,17 +83,89 @@ struct TestApplication : public app::IApplication {
 
         std::mt19937 mrand;
 
-        
+        glm::vec3 fontColor = glm::vec3(1.0f);
+
+        bool isFontColorBasedOnDistance = false;
+
+        float rotation = 0.0f;
+
+        float beat[8] = {
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f
+        };
+
+        bool isFX = false;
+        float maxFX = 0.04f;
+
         static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
             //std::cout << len << "\n";
             TestApplication* app = (TestApplication*)userdata;
-
+            /*
             for(int i = 0; i < len; i++) {
                 //stream[i] = (uint8_t)(app->mrand() % 255);
                 //stream[i] = (uint8_t)(glm::sin(glm::radians((float)(i % 360))) * 255);
                 //stream[i] = (uint8_t)(2.0f * glm::atan((glm::radians((float)(i % 360)) / 2.0f)) * 255) * 0.1f;
 
+                app->test += stream[i] / 255.0f;
+            }
 
+            app->test /= (float)(len);
+            */
+
+            int channel_len = len / 8;
+
+            for(int i = 0; i < 8; i++) {
+                int start = channel_len * i;
+                int end = channel_len * (i+1);
+
+                app->beat[i] = 0;
+
+                for(int j = start; j < end; j++) {
+                    app->beat[i] += stream[j] / 255.0f;
+                }
+
+                app->beat[i] /= (float)(len);
+            }
+        }
+
+
+        void load_assets() {
+            std::ifstream in("assets.json");
+
+            Json::Value root;
+
+            in >> root;
+
+            in.close();
+
+            Json::Value music = root["music"];
+            // Load Music
+
+            for(int i = 0; i < music.size(); i++) {
+                Json::Value item = music[i];
+
+                std::string name = item["name"].asString();
+                std::string path = item["path"].asString();
+
+                sound::addMusicStream(name, path);
+            }
+
+            Json::Value sfx = root["sfx"];
+            // Load SFX
+
+            for(int i = 0; i < sfx.size(); i++) {
+                Json::Value item = sfx[i];
+
+                std::string name = item["name"].asString();
+                std::string path = item["path"].asString();
+
+                sound::addSoundFXStream(name, path);
             }
         }
 
@@ -140,14 +209,18 @@ struct TestApplication : public app::IApplication {
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
             this->soundPosition = glm::vec2(render::getWidth() / 2, render::getHeight() / 2);
 
-
+            this->load_assets();
+            
+            /*
             sound::addMusicStream("jungle", "data/sound/music/jungle.mp3");
             sound::addMusicStream("happy", "data/sound/music/happyHeavenTrance.mp3");
             sound::addMusicStream("level", "data/sound/music/level.mp3");
             sound::addMusicStream("menu", "data/sound/music/menu.mp3");
+            */
 
             sound::getMusicStreamNames(musicNamesMenuItems);
 
+            /*
             sound::addSoundFXStream("explosion", "data/sound/sfx/explosion.wav");
             sound::addSoundFXStream("jump", "data/sound/sfx/jump.wav");
             sound::addSoundFXStream("lazer", "data/sound/sfx/lazer.wav");
@@ -155,6 +228,7 @@ struct TestApplication : public app::IApplication {
             sound::addSoundFXStream("powerup", "data/sound/sfx/powerup.wav");
             sound::addSoundFXStream("random", "data/sound/sfx/random.wav");
             sound::addSoundFXStream("select", "data/sound/sfx/select.wav");
+            */
 
             sound::getSoundFXStreamNames(this->soundFXNamesMenuItems);
 
@@ -170,6 +244,23 @@ struct TestApplication : public app::IApplication {
             //soundFXPlayer.play(-1, 0);
 
             Mix_SetPostMix(TestApplication::sound_visual_fx, this);
+
+            render::extension::bind();
+            //render::extension::setBeat(0.0f);
+
+            for(int i = 0; i < 8; i++) {
+                render::extension::setBeat(i, beat[i]);
+            }
+
+            render::extension::setCircle(
+                glm::vec2(
+                    glm::cos(glm::radians(this->rotation)),
+                    glm::sin(glm::radians(this->rotation))
+                )
+            );
+            render::extension::setIsFX(this->isFX);
+            render::extension::setMaxFX(this->maxFX);
+            render::extension::unbind();
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -206,10 +297,10 @@ struct TestApplication : public app::IApplication {
 
             positioningTest.direction = this->postion - this->soundPosition;
             positioningTest.distance = glm::abs(glm::length(positioningTest.direction));
-            positioningTest.distance = glm::clamp(positioningTest.distance, 0.0f, positioningTest.maxDistance);
+            positioningTest.distance = glm::clamp(positioningTest.distance, 0.0f, soundFXPlayer.scaledDistance);
 
 
-            positioningTest.actualDistance = glm::mix(0.0f, 255.0f,  positioningTest.distance / positioningTest.maxDistance);
+            positioningTest.actualDistance = glm::mix(0.0f, 255.0f,  positioningTest.distance / soundFXPlayer.scaledDistance);
             //float d = glm::dot(postion, soundPosition);
             glm::vec2 nv = glm::normalize(positioningTest.direction);
             positioningTest.angle = glm::degrees(atan2(-nv.x, nv.y)) + 180.0f;  
@@ -248,6 +339,27 @@ struct TestApplication : public app::IApplication {
                     this->postion = render_pos;
                 }
             }
+
+
+            rotation += 720.0f * delta;
+
+            if(rotation > 360.0f) {
+                rotation -= 360.0f;
+            }
+
+            render::extension::bind();
+            //render::extension::setBeat(test);
+            render::extension::setCircle(glm::normalize(glm::vec2(glm::cos(glm::radians(rotation)), glm::sin(glm::radians(rotation)))));
+
+            render::extension::setIsFX(this->isFX);
+
+            for(int i = 0; i < 8; i++) {
+                render::extension::setBeat(i, this->beat[i]);
+            }
+
+            render::extension::setMaxFX(this->maxFX);
+
+            render::extension::unbind();
         }
 
         void playMusic() {
@@ -430,6 +542,9 @@ struct TestApplication : public app::IApplication {
                     }
                 }
 
+                // distanceScaled slider
+                ImGui::SliderFloat("Distance Scaled", &soundFXPlayer.scaledDistance, 255.0f, 4096.0f);
+
                 if(!soundFXPlayer.isPlaying()) {
                     if(ImGui::Button("Play")) {
                         if(isSoundFXLooping) {
@@ -465,6 +580,21 @@ struct TestApplication : public app::IApplication {
             ImGui::Checkbox("Player Warp: (hold left ctrl to prevent teleport)", &this->isPlayerWarp);
             ImGui::PopID();
             ImGui::Separator();
+            ImGui::Text("Font Configuration");
+            ImGui::PushID("font_section");
+
+            if(!this->isFontColorBasedOnDistance) {
+                ImGui::ColorEdit3("Font Color", &this->fontColor[0]);
+            }
+
+            ImGui::Checkbox("Is font color based on distance?", &this->isFontColorBasedOnDistance);
+            ImGui::PopID();
+
+            ImGui::Text("Render FX Configuration");
+            ImGui::PushID("render_fx_section");
+            ImGui::Checkbox("Use FX", &this->isFX);
+            ImGui::SliderFloat("MaxFX", &this->maxFX, 0.0f, 1.0f);
+            ImGui::PopID();
         }
 
         void renderMenu() {
@@ -583,7 +713,26 @@ struct TestApplication : public app::IApplication {
                 glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
             );
 
-            render::font_postprocess::setColor(glm::vec3(0.0f, 1.0f, 0.0f));
+            
+
+            if(!this->isFontColorBasedOnDistance) {
+                render::font_postprocess::setColor(this->fontColor);
+            } else {
+                float actualDistance = positioningTest.actualDistance;
+
+                if(actualDistance >= 0.0f && actualDistance < (255.0f * 0.25f)) {
+                    render::font_postprocess::setColor(glm::vec3(1.0f));
+                } else if(actualDistance >= (255.0f * 0.25f) && actualDistance < (255.0f * 0.5f)) {
+                    render::font_postprocess::setColor(glm::vec3(0.0f, 0.0f, 1.0f));
+                } else if(actualDistance >= (255.0f * 0.5f) && actualDistance < (255.0f * 0.75f)) {
+                    render::font_postprocess::setColor(glm::vec3(0.0f, 1.0f, 0.0f));
+                } else if(actualDistance >= (255.0f * 0.75f) && actualDistance < 255.0f) {
+                    render::font_postprocess::setColor(glm::vec3(1.0f, 0.0f, 0.0f));
+                } else {
+                    render::font_postprocess::setColor(glm::vec3(1.0f, 0.0f, 1.0f));
+                }
+            }
+
 
             render::font::bind(GL_TEXTURE0);
             render::font_postprocess::render();
