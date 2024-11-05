@@ -1,0 +1,50 @@
+{
+    "music": [
+        {
+            "name": "jungle",
+            "path": "data/sound/music/jungle.mp3"
+        },
+        {
+            "name": "happy",
+            "path": "data/sound/music/happyHeavenTrance.mp3"
+        },
+        {
+            "name": "level",
+            "path": "data/sound/music/level.mp3"
+        },
+        {
+            "name": "menu",
+            "path": "data/sound/music/menu.mp3"
+        }
+    ],
+    "sfx": [
+        {
+            "name": "explosion",
+            "path": "data/sound/sfx/explosion.wav"
+        },
+        {
+            "name": "jump",
+            "path": "data/sound/sfx/jump.wav"
+        },
+        {
+            "name": "lazer",
+            "path": "data/sound/sfx/lazer.wav"
+        },
+        {
+            "name": "pickup",
+            "path": "data/sound/sfx/pickup.wav"
+        },
+        {
+            "name": "powerup",
+            "path": "data/sound/sfx/powerup.wav"
+        },
+        {
+            "name": "random",
+            "path": "data/sound/sfx/random.wav"
+        },
+        {
+            "name": "select",
+            "path": "data/sound/sfx/select.wav"
+        }
+    ]
+}

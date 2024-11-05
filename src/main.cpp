@@ -134,6 +134,41 @@ struct TestApplication : public app::IApplication {
             }
         }
 
+
+        void load_assets() {
+            std::ifstream in("assets.json");
+
+            Json::Value root;
+
+            in >> root;
+
+            in.close();
+
+            Json::Value music = root["music"];
+            // Load Music
+
+            for(int i = 0; i < music.size(); i++) {
+                Json::Value item = music[i];
+
+                std::string name = item["name"].asString();
+                std::string path = item["path"].asString();
+
+                sound::addMusicStream(name, path);
+            }
+
+            Json::Value sfx = root["sfx"];
+            // Load SFX
+
+            for(int i = 0; i < sfx.size(); i++) {
+                Json::Value item = sfx[i];
+
+                std::string name = item["name"].asString();
+                std::string path = item["path"].asString();
+
+                sound::addSoundFXStream(name, path);
+            }
+        }
+
         virtual void init() {
 
             mrand = std::mt19937(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -174,14 +209,18 @@ struct TestApplication : public app::IApplication {
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
             this->soundPosition = glm::vec2(render::getWidth() / 2, render::getHeight() / 2);
 
-
+            this->load_assets();
+            
+            /*
             sound::addMusicStream("jungle", "data/sound/music/jungle.mp3");
             sound::addMusicStream("happy", "data/sound/music/happyHeavenTrance.mp3");
             sound::addMusicStream("level", "data/sound/music/level.mp3");
             sound::addMusicStream("menu", "data/sound/music/menu.mp3");
+            */
 
             sound::getMusicStreamNames(musicNamesMenuItems);
 
+            /*
             sound::addSoundFXStream("explosion", "data/sound/sfx/explosion.wav");
             sound::addSoundFXStream("jump", "data/sound/sfx/jump.wav");
             sound::addSoundFXStream("lazer", "data/sound/sfx/lazer.wav");
@@ -189,6 +228,7 @@ struct TestApplication : public app::IApplication {
             sound::addSoundFXStream("powerup", "data/sound/sfx/powerup.wav");
             sound::addSoundFXStream("random", "data/sound/sfx/random.wav");
             sound::addSoundFXStream("select", "data/sound/sfx/select.wav");
+            */
 
             sound::getSoundFXStreamNames(this->soundFXNamesMenuItems);
 

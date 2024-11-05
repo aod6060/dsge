@@ -2,3 +2,8 @@
 *.o
 *.obj
 .sconsign.dblite
+bin/data/sound/sfx/sinus_bomb.mp3
+bin/data/sound/sfx/vine_bomb.mp3
+bin/data/sound/sfx/sinus_bomb.wav
+bin/data/sound/sfx/vine_bomb.wav
+bin/data/sound/music/MakaiSymphonyDragonCastle.mp3
