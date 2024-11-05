@@ -88,12 +88,25 @@ struct TestApplication : public app::IApplication {
         bool isFontColorBasedOnDistance = false;
 
         float rotation = 0.0f;
-        float test = 0.0f;
+
+        float beat[8] = {
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f
+        };
+
+        bool isFX = false;
+        float maxFX = 0.04f;
 
         static void sound_visual_fx(void* userdata, uint8_t* stream, int len) {
             //std::cout << len << "\n";
             TestApplication* app = (TestApplication*)userdata;
-
+            /*
             for(int i = 0; i < len; i++) {
                 //stream[i] = (uint8_t)(app->mrand() % 255);
                 //stream[i] = (uint8_t)(glm::sin(glm::radians((float)(i % 360))) * 255);
@@ -103,6 +116,22 @@ struct TestApplication : public app::IApplication {
             }
 
             app->test /= (float)(len);
+            */
+
+            int channel_len = len / 8;
+
+            for(int i = 0; i < 8; i++) {
+                int start = channel_len * i;
+                int end = channel_len * (i+1);
+
+                app->beat[i] = 0;
+
+                for(int j = start; j < end; j++) {
+                    app->beat[i] += stream[j] / 255.0f;
+                }
+
+                app->beat[i] /= (float)(len);
+            }
         }
 
         virtual void init() {
@@ -177,7 +206,20 @@ struct TestApplication : public app::IApplication {
             Mix_SetPostMix(TestApplication::sound_visual_fx, this);
 
             render::extension::bind();
-            render::extension::setBeat(0.0f);
+            //render::extension::setBeat(0.0f);
+
+            for(int i = 0; i < 8; i++) {
+                render::extension::setBeat(i, beat[i]);
+            }
+
+            render::extension::setCircle(
+                glm::vec2(
+                    glm::cos(glm::radians(this->rotation)),
+                    glm::sin(glm::radians(this->rotation))
+                )
+            );
+            render::extension::setIsFX(this->isFX);
+            render::extension::setMaxFX(this->maxFX);
             render::extension::unbind();
         }
 
@@ -266,8 +308,17 @@ struct TestApplication : public app::IApplication {
             }
 
             render::extension::bind();
-            render::extension::setBeat(test);
+            //render::extension::setBeat(test);
             render::extension::setCircle(glm::normalize(glm::vec2(glm::cos(glm::radians(rotation)), glm::sin(glm::radians(rotation)))));
+
+            render::extension::setIsFX(this->isFX);
+
+            for(int i = 0; i < 8; i++) {
+                render::extension::setBeat(i, this->beat[i]);
+            }
+
+            render::extension::setMaxFX(this->maxFX);
+
             render::extension::unbind();
         }
 
@@ -497,6 +548,12 @@ struct TestApplication : public app::IApplication {
             }
 
             ImGui::Checkbox("Is font color based on distance?", &this->isFontColorBasedOnDistance);
+            ImGui::PopID();
+
+            ImGui::Text("Render FX Configuration");
+            ImGui::PushID("render_fx_section");
+            ImGui::Checkbox("Use FX", &this->isFX);
+            ImGui::SliderFloat("MaxFX", &this->maxFX, 0.0f, 1.0f);
             ImGui::PopID();
         }
 

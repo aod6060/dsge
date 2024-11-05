@@ -74,7 +74,10 @@ namespace render {
         void unbind();
 
         void setCircle(const glm::vec2& circle);
-        void setBeat(float beat);
+        //void setBeat(float beat);
+        void setBeat(int index, float beat);
+        void setIsFX(bool fx);
+        void setMaxFX(float fx);
     }
 }
 
