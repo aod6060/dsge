@@ -43,31 +43,6 @@ struct TestApplication : public app::IApplication {
         int32_t width;
         int32_t height;
 
-        sound::MusicPlayer musicPlayer;
-        sound::SoundFXPlayer soundFXPlayer;
-
-        struct PositioningTest {
-            glm::vec2 direction;
-            float distance;
-            float actualDistance;
-            float angle;
-            float maxDistance = 1024.0f;
-        } positioningTest;
-
-        struct VolumeControls {
-            float masterVolume = 1.0f;
-            float musicVolume = 1.0f;
-            float soundFXVolume = 1.0f;
-        } volumeControls;
-
-        std::vector<std::string> musicNamesMenuItems;
-        std::string currentName = "jungle";
-
-        std::vector<std::string> soundFXNamesMenuItems;
-        std::string currentSFXName = "explosion";
-
-        float musicPosition = 0.0f;
-
         virtual void init() {
 
             IMGUI_CHECKVERSION();
@@ -101,34 +76,6 @@ struct TestApplication : public app::IApplication {
 
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
-            this->soundPosition = glm::vec2(render::getWidth() / 2, render::getHeight() / 2);
-
-
-            sound::addMusicStream("jungle", "data/sound/music/jungle.mp3");
-            sound::addMusicStream("happy", "data/sound/music/happyHeavenTrance.mp3");
-            sound::addMusicStream("level", "data/sound/music/level.mp3");
-            sound::addMusicStream("menu", "data/sound/music/menu.mp3");
-
-            sound::getMusicStreamNames(musicNamesMenuItems);
-
-            sound::addSoundFXStream("explosion", "data/sound/sfx/explosion.wav");
-            sound::addSoundFXStream("jump", "data/sound/sfx/jump.wav");
-            sound::addSoundFXStream("lazer", "data/sound/sfx/lazer.wav");
-            sound::addSoundFXStream("pickup", "data/sound/sfx/pickup.wav");
-            sound::addSoundFXStream("powerup", "data/sound/sfx/powerup.wav");
-            sound::addSoundFXStream("random", "data/sound/sfx/random.wav");
-            sound::addSoundFXStream("select", "data/sound/sfx/select.wav");
-
-            sound::getSoundFXStreamNames(this->soundFXNamesMenuItems);
-
-
-            musicPlayer.init(this->currentName);
-            //musicPlayer.play(-1);
-
-
-            soundFXPlayer.init(this->currentSFXName);
-            soundFXPlayer.setScaledDistance(1024);
-            soundFXPlayer.setPosition(this->soundPosition);
 
             //soundFXPlayer.play(-1, 0);
         }
@@ -168,29 +115,6 @@ struct TestApplication : public app::IApplication {
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
                 isArrayTest = !isArrayTest;
             }
-
-            positioningTest.direction = this->postion - this->soundPosition;
-            positioningTest.distance = glm::abs(glm::length(positioningTest.direction));
-            positioningTest.distance = glm::clamp(positioningTest.distance, 0.0f, positioningTest.maxDistance);
-
-
-            positioningTest.actualDistance = glm::mix(0.0f, 255.0f,  positioningTest.distance / positioningTest.maxDistance);
-            //float d = glm::dot(postion, soundPosition);
-            glm::vec2 nv = glm::normalize(positioningTest.direction);
-            positioningTest.angle = glm::degrees(atan2(-nv.x, nv.y)) + 180.0f;  
-
-
-            sound::setMasterVolume(volumeControls.masterVolume);
-            sound::setMusicVolume(volumeControls.musicVolume);
-            sound::setSoundFXVolume(volumeControls.soundFXVolume);
-
-
-            sound::setListenerPosition(this->postion);
-            
-            if(soundFXPlayer.isPlaying()) {
-                soundFXPlayer.setPosition(this->soundPosition);
-                soundFXPlayer.update();
-            }
         }
 
         void renderMenu() {
@@ -200,124 +124,8 @@ struct TestApplication : public app::IApplication {
             ImGui::NewFrame();
             ImGui::Begin("Configuration");
 
-            ImGui::Text("Sound Controls");
-            ImGui::SliderFloat("Master Volume", &volumeControls.masterVolume, 0.0f, 1.0f);
-            ImGui::SliderFloat("Music Volume", &volumeControls.musicVolume, 0.0f, 1.0f);
-            ImGui::SliderFloat("Sound FX Volume", &volumeControls.soundFXVolume, 0.0f, 1.0f);
-            ImGui::Separator();
+            ImGui::Text("Physics System Controls");
 
-            ImGui::Text("Position Test");
-
-            ImGui::Text("Direction: [%f, %f]", this->positioningTest.direction.x, this->positioningTest.direction.y);
-            ImGui::Text("Distance: %f", this->positioningTest.distance);
-            ImGui::Text("Actual Distance: %f", this->positioningTest.actualDistance);
-            ImGui::Text("Angle: %f", this->positioningTest.angle);
-            ImGui::Separator();
-            
-
-            ImGui::PushID("music_test");
-
-            ImGui::Text("Music Test");
-            // Yes this works :)
-            if(ImGui::BeginCombo("Music Player Names", currentName.data())) {
-                for(int i = 0; i < musicNamesMenuItems.size(); i++) {
-                    bool is_selected = (currentName == musicNamesMenuItems[i]);
-
-                    if(ImGui::Selectable(musicNamesMenuItems[i].data(), is_selected)) {
-                        currentName = musicNamesMenuItems[i];
-                        musicPlayer.stop();
-                        //musicPlayer.name = currentName;
-                        musicPlayer.setName(currentName);
-                        //musicPlayer.play(-1);
-                    }
-
-                    if(is_selected) {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-
-                ImGui::EndCombo();
-            }
-
-            if(musicPlayer.isPlaying()) {
-                if(ImGui::Button("Stop")) {
-                    musicPlayer.stop();
-                }
-
-                if(ImGui::Button("Rewind")) {
-                    musicPlayer.rewind();
-                }
-
-                if(musicPlayer.isPaused()) {
-                    if(ImGui::Button("Resume")) {
-                        musicPlayer.resume();
-                    }
-                } else {
-                    if(ImGui::Button("Pause")) {
-                        musicPlayer.pause();
-                    }
-                }
-
-                this->musicPosition = musicPlayer.getPosition();
-
-                ImGui::Text("%s/%s", musicPlayer.toCurrentPositionString().c_str(), musicPlayer.toMaxTimeString().c_str());
-                ImGui::SameLine();
-                if(ImGui::SliderFloat("Music Position", &this->musicPosition, 0.0f, musicPlayer.getMusicDuration(), "")) {
-                    // Do something
-                    musicPlayer.setPosition(this->musicPosition);
-                }
-            } else {
-                if(ImGui::Button("Play")) {
-                    musicPlayer.play(-1);
-                }
-            }
-
-            ImGui::PopID();
-
-            ImGui::Separator();
-
-            ImGui::PushID("sound_fx_test");
-
-            ImGui::Text("Sound FX Test");
-            if(ImGui::BeginCombo("Sound FX Names", this->currentSFXName.data())) {
-                for(int i = 0; i < this->soundFXNamesMenuItems.size(); i++) {
-                    bool is_selected = (this->currentSFXName == this->soundFXNamesMenuItems[i]);
-
-                    if(ImGui::Selectable(soundFXNamesMenuItems[i].data(), is_selected)) {
-                        currentSFXName = soundFXNamesMenuItems[i];
-                        soundFXPlayer.stop();
-                        //musicPlayer.name = currentName;
-                        soundFXPlayer.setName(currentSFXName);
-                        //musicPlayer.play(-1);
-                    }
-
-                    if(is_selected) {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            if(!soundFXPlayer.isPlaying()) {
-                if(ImGui::Button("Play")) {
-                    soundFXPlayer.play(-1, 0);
-                }
-            }
-
-            ImGui::PopID();
-
-            ImGui::Text("Sound FX 2D Test");
-
-            ImGui::PushID("sound_fx_2d_test");
-
-            if(!soundFXPlayer.isPlaying()) {
-                if(ImGui::Button("Play")) {
-                    soundFXPlayer.play(-1, 0, true);
-                }
-            }
-
-            ImGui::PopID();
-            
             ImGui::End();
 
             ImGui::EndFrame();
@@ -428,12 +236,6 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void release() {
-            soundFXPlayer.stop();
-            soundFXPlayer.release();
-
-            musicPlayer.stop();
-            musicPlayer.release();
-
             icon_array_texCoords.release();
             icon_array.release();
             icon_32.release();
