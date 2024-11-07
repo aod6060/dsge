@@ -5,5 +5,8 @@
 #include "../sys.h"
 
 
+namespace physics {
+
+}
 
 #endif

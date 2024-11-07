@@ -1,9 +1,4 @@
-#include "app.h"
-#include "../sys.h"
-#include "SDL.h"
-#include "SDL_pixels.h"
-#include "SDL_video.h"
-#include <fstream>
+#include "app_hidden.h"
 
 
 namespace app {

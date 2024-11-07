@@ -76,8 +76,6 @@ struct TestApplication : public app::IApplication {
 
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
-
-            //soundFXPlayer.play(-1, 0);
         }
 
         virtual void handleEvent(SDL_Event* e) {
