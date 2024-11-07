@@ -43,6 +43,7 @@ struct TestApplication : public app::IApplication {
         int32_t width;
         int32_t height;
 
+        
         virtual void init() {
 
             IMGUI_CHECKVERSION();
