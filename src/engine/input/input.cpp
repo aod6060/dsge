@@ -135,6 +135,19 @@ namespace input {
         return position;
     }
 
+    /*
+        This will try and keep it with in 640x480 positions.
+    */
+    glm::vec2 getConvertedPosition() {
+        float scaledWidth = (float)app::get_width() / (float)render::getWidth();
+        float scaledHeight = (float)app::get_height() / (float)render::getHeight();
+
+        return glm::vec2(
+            position.x / scaledWidth,
+            position.y / scaledHeight
+        );
+    }
+
     glm::vec2 getRelative() {
         return relative;
     }

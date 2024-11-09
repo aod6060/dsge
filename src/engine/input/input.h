@@ -295,6 +295,9 @@ namespace input {
     glm::vec2 getPosition();
     glm::vec2 getRelative();
 
+    // This converts it to render coords
+    glm::vec2 getConvertedPosition();
+
     void setGrab(bool grab);
     bool getGrab();
     void toggleGrab();
