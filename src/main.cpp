@@ -162,6 +162,8 @@ struct TestApplication : public app::IApplication {
         float time = 0.0f;
         float maxTime = 1.0f / 60.0f;
 
+        float jump = 5.0f;
+
         virtual void init() {
 
             IMGUI_CHECKVERSION();
@@ -217,7 +219,7 @@ struct TestApplication : public app::IApplication {
             
             // Create Player
             this->playerDef.position = b2Vec2(this->toBox2DPosition(glm::vec2(32.0f, 32.0f)));
-            this->playerDef.type = b2_kinematicBody;
+            this->playerDef.type = b2_dynamicBody;
 
             this->playerBody = world->CreateBody(&this->playerDef);
 
@@ -229,7 +231,7 @@ struct TestApplication : public app::IApplication {
             fd.shape = &this->playerShape;
             fd.density = 1.0f;
             fd.friction = 0.3f;
-            fd.isSensor = true;
+            fd.isSensor = false;
 
             this->playerBody->SetEnabled(true);
             this->playerBody->SetAwake(true);
@@ -295,7 +297,12 @@ struct TestApplication : public app::IApplication {
                 vel.x = 0;
             }
 
+            if(input::isKeyPressedOnce(input::Keyboard::KEYS_SPACE)) {
+                vel.y = jump;
+            }
+
             // Vertical
+            /*
             if(input::isKeyPressed(input::Keyboard::KEYS_UP)) {
                 vel.y = 3;
             } else if(input::isKeyPressed(input::Keyboard::KEYS_DOWN)) {
@@ -303,6 +310,7 @@ struct TestApplication : public app::IApplication {
             } else {
                 vel.y = 0;
             }
+            */
 
             // Normalize Velocity so it goes the same speed in the diaganal
             /*
@@ -331,6 +339,7 @@ struct TestApplication : public app::IApplication {
 
             ImGui::Text("Position in Meters: [%f, %f]", mp.x, mp.y);
 
+            ImGui::SliderFloat("Jump", &this->jump, 1.0f, 20.0f);
             ImGui::End();
 
             ImGui::EndFrame();
@@ -391,6 +400,8 @@ struct TestApplication : public app::IApplication {
             
             std::stringstream ss;
 
+            postion = this->toGLMPosition(this->playerBody->GetPosition());
+            
             ss << "Position: [" << postion.x << ", " << postion.y << "]";
 
             render::font::getSize("regular", ss.str(), &width, &height);
