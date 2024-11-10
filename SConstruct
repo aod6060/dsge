@@ -65,6 +65,7 @@ if platform == "win32":
             'jsoncpp.lib',
             'freetype.lib',
             'box2d.lib',
+            'chipmunk.lib',
             'lua_5_4_7.lib',
             'kernel32.lib',
             'user32.lib',
