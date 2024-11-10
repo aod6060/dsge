@@ -200,7 +200,7 @@ struct TestApplication : public app::IApplication {
 
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
-
+            
 
             this->world = new b2World(this->gravity);
 
