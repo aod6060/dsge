@@ -104,14 +104,14 @@ struct TestApplication : public app::IApplication {
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
 
-            this->gravity = cpv(0.0f, 100.0f);
+            this->gravity = cpv(0.0f, -100.0f);
 
             this->space = cpSpaceNew();
             cpSpaceSetGravity(space, this->gravity);
 
             // Platform (64.0f, 32.0f * 12) [32.0f * 16.0f, 32.0f]
             platformBody = cpBodyNewStatic();
-            cpBodySetPosition(platformBody, cpv(64.0f, 32.0f * 12.0f));
+            cpBodySetPosition(platformBody, cpv(64.0f, -(32.0f * 12.0f)));
             cpBodySetAngle(platformBody, 0.0f);
         
             box.l = 0.0f;
@@ -127,12 +127,13 @@ struct TestApplication : public app::IApplication {
             // Player
             
             // Box
-            cpFloat moment = cpMomentForBox(1.0f, 32.0f, 32.0f);
+            //cpFloat moment = cpMomentForBox(1.0f, 32.0f, 32.0f);
+            cpFloat moment = cpMomentForBox2(1.0f, cpBBNew(0.0f, 32.0f, 32.0f, 0.0f));
 
             //this->boxBody = cpBodyNew(1.0f, moment);
 
             this->boxBody = cpSpaceAddBody(space, cpBodyNew(1.0f, moment));
-            cpBodySetPosition(this->boxBody, cpv(128.0f, 32.0f));
+            cpBodySetPosition(this->boxBody, cpv(128.0f, -32.0f));
 
             //this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew(this->boxBody, 32.0f, 32.0f, 1.0f));
             this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew2(boxBody, cpBBNew(0.0f, 32.0f, 32.0f, 0.0f), 1.0f));
@@ -245,11 +246,11 @@ struct TestApplication : public app::IApplication {
 
             cpVect p = cpBodyGetPosition(this->boxBody);
 
-            this->drawSprite(&this->box_tex, glm::vec2(p.x, p.y), glm::vec2(32.0f), 0.0f);
+            this->drawSprite(&this->box_tex, glm::vec2(p.x, -p.y), glm::vec2(32.0f), 0.0f);
 
             p = cpBodyGetPosition(this->platformBody);
 
-            this->drawSprite(&this->brick_tex, glm::vec2(p.x, p.y), glm::vec2(32.0f * 16.0f, 32.0f), 0.0f);
+            this->drawSprite(&this->brick_tex, glm::vec2(p.x, -p.y), glm::vec2(32.0f * 16.0f, 32.0f), 0.0f);
 
             this->drawSprite(&this->icon_32, this->postion, glm::vec2(32.0f, 32.0f), 0.0f);
 
