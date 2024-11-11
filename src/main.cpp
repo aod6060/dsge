@@ -117,7 +117,7 @@ struct TestApplication : public app::IApplication {
             box.l = 0.0f;
             box.r = 32.0f * 16.0f;
             box.t = 0.0f;
-            box.b = 32.0f;
+            box.b = -32.0f;
 
             std::cout << "Platform" << "\n";
 
@@ -130,7 +130,7 @@ struct TestApplication : public app::IApplication {
             
             // Box
             //cpFloat moment = cpMomentForBox(1.0f, 32.0f, 32.0f);
-            cpFloat moment = cpMomentForBox2(1.0f, cpBBNew(0.0f, 32.0f, 32.0f, 0.0f));
+            cpFloat moment = cpMomentForBox2(1.0f, cpBBNew(0.0f, -32.0f, 32.0f, 0.0f));
 
             //this->boxBody = cpBodyNew(1.0f, moment);
 
@@ -139,7 +139,7 @@ struct TestApplication : public app::IApplication {
             cpBodySetPosition(this->boxBody, cpv(128.0f, 32.0f));
 
             //this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew(this->boxBody, 32.0f, 32.0f, 1.0f));
-            this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew2(boxBody, cpBBNew(0.0f, 32.0f, 32.0f, 0.0f), 1.0f));
+            this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew2(boxBody, cpBBNew(0.0f, -32.0f, 32.0f, 0.0f), 1.0f));
 
 
             cpShapeSetFriction(this->boxShape, 0.7f);
