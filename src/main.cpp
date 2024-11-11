@@ -104,14 +104,14 @@ struct TestApplication : public app::IApplication {
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
 
-            this->gravity = cpv(0.0f, -100.0f);
+            this->gravity = cpv(0.0f, 100.0f);
 
             this->space = cpSpaceNew();
             cpSpaceSetGravity(space, this->gravity);
 
             // Platform (64.0f, 32.0f * 12) [32.0f * 16.0f, 32.0f]
             platformBody = cpBodyNewStatic();
-            cpBodySetPosition(platformBody, cpv(64.0f, -(32.0f * 12.0f)));
+            cpBodySetPosition(platformBody, cpv(64.0f, (32.0f * 12.0f)));
             cpBodySetAngle(platformBody, 0.0f);
         
             box.l = 0.0f;
@@ -119,10 +119,12 @@ struct TestApplication : public app::IApplication {
             box.t = 0.0f;
             box.b = 32.0f;
 
+            std::cout << "Platform" << "\n";
+
             platformShape = cpBoxShapeNew2(this->platformBody, box, 1.0f);
             //platformShape = cpBoxShapeNew(this->platformBody, 32.0f * 16.0f, 32.0f, 1.0f);
             cpSpaceAddShape(this->space, this->platformShape);
-            //cpShapeSetFriction(this->platformShape, 1.0f);
+            cpShapeSetFriction(this->platformShape, 1.0f);
             
             // Player
             
@@ -132,14 +134,15 @@ struct TestApplication : public app::IApplication {
 
             //this->boxBody = cpBodyNew(1.0f, moment);
 
+            std::cout << "Box" << "\n";
             this->boxBody = cpSpaceAddBody(space, cpBodyNew(1.0f, moment));
-            cpBodySetPosition(this->boxBody, cpv(128.0f, -32.0f));
+            cpBodySetPosition(this->boxBody, cpv(128.0f, 32.0f));
 
             //this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew(this->boxBody, 32.0f, 32.0f, 1.0f));
             this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew2(boxBody, cpBBNew(0.0f, 32.0f, 32.0f, 0.0f), 1.0f));
 
 
-            //cpShapeSetFriction(this->boxShape, 0.7f);
+            cpShapeSetFriction(this->boxShape, 0.7f);
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -194,6 +197,8 @@ struct TestApplication : public app::IApplication {
                     );
 
                     cpBodySetPosition(this->boxBody, cpv(mc.x, mc.y));
+                    cpBodyActivate(this->boxBody);
+                    
                 }
             }
             cpSpaceStep(space, 1.0f / 60.0f);
@@ -246,11 +251,11 @@ struct TestApplication : public app::IApplication {
 
             cpVect p = cpBodyGetPosition(this->boxBody);
 
-            this->drawSprite(&this->box_tex, glm::vec2(p.x, -p.y), glm::vec2(32.0f), 0.0f);
+            this->drawSprite(&this->box_tex, glm::vec2(p.x, p.y), glm::vec2(32.0f), 0.0f);
 
             p = cpBodyGetPosition(this->platformBody);
 
-            this->drawSprite(&this->brick_tex, glm::vec2(p.x, -p.y), glm::vec2(32.0f * 16.0f, 32.0f), 0.0f);
+            this->drawSprite(&this->brick_tex, glm::vec2(p.x, p.y), glm::vec2(32.0f * 16.0f, 32.0f), 0.0f);
 
             this->drawSprite(&this->icon_32, this->postion, glm::vec2(32.0f, 32.0f), 0.0f);
 
