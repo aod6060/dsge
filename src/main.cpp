@@ -164,6 +164,8 @@ struct TestApplication : public app::IApplication {
 
         float jump = 5.0f;
 
+        bool isClickBox = false;
+
         virtual void init() {
 
             IMGUI_CHECKVERSION();
@@ -268,15 +270,9 @@ struct TestApplication : public app::IApplication {
                 isArrayTest = !isArrayTest;
             }
 
-            if(this->time >= this->maxTime) {
-                world->Step(1.0f / 60.0f, 8, 3);
+            world->Step(1.0f / 60.0f, 8, 3);
 
-                this->time = 0.0f;
-            } else {
-                this->time += delta;
-            }
-
-            if(input::isMouseButtonPressedOnce(input::MouseButtons::MBS_LEFT)) {
+            if(isClickBox && input::isMouseButtonPressedOnce(input::MouseButtons::MBS_LEFT) && !(input::isKeyPressed(input::Keyboard::KEYS_LCTRL))) {
                 glm::vec2 mc = input::getConvertedPosition();
 
                 b2Vec2 pmc = this->toBox2DPosition(mc);
@@ -340,8 +336,9 @@ struct TestApplication : public app::IApplication {
             ImGui::Text("Position in Meters: [%f, %f]", mp.x, mp.y);
 
             ImGui::SliderFloat("Jump", &this->jump, 1.0f, 20.0f);
+            ImGui::Checkbox("Is Click Box Location?", &this->isClickBox);
             ImGui::End();
-
+            
             ImGui::EndFrame();
 
             ImGui::Render();
