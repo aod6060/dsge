@@ -1,4 +1,5 @@
 #include "chipmunk/chipmunk_types.h"
+#include "chipmunk/cpBB.h"
 #include "engine/app/app.h"
 #include "engine/input/input.h"
 #include "engine/render/font/font.h"
@@ -59,6 +60,8 @@ struct TestApplication : public app::IApplication {
         cpShape* platformShape = nullptr;
         cpBody* platformBody = nullptr;
         // Player
+        cpShape* playerShape = nullptr;
+        cpBody* playerBody = nullptr;
         // Box
         cpShape* boxShape = nullptr;
         cpBody* boxBody = nullptr;
@@ -68,6 +71,19 @@ struct TestApplication : public app::IApplication {
         float maxTime = 1.0f / 60.0f;
 
         bool isMouseEnabled = false;
+
+        cpBB createAABB(float left, float top, float bottom, float right) {
+            return cpBBNew(left, bottom, right, top);
+        }
+
+        cpVect toCPPosition(const glm::vec2& m) {
+            return cpv(m.x, -m.y);
+        }
+
+        glm::vec2 toGLMPosition(const cpVect& m) {
+            return glm::vec2(m.x, -m.y);
+        }
+
 
         virtual void init() {
             IMGUI_CHECKVERSION();
@@ -104,45 +120,42 @@ struct TestApplication : public app::IApplication {
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
 
-            this->gravity = cpv(0.0f, 100.0f);
+            this->gravity = cpv(0.0f, -100.0f);
 
             this->space = cpSpaceNew();
             cpSpaceSetGravity(space, this->gravity);
 
-            // Platform (64.0f, 32.0f * 12) [32.0f * 16.0f, 32.0f]
+
+            // Platform
             platformBody = cpBodyNewStatic();
-            cpBodySetPosition(platformBody, cpv(64.0f, (32.0f * 12.0f)));
+            cpBodySetPosition(platformBody, this->toCPPosition(glm::vec2(320.0f, 32.0f * 12.0f)));
             cpBodySetAngle(platformBody, 0.0f);
-        
-            box.l = 0.0f;
-            box.r = 32.0f * 16.0f;
-            box.t = 0.0f;
-            box.b = -32.0f;
+            //platformShape = cpBoxShapeNew2(platformBody, createAABB(0.0f, 0.0f, 32.0f, 32.0f * 16.0f), 1.0f);
+            platformShape = cpBoxShapeNew(platformBody, 32.0f * 16.0f, 32.0f, 1.0f);
+            cpShapeSetFriction(platformShape, 0.5f);
+            cpSpaceAddShape(space, platformShape);
 
-            std::cout << "Platform" << "\n";
-
-            platformShape = cpBoxShapeNew2(this->platformBody, box, 1.0f);
-            //platformShape = cpBoxShapeNew(this->platformBody, 32.0f * 16.0f, 32.0f, 1.0f);
-            cpSpaceAddShape(this->space, this->platformShape);
-            cpShapeSetFriction(this->platformShape, 1.0f);
-            
-            // Player
-            
             // Box
-            //cpFloat moment = cpMomentForBox(1.0f, 32.0f, 32.0f);
-            cpFloat moment = cpMomentForBox2(1.0f, cpBBNew(0.0f, -32.0f, 32.0f, 0.0f));
+            cpFloat moment = cpMomentForBox(1.0f, 32.0f, 32.0f);
+            boxBody = cpBodyNew(1.0f, moment);
+            cpBodySetPosition(boxBody, this->toCPPosition(glm::vec2(128.0f, 32.0f)));
+            cpBodySetAngle(boxBody, 0.0f);
+            cpSpaceAddBody(space, boxBody);
+            //boxShape = cpBoxShapeNew2(this->boxBody, createAABB(0.0f, 0.0f, 32.0f, 32.0f), 1.0f);
+            boxShape = cpBoxShapeNew(boxBody, 32.0f, 32.0f, 1.0f);
+            cpShapeSetFriction(this->boxShape, 0.5f);
+            cpSpaceAddShape(space, boxShape);
 
-            //this->boxBody = cpBodyNew(1.0f, moment);
-
-            std::cout << "Box" << "\n";
-            this->boxBody = cpSpaceAddBody(space, cpBodyNew(1.0f, moment));
-            cpBodySetPosition(this->boxBody, cpv(128.0f, 32.0f));
-
-            //this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew(this->boxBody, 32.0f, 32.0f, 1.0f));
-            this->boxShape = cpSpaceAddShape(space, cpBoxShapeNew2(boxBody, cpBBNew(0.0f, -32.0f, 32.0f, 0.0f), 1.0f));
-
-
-            cpShapeSetFriction(this->boxShape, 0.7f);
+            // Player
+            moment = cpMomentForBox(1.0f, 32.0f, 32.0f);
+            playerBody = cpBodyNew(1.0f, moment);
+            cpBodySetPosition(playerBody, this->toCPPosition(glm::vec2(32.0f, 32.0f)));
+            cpBodySetAngle(playerBody, 0.0f);
+            cpSpaceAddBody(space, playerBody);
+            //playerShape = cpBoxShapeNew2(playerBody, this->createAABB(0.0f, 0.0f, 32.0f, 32.0f), 1.0f);
+            playerShape = cpBoxShapeNew(playerBody, 32.0f, 32.0f, 1.0f);
+            cpShapeSetFriction(playerShape, 0.5f);
+            cpSpaceAddShape(space, playerShape);
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -150,24 +163,6 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void update(float delta) {
-            // Horizontal
-            if(input::isKeyPressed(input::Keyboard::KEYS_LEFT)) {
-                this->velocity.x = -1;
-            } else if(input::isKeyPressed(input::Keyboard::KEYS_RIGHT)) {
-                this->velocity.x = 1;
-            } else {
-                this->velocity.x = 0;
-            }
-
-            // Vertical
-            if(input::isKeyPressed(input::Keyboard::KEYS_UP)) {
-                this->velocity.y = -1;
-            } else if(input::isKeyPressed(input::Keyboard::KEYS_DOWN)) {
-                this->velocity.y = 1;
-            } else {
-                this->velocity.y = 0;
-            }
-
             // Normalize Velocity so it goes the same speed in the diaganal
             if(this->velocity != glm::zero<glm::vec2>()) {
                 this->velocity = glm::normalize(this->velocity);
@@ -196,12 +191,32 @@ struct TestApplication : public app::IApplication {
                         mp.y / scaledHeight
                     );
 
-                    cpBodySetPosition(this->boxBody, cpv(mc.x, mc.y));
+                    cpBodySetPosition(this->boxBody, toCPPosition(mc));
                     cpBodyActivate(this->boxBody);
                     
                 }
             }
+
             cpSpaceStep(space, 1.0f / 60.0f);
+
+            // Horizontal
+
+            cpVect v = cpBodyGetVelocity(this->playerBody);
+
+            if(input::isKeyPressed(input::Keyboard::KEYS_LEFT)) {
+                v.x = -64.0f;
+            } else if(input::isKeyPressed(input::Keyboard::KEYS_RIGHT)) {
+                v.x = 64.0f;
+            } else {
+                v.x = 0.0f;
+            }
+
+
+            if(input::isKeyPressedOnce(input::Keyboard::KEYS_SPACE)) {
+                v.y = 128.0f;
+            }
+
+            cpBodySetVelocity(this->playerBody, v);
         }
 
         void renderMenu() {
@@ -235,7 +250,7 @@ struct TestApplication : public app::IApplication {
             );
 
             tex->bind(GL_TEXTURE0);
-            render::draw();
+            render::draw_center();
             tex->unbind(GL_TEXTURE0);
 
             render::endShader();
@@ -249,15 +264,19 @@ struct TestApplication : public app::IApplication {
             render::setView(glm::mat4(1.0f));
             render::updateCameraBuffer();
 
-            cpVect p = cpBodyGetPosition(this->boxBody);
+            //cpVect p = cpBodyGetPosition(this->boxBody);
+            glm::vec2 p = toGLMPosition(cpBodyGetPosition(this->boxBody));
 
-            this->drawSprite(&this->box_tex, glm::vec2(p.x, p.y), glm::vec2(32.0f), 0.0f);
+            this->drawSprite(&this->box_tex, p, glm::vec2(32.0f), 0.0f);
 
-            p = cpBodyGetPosition(this->platformBody);
+            //p = cpBodyGetPosition(this->platformBody);
+            p = toGLMPosition(cpBodyGetPosition(this->platformBody));
 
-            this->drawSprite(&this->brick_tex, glm::vec2(p.x, p.y), glm::vec2(32.0f * 16.0f, 32.0f), 0.0f);
+            this->drawSprite(&this->brick_tex, p, glm::vec2(32.0f * 16.0f, 32.0f), 0.0f);
 
-            this->drawSprite(&this->icon_32, this->postion, glm::vec2(32.0f, 32.0f), 0.0f);
+            p = toGLMPosition(cpBodyGetPosition(this->playerBody));
+
+            this->drawSprite(&this->icon_32, p, glm::vec2(32.0f, 32.0f), 0.0f);
 
             render::endFrame();
 
@@ -294,15 +313,32 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void release() {
-            cpSpaceRemoveShape(this->space, this->boxShape);
-            cpSpaceRemoveBody(this->space, this->boxBody);
-            cpSpaceRemoveShape(this->space, this->platformShape);
+            // Player
+            cpSpaceRemoveShape(space, this->playerShape);
+            cpSpaceRemoveBody(space, this->playerBody);
+            cpShapeFree(this->playerShape);
+            cpBodyFree(this->playerBody);
 
+            // Box
+            cpSpaceRemoveShape(space, this->boxShape);
+            cpSpaceRemoveBody(space, this->boxBody);
             cpShapeFree(this->boxShape);
             cpBodyFree(this->boxBody);
 
+            // Platform
+            cpSpaceRemoveShape(space, this->platformShape);
             cpShapeFree(this->platformShape);
             cpBodyFree(this->platformBody);
+
+            //cpSpaceRemoveShape(this->space, this->boxShape);
+            //cpSpaceRemoveBody(this->space, this->boxBody);
+            //cpSpaceRemoveShape(this->space, this->platformShape);
+
+            //cpShapeFree(this->boxShape);
+            //cpBodyFree(this->boxBody);
+
+            // cpShapeFree(this->platformShape);
+            // cpBodyFree(this->platformBody);
             // Freeing Chipmunk Stuff
             cpSpaceFree(this->space);
             // Forget to release textures :(

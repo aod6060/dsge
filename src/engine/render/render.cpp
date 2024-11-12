@@ -21,6 +21,8 @@ namespace render {
 
     // Default Vertex Buffer
     glw::VertexBuffer defVertices;
+    glw::VertexBuffer defCenterVertices;
+
     // Default TexCoord Buffer
     glw::VertexBuffer defTexCoords;
     // Default TexCoord 3D Buffer
@@ -56,6 +58,13 @@ namespace render {
         defVertices.add3(0.0f, 1.0f, 0.0f);
         defVertices.add3(1.0f, 1.0f, 0.0f);
         defVertices.update();
+
+        defCenterVertices.init();
+        defCenterVertices.add3(-0.5f, -0.5f, 0.0f);
+        defCenterVertices.add3(0.5f, -0.5f, 0.0f);
+        defCenterVertices.add3(-0.5f, 0.5f, 0.0f);
+        defCenterVertices.add3(0.5f, 0.5f, 0.0f);
+        defCenterVertices.update();
 
         defTexCoords.init();
         defTexCoords.add2(0.0f, 0.0f);
@@ -119,6 +128,7 @@ namespace render {
 
         defTexCoords3D.release();
         defTexCoords.release();
+        defCenterVertices.release();
         defVertices.release();
 
         fontPostprocessing.release();
@@ -244,6 +254,15 @@ namespace render {
         }
     }
 
+    void draw_center() {
+        if(shaderType == ShaderType::ST_MAIN) {
+            draw(&mainShader, defCenterVertices, defTexCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
+            draw(&tex2DArrayShader, defCenterVertices, defTexCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_FONT) {
+            draw(&fontShader, defCenterVertices, defTexCoords, defIndex);
+        }
+    }
 
     void draw(glw::VertexBuffer& texCoords) {
         if(shaderType == ShaderType::ST_MAIN) {
@@ -254,6 +273,8 @@ namespace render {
             draw(&fontShader, defVertices, texCoords, defIndex);
         }
     }
+
+
 
     // Sending a custom vertices, texCoords, and indencies to 
     // the render
