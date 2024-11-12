@@ -72,6 +72,8 @@ struct TestApplication : public app::IApplication {
 
         bool isMouseEnabled = false;
 
+        float value = 4.0f;
+
         cpBB createAABB(float left, float top, float bottom, float right) {
             return cpBBNew(left, bottom, right, top);
         }
@@ -213,7 +215,7 @@ struct TestApplication : public app::IApplication {
 
 
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_SPACE)) {
-                v.y = 128.0f;
+                v.y = 32 * value;
             }
 
             cpBodySetVelocity(this->playerBody, v);
@@ -229,6 +231,8 @@ struct TestApplication : public app::IApplication {
             ImGui::Text("Physics System Controls");
 
             ImGui::Checkbox("Is Box Mouse Enabled", &this->isMouseEnabled);
+
+            ImGui::SliderFloat("Jump", &value, 1.0f, 10.0f);
 
             ImGui::End();
 
@@ -283,7 +287,7 @@ struct TestApplication : public app::IApplication {
             
             std::stringstream ss;
 
-            ss << "Position: [" << postion.x << ", " << postion.y << "]";
+            ss << "Position: [" << p.x << ", " << p.y << "]";
 
             render::font::getSize("regular", ss.str(), &width, &height);
             render::font::update("regular", ss.str());
@@ -298,7 +302,7 @@ struct TestApplication : public app::IApplication {
                 glm::scale(glm::mat4(1.0f), glm::vec3((float)width, (float)height, 0.0f))
             );
 
-            render::font_postprocess::setColor(glm::vec3(0.0f, 1.0f, 0.0f));
+            render::font_postprocess::setColor(glm::vec3(1.0f, 1.0f, 0.0f));
 
             render::font::bind(GL_TEXTURE0);
             render::font_postprocess::render();
