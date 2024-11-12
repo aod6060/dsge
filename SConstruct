@@ -120,6 +120,7 @@ elif platform == "linux":
             'brotlidec',
             'brotlienc',
             'box2d',
+            'chipmunk',
             'lua'
         ],
         CPPFLAGS=[
