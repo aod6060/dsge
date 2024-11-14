@@ -64,7 +64,7 @@ if platform == "win32":
             'glew32.lib',
             'jsoncpp.lib',
             'freetype.lib',
-            'box2d.lib',
+            'chipmunk.lib',
             'lua_5_4_7.lib',
             'kernel32.lib',
             'user32.lib',
@@ -118,7 +118,7 @@ elif platform == "linux":
             'brotlicommon',
             'brotlidec',
             'brotlienc',
-            'box2d',
+            'chipmunk',
             'lua'
         ],
         CPPFLAGS=[
