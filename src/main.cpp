@@ -1,5 +1,7 @@
+#include "chipmunk/chipmunk_types.h"
 #include "engine/app/app.h"
 #include "engine/input/input.h"
+#include "engine/physics/physics.h"
 #include "engine/render/font/font.h"
 #include "engine/render/glw/glw.h"
 #include "engine/render/render.h"
@@ -24,6 +26,9 @@ struct TestApplication : public app::IApplication {
         int i = 0;
 
         render::glw::Texture2D icon_32;
+        render::glw::Texture2D box_tex;
+        render::glw::Texture2D brick_tex;
+
         render::glw::Texture2DArray icon_array;
 
         // Custom TexCoords for texture array example
@@ -35,13 +40,24 @@ struct TestApplication : public app::IApplication {
 
         float speed = 64.0f;
 
-
         glm::vec2 soundPosition;
 
         bool isArrayTest = false;
 
         int32_t width;
         int32_t height;
+
+        // Platform
+        physics::Body platBody;
+        physics::Shape platShape;
+
+        // Box
+        physics::Body boxBody;
+        physics::Shape boxShape;
+
+        // Player
+        physics::Body playerBody;
+        physics::Shape playerShape;
 
         virtual void init() {
 
@@ -59,6 +75,8 @@ struct TestApplication : public app::IApplication {
 
 
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
+            render::glw::Texture2D::createTexture2DFromFile(&this->box_tex, "data/icon/Box.png");
+            render::glw::Texture2D::createTexture2DFromFile(&this->brick_tex, "data/icon/Brick.png");
 
             render::glw::Texture2DArray::createTexture2DArrayFromFiles(&icon_array, {
                 "data/icon/icon_32.png",
@@ -76,6 +94,34 @@ struct TestApplication : public app::IApplication {
 
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
+
+            physics::setGravity(cpv(0.0f, -100.0f));
+
+            // Platform
+            platBody.setBodyType(physics::BodyType::BT_STATIC);
+            platBody.init();
+            platBody.setPosition(cpv(320.0f, -(12.0f * 32.0f)));
+
+            platShape.initBox(&platBody, 32.0f * 16.0f, 32.0f);
+            platShape.setFriction(0.5f);
+            physics::addShape(&platShape);
+
+            // Box
+            boxBody.setBodyType(physics::BodyType::BT_DYNAMIC);
+            boxBody.setMass(1.0f);
+            boxBody.setMoment(physics::toBoxMoment(1.0f, 32.0f, 32.0f));
+            boxBody.init();
+            boxBody.setPosition(cpv(128.0f, -32.0f));
+            boxBody.setAngle(glm::radians(45.0f));
+
+            physics::addBody(&boxBody);
+
+            boxShape.initBox(&boxBody, 32.0f, 32.0f);
+            boxShape.setFriction(0.5f);
+            physics::addShape(&boxShape);
+
+            // Player
+            
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -83,6 +129,9 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void update(float delta) {
+
+            physics::step(1.0f / 60.0f);
+
             // Horizontal
             if(input::isKeyPressed(input::Keyboard::KEYS_LEFT)) {
                 this->velocity.x = -1;
@@ -108,11 +157,6 @@ struct TestApplication : public app::IApplication {
 
             // Add it to the postion
             this->postion += velocity * speed * delta;
-
-
-            if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
-                isArrayTest = !isArrayTest;
-            }
         }
 
         void renderMenu() {
@@ -133,6 +177,23 @@ struct TestApplication : public app::IApplication {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
+        void drawTexture(render::glw::Texture2D& tex, const glm::vec2& p, float r, const glm::vec2& s) {
+            render::startShader(render::ShaderType::ST_MAIN);
+
+            //render::setView(glm::mat4(1.0f));
+            render::setModel(
+                glm::translate(glm::mat4(1.0f), glm::vec3(p, 0.0f)) *
+                glm::rotate(glm::mat4(1.0f), r, glm::vec3(0.0f, 0.0f, 1.0f)) *
+                glm::scale(glm::mat4(1.0f), glm::vec3(s, 0.0f))
+            );
+
+            tex.bind(GL_TEXTURE0);
+            render::draw_center();
+            tex.unbind(GL_TEXTURE0);
+
+            render::endShader();
+        }
+
         virtual void render() {
             render::startFrame();
 
@@ -141,38 +202,19 @@ struct TestApplication : public app::IApplication {
             render::setView(glm::mat4(1.0f));
             render::updateCameraBuffer();
 
+            cpVect p = this->boxBody.getPosition();
+            float r = this->boxBody.getAngle();
 
-            if(isArrayTest) {
-                render::startShader(render::ShaderType::ST_TEXTURE2D_ARRAY);
+            // Draw Box
+            drawTexture(this->box_tex, glm::vec2(p.x, -p.y), r, glm::vec2(32.0f, 32.0f));
 
-                //render::setView(glm::mat4(1.0f));
-                render::setModel(
-                    glm::translate(glm::mat4(1.0f), glm::vec3(this->postion, 0.0f)) *
-                    glm::scale(glm::mat4(1.0f), glm::vec3(32.0f, 32.0f, 0.0f))
-                );
+            p = this->platBody.getPosition();
 
-                icon_array.bind(GL_TEXTURE0);
-                render::draw(icon_array_texCoords);
-                icon_array.unbind(GL_TEXTURE0);
+            // Draw Brick
+            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
-                render::endShader();
-
-            } else {
-                render::startShader(render::ShaderType::ST_MAIN);
-
-                //render::setView(glm::mat4(1.0f));
-                render::setModel(
-                    glm::translate(glm::mat4(1.0f), glm::vec3(this->postion, 0.0f)) *
-                    glm::scale(glm::mat4(1.0f), glm::vec3(32.0f, 32.0f, 0.0f))
-                );
-
-                icon_32.bind(GL_TEXTURE0);
-                render::draw();
-                icon_32.unbind(GL_TEXTURE0);
-
-                render::endShader();
-            }
-            
+            // Draw Player
+            drawTexture(this->icon_32, this->postion, 0.0f, glm::vec2(32.0f, 32.0f));
             render::endFrame();
 
             
@@ -208,8 +250,23 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void release() {
+
+            // Player
+            // Box
+            physics::removeShape(&this->boxShape);
+            physics::removeBody(&this->boxBody);
+            this->boxShape.release();
+            this->boxBody.release();
+
+            // Platform
+            physics::removeShape(&this->platShape);
+            platShape.release();
+            platBody.release();
+
             icon_array_texCoords.release();
             icon_array.release();
+            brick_tex.release();
+            box_tex.release();
             icon_32.release();
         }
 
