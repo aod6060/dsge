@@ -42,6 +42,10 @@ namespace physics {
         return cpMomentForCircle(mass, radius1, radius2, offset);
     }
 
+    void step(float dt) {
+        cpSpaceStep(space, dt);
+    }
+
     // Hidden Functions
     cpSpace* getSpace() {
         return space;

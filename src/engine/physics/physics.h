@@ -76,12 +76,14 @@ namespace physics {
 
         void setSurfaceVelocity(const cpVect& v);
         cpVect getSurfaceVelocity();
-        
+
     };
 
     void init();
     void release();
 
+    void step(float dt);
+    
     void setGravity(const cpVect& v);
 
     void addBody(Body* body);
