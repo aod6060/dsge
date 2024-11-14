@@ -5,4 +5,5 @@ def source(file):
 
 env["source_files"] += [
     source("physics.cpp"),
+    source("physics_body.cpp")
 ]

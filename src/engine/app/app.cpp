@@ -68,6 +68,7 @@ namespace app {
         input::init();
         render::init();
         sound::init();
+        physics::init();
 
         if(config->app) {
             config->app->init();
@@ -121,6 +122,7 @@ namespace app {
             config->app->release();
         }
         
+        physics::release();
         sound::release();
         render::release();
         input::release();

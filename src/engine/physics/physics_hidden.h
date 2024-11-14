@@ -6,6 +6,7 @@
 
 
 namespace physics {
+    cpSpace* getSpace();
 
 }
 

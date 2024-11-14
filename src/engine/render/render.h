@@ -36,6 +36,9 @@ namespace render {
 
     void draw();
 
+    // Draw Centered
+    void draw_center();
+    
     // Sending a custom texCoord buffer to the render
     void draw(glw::VertexBuffer& texCoords);
 
