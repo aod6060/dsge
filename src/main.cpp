@@ -112,7 +112,7 @@ struct TestApplication : public app::IApplication {
             boxBody.setMoment(physics::toBoxMoment(1.0f, 32.0f, 32.0f));
             boxBody.init();
             boxBody.setPosition(cpv(128.0f, -32.0f));
-            boxBody.setAngle(glm::radians(45.0f));
+            boxBody.setAngle(glm::radians(35.0f));
 
             physics::addBody(&boxBody);
 
@@ -121,7 +121,20 @@ struct TestApplication : public app::IApplication {
             physics::addShape(&boxShape);
 
             // Player
-            
+            playerBody.setBodyType(physics::BodyType::BT_DYNAMIC);
+            playerBody.setMass(1.0f);
+            playerBody.setMoment(physics::toBoxMoment(1.0f, 32.0f, 32.0f));
+            playerBody.init();
+            playerBody.setPosition(cpv(256.0f, -32.0f));
+            playerBody.setAngle(0.0f); // To keep the player from rotating set it to zero 
+            physics::addBody(&this->playerBody);
+
+            playerShape.initBox(&this->playerBody, 32.0f, 32.0f);
+            playerShape.setFriction(0.5f);
+            physics::addShape(&this->playerShape);
+
+            // In the update function
+
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -132,31 +145,28 @@ struct TestApplication : public app::IApplication {
 
             physics::step(1.0f / 60.0f);
 
+            float speed = 64.0f;
+            float jump = 32.0f * 4.0f;
+            cpVect vel = playerBody.getVelocity();
+
             // Horizontal
             if(input::isKeyPressed(input::Keyboard::KEYS_LEFT)) {
-                this->velocity.x = -1;
+                vel.x = -1;
             } else if(input::isKeyPressed(input::Keyboard::KEYS_RIGHT)) {
-                this->velocity.x = 1;
+                vel.x = 1;
             } else {
-                this->velocity.x = 0;
+                vel.x = 0;
             }
 
-            // Vertical
-            if(input::isKeyPressed(input::Keyboard::KEYS_UP)) {
-                this->velocity.y = -1;
-            } else if(input::isKeyPressed(input::Keyboard::KEYS_DOWN)) {
-                this->velocity.y = 1;
-            } else {
-                this->velocity.y = 0;
+            if(input::isKeyPressedOnce(input::Keyboard::KEYS_SPACE)) {
+                vel.y = jump;
             }
 
-            // Normalize Velocity so it goes the same speed in the diaganal
-            if(this->velocity != glm::zero<glm::vec2>()) {
-                this->velocity = glm::normalize(this->velocity);
-            }
+            vel.x *= speed;
 
-            // Add it to the postion
-            this->postion += velocity * speed * delta;
+            playerBody.setVelocity(vel);
+            playerBody.setAngularVelocity(0.0f);
+            playerBody.setAngle(0.0f);
         }
 
         void renderMenu() {
@@ -213,8 +223,10 @@ struct TestApplication : public app::IApplication {
             // Draw Brick
             drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
+            p = this->playerBody.getPosition();
+
             // Draw Player
-            drawTexture(this->icon_32, this->postion, 0.0f, glm::vec2(32.0f, 32.0f));
+            drawTexture(this->icon_32, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
             render::endFrame();
 
             
@@ -252,6 +264,11 @@ struct TestApplication : public app::IApplication {
         virtual void release() {
 
             // Player
+            physics::removeShape(&this->playerShape);
+            physics::removeBody(&this->playerBody);
+            this->playerShape.release();
+            this->playerBody.release();
+
             // Box
             physics::removeShape(&this->boxShape);
             physics::removeBody(&this->boxBody);
