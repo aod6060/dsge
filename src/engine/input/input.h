@@ -275,6 +275,11 @@ namespace input {
         MBS_MAX_SIZE
     };
 
+    struct InputMapping {
+        int input;
+        bool isMouse;
+    };
+
     void init();
     void handleEvent(SDL_Event* e);
     void update(float delta);
@@ -298,6 +303,13 @@ namespace input {
     void setGrab(bool grab);
     bool getGrab();
     void toggleGrab();
+
+    // Input Mapping
+    void initInputMapping(InputMapping& mapping, int input, bool isMouse=false);
+    bool isInputMappingReleased(InputMapping& mapping);
+    bool isInputMappingPressedOnce(InputMapping& mapping);
+    bool isInputMappingPressed(InputMapping& mapping);
+    bool isInputMappingReleasedOnce(InputMapping& mapping);
 }
 
 #endif

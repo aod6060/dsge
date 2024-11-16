@@ -81,6 +81,11 @@ struct TestApplication : public app::IApplication {
 
         cpVect gravity;
 
+        input::InputMapping moveLeft;
+        input::InputMapping moveRight;
+
+        input::InputMapping jumpIM;
+
         virtual void init() {
 
             IMGUI_CHECKVERSION();
@@ -195,6 +200,10 @@ struct TestApplication : public app::IApplication {
             physics::addShape(&ballShape);
             // In the update function
 
+            input::initInputMapping(moveLeft, input::Keyboard::KEYS_LEFT);
+            input::initInputMapping(moveRight, input::Keyboard::KEYS_RIGHT);
+            input::initInputMapping(jumpIM, input::Keyboard::KEYS_SPACE);
+
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -208,15 +217,15 @@ struct TestApplication : public app::IApplication {
             cpVect vel = playerBody.getVelocity();
 
             // Horizontal
-            if(input::isKeyPressed(input::Keyboard::KEYS_LEFT)) {
+            if(input::isInputMappingPressed(moveLeft)) {
                 vel.x = -1;
-            } else if(input::isKeyPressed(input::Keyboard::KEYS_RIGHT)) {
+            } else if(input::isInputMappingPressed(moveRight)) {
                 vel.x = 1;
             } else {
                 vel.x = 0;
             }
 
-            if(input::isKeyPressedOnce(input::Keyboard::KEYS_SPACE)) {
+            if(input::isInputMappingPressedOnce(jumpIM)) {
                 vel.y = jump;
             }
 
@@ -244,7 +253,7 @@ struct TestApplication : public app::IApplication {
             ImGui::Text("Physics System Controls");
 
             ImGui::SliderFloat2("Gravity", &g[0], -100.0f, 100.0f);
-            
+
             ImGui::End();
 
             ImGui::EndFrame();
