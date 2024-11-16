@@ -28,6 +28,7 @@ struct TestApplication : public app::IApplication {
         render::glw::Texture2D icon_32;
         render::glw::Texture2D box_tex;
         render::glw::Texture2D brick_tex;
+        render::glw::Texture2D ball_tex;
 
         render::glw::Texture2DArray icon_array;
 
@@ -51,6 +52,19 @@ struct TestApplication : public app::IApplication {
         physics::Body platBody;
         physics::Shape platShape;
 
+        // Walls
+        // Left
+        physics::Body leftWallBody;
+        physics::Shape leftWallShape;
+
+        // Right
+        physics::Body rightWallBody;
+        physics::Shape rightWallShape;
+
+        // Ceiling
+        physics::Body ceilingBody;
+        physics::Shape ceilingShape;
+
         // Box
         physics::Body boxBody;
         physics::Shape boxShape;
@@ -58,6 +72,14 @@ struct TestApplication : public app::IApplication {
         // Player
         physics::Body playerBody;
         physics::Shape playerShape;
+
+        // Ball
+        physics::Body ballBody;
+        physics::Shape ballShape;
+
+        glm::vec2 g = glm::vec2(0.0f, -100.0f);
+
+        cpVect gravity;
 
         virtual void init() {
 
@@ -77,6 +99,7 @@ struct TestApplication : public app::IApplication {
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
             render::glw::Texture2D::createTexture2DFromFile(&this->box_tex, "data/icon/Box.png");
             render::glw::Texture2D::createTexture2DFromFile(&this->brick_tex, "data/icon/Brick.png");
+            render::glw::Texture2D::createTexture2DFromFile(&this->ball_tex, "data/icon/Ball.png");
 
             render::glw::Texture2DArray::createTexture2DArrayFromFiles(&icon_array, {
                 "data/icon/icon_32.png",
@@ -95,7 +118,9 @@ struct TestApplication : public app::IApplication {
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
 
-            physics::setGravity(cpv(0.0f, -100.0f));
+            gravity = cpv(0.0f, -100.0f);
+
+            physics::setGravity(gravity);
 
             // Platform
             platBody.setBodyType(physics::BodyType::BT_STATIC);
@@ -106,12 +131,34 @@ struct TestApplication : public app::IApplication {
             platShape.setFriction(0.5f);
             physics::addShape(&platShape);
 
+            // Walls
+            // Left
+            leftWallBody.setBodyType(physics::BodyType::BT_STATIC);
+            leftWallBody.init();
+            leftWallBody.setPosition(cpv(64.0f + 16.0f, -224.0f));
+            leftWallShape.initBox(&leftWallBody, 32.0f, 288.0f);
+            physics::addShape(&leftWallShape);
+
+            // Right
+            rightWallBody.setBodyType(physics::BodyType::BT_STATIC);
+            rightWallBody.init();
+            rightWallBody.setPosition(cpv(render::getWidth() - (64.0f + 16.0f), -224.0f));
+            rightWallShape.initBox(&rightWallBody, 32.0f, 288.0f);
+            physics::addShape(&rightWallShape);
+
+            // Ceiling
+            ceilingBody.setBodyType(physics::BodyType::BT_STATIC);
+            ceilingBody.init();
+            ceilingBody.setPosition(cpv(320.0f, -64.0f));
+            ceilingShape.initBox(&ceilingBody, 32.0f * 16.0f, 32.0f);
+            physics::addShape(&ceilingShape);
+
             // Box
             boxBody.setBodyType(physics::BodyType::BT_DYNAMIC);
             boxBody.setMass(1.0f);
             boxBody.setMoment(physics::toBoxMoment(1.0f, 32.0f, 32.0f));
             boxBody.init();
-            boxBody.setPosition(cpv(128.0f, -32.0f));
+            boxBody.setPosition(cpv(128.0f, -288.0f));
             boxBody.setAngle(glm::radians(35.0f));
 
             physics::addBody(&boxBody);
@@ -125,7 +172,7 @@ struct TestApplication : public app::IApplication {
             playerBody.setMass(1.0f);
             playerBody.setMoment(physics::toBoxMoment(1.0f, 32.0f, 32.0f));
             playerBody.init();
-            playerBody.setPosition(cpv(256.0f, -32.0f));
+            playerBody.setPosition(cpv(256.0f, -288.0f));
             playerBody.setAngle(0.0f); // To keep the player from rotating set it to zero 
             physics::addBody(&this->playerBody);
 
@@ -133,6 +180,19 @@ struct TestApplication : public app::IApplication {
             playerShape.setFriction(0.5f);
             physics::addShape(&this->playerShape);
 
+            // Ball
+            ballBody.setBodyType(physics::BodyType::BT_DYNAMIC);
+            ballBody.setMass(1.0f);
+            ballBody.setMoment(physics::toCircleMoment(1.0f, 0.0f, 16.0f, cpv(0.0f, 0.0f)));
+            ballBody.init();
+            ballBody.setPosition(cpv(384.0f, -288.0f));
+            ballBody.setAngle(0.0f);
+            physics::addBody(&this->ballBody);
+
+            ballShape.initCircle(&ballBody, 16.0f, cpv(0.0f, 0.0f));
+            ballShape.setFriction(0.5f);
+            ballShape.setElasticity(0.0f);
+            physics::addShape(&ballShape);
             // In the update function
 
         }
@@ -142,11 +202,9 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void update(float delta) {
-
-            physics::step(1.0f / 60.0f);
-
             float speed = 64.0f;
             float jump = 32.0f * 4.0f;
+            //cpVect vel = playerBody.getVelocity();
             cpVect vel = playerBody.getVelocity();
 
             // Horizontal
@@ -167,6 +225,13 @@ struct TestApplication : public app::IApplication {
             playerBody.setVelocity(vel);
             playerBody.setAngularVelocity(0.0f);
             playerBody.setAngle(0.0f);
+
+            physics::step(1.0f / 60.0f);
+
+            gravity.x = g.x;
+            gravity.y = g.y;
+
+            physics::setGravity(gravity);
         }
 
         void renderMenu() {
@@ -178,6 +243,8 @@ struct TestApplication : public app::IApplication {
 
             ImGui::Text("Physics System Controls");
 
+            ImGui::SliderFloat2("Gravity", &g[0], -100.0f, 100.0f);
+            
             ImGui::End();
 
             ImGui::EndFrame();
@@ -216,16 +283,37 @@ struct TestApplication : public app::IApplication {
             float r = this->boxBody.getAngle();
 
             // Draw Box
-            drawTexture(this->box_tex, glm::vec2(p.x, -p.y), r, glm::vec2(32.0f, 32.0f));
+            drawTexture(this->box_tex, glm::vec2(p.x, -p.y), -r, glm::vec2(32.0f, 32.0f));
+
+            p = this->ballBody.getPosition();
+            r = this->ballBody.getAngle();
+
+            // Draw Ball
+            render::enableBlend();
+            drawTexture(this->ball_tex, glm::vec2(p.x, -p.y), -r, glm::vec2(32.0f, 32.0f));
+            render::disableBlend();
 
             p = this->platBody.getPosition();
-
             // Draw Brick
             drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
-            p = this->playerBody.getPosition();
+            // Wall Left
+            p = this->leftWallBody.getPosition();
+            
+            // Draw Brick
+            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 288.0f));
+            // Wall Right
+            p = this->rightWallBody.getPosition();
+            
+            // Draw Brick
+            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 288.0f));
+
+            p = this->ceilingBody.getPosition();
+            // Draw Brick
+            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
             // Draw Player
+            p = this->playerBody.getPosition();
             drawTexture(this->icon_32, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
             render::endFrame();
 
@@ -262,6 +350,11 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void release() {
+            // Ball
+            physics::removeShape(&this->ballShape);
+            physics::removeBody(&this->ballBody);
+            this->ballShape.release();
+            this->ballBody.release();
 
             // Player
             physics::removeShape(&this->playerShape);
@@ -275,6 +368,22 @@ struct TestApplication : public app::IApplication {
             this->boxShape.release();
             this->boxBody.release();
 
+            // Ceiling
+            physics::removeShape(&this->ceilingShape);
+            ceilingShape.release();
+            ceilingBody.release();
+
+            // Walls
+            // Left
+            physics::removeShape(&this->leftWallShape);
+            this->leftWallShape.release();
+            this->leftWallBody.release();
+
+            // Right
+            physics::removeShape(&this->rightWallShape);
+            this->rightWallShape.release();
+            this->rightWallBody.release();
+
             // Platform
             physics::removeShape(&this->platShape);
             platShape.release();
@@ -282,6 +391,7 @@ struct TestApplication : public app::IApplication {
 
             icon_array_texCoords.release();
             icon_array.release();
+            ball_tex.release();
             brick_tex.release();
             box_tex.release();
             icon_32.release();
