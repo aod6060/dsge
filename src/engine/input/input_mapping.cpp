@@ -50,85 +50,38 @@ namespace input {
         }
         return b;
     }
-
-    /*
-        Basically this will 
-    */
-    /*
-    float getInputMappingAxis(InputMapping& negative, InputMapping& positive) {
-        float n = 0.0f;
-        float p = 0.0f;
-
-        if(isInputMappingPressed(negative)) {
-            n = 1.0f;
-        }
-
-        if(isInputMappingPressed(positive)) {
-            p = 1.0f;
-        }
-
-        return p - n;
-    }
-    */
-
+    
     float getInputMappingAxisReleased(InputMapping& negative, InputMapping& positive) {
-        float n = 0.0f;
-        float p = 0.0f;
-
-        if(isInputMappingReleased(negative)) {
-            n = 1.0f;
-        }
-
-        if(isInputMappingReleased(positive)) {
-            p = 1.0f;
-        }
-
-        return p - n; 
+        return getInputMappingValueReleased(positive) - getInputMappingValueReleased(negative);
     }
 
     float getInputMappingAxisPressedOnce(InputMapping& negative, InputMapping& positive) {
-        float n = 0.0f;
-        float p = 0.0f;
-
-        if(isInputMappingPressedOnce(negative)) {
-            n = 1.0f;
-        }
-
-        if(isInputMappingPressedOnce(positive)) {
-            p = 1.0f;
-        }
-
-        return p - n;
+        return getInputMappingValuePressedOnce(positive) - getInputMappingValuePressedOnce(negative);
     }
 
     float getInputMappingAxisPressed(InputMapping& negative, InputMapping& positive) {
-        float n = 0.0f;
-        float p = 0.0f;
-
-        if(isInputMappingPressed(negative)) {
-            n = 1.0f;
-        }
-
-        if(isInputMappingPressed(positive)) {
-            p = 1.0f;
-        }
-
-        return p - n;
+        return getInputMappingValuePressed(positive) - getInputMappingValuePressed(negative);
     }
 
     float getInputMappingAxisReleasedOnce(InputMapping& negative, InputMapping& positive) {
-        float n = 0.0f;
-        float p = 0.0f;
+        return getInputMappingValueReleasedOnce(positive) - getInputMappingValueReleasedOnce(negative);
+    }
 
-        if(isInputMappingReleasedOnce(negative)) {
-            n = 1.0f;
-        }
+    // Value Functions
+    float getInputMappingValueReleased(InputMapping& mapping) {
+        return isInputMappingReleased(mapping) ? 1.0f : 0.0f;
+    }
 
-        if(isInputMappingReleasedOnce(positive)) {
-            p = 1.0f;
-        }
+    float getInputMappingValuePressedOnce(InputMapping& mapping) {
+        return isInputMappingPressedOnce(mapping) ? 1.0f : 0.0f;
+    }
 
-        return p - n; 
+    float getInputMappingValuePressed(InputMapping& mapping) {
+        return isInputMappingPressed(mapping) ? 1.0f : 0.0f;
+    }
+
+    float getInputMappingValueReleasedOnce(InputMapping& mapping) {
+        return isInputMappingReleasedOnce(mapping) ? 1.0f : 0.0f;
     }
 
 }

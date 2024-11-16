@@ -306,18 +306,21 @@ namespace input {
 
     // Input Mapping
     void initInputMapping(InputMapping& mapping, int input, bool isMouse=false);
+    // Basic InputMapping function
     bool isInputMappingReleased(InputMapping& mapping);
     bool isInputMappingPressedOnce(InputMapping& mapping);
     bool isInputMappingPressed(InputMapping& mapping);
     bool isInputMappingReleasedOnce(InputMapping& mapping);
-
-    /*
-        Basically this will 
-    */
+    // Axis Functions
     float getInputMappingAxisReleased(InputMapping& negative, InputMapping& positive);
     float getInputMappingAxisPressedOnce(InputMapping& negative, InputMapping& positive);
     float getInputMappingAxisPressed(InputMapping& negative, InputMapping& positive);
     float getInputMappingAxisReleasedOnce(InputMapping& negative, InputMapping& positive);
+    // Value Functions
+    float getInputMappingValueReleased(InputMapping& mapping);
+    float getInputMappingValuePressedOnce(InputMapping& mapping);
+    float getInputMappingValuePressed(InputMapping& mapping);
+    float getInputMappingValueReleasedOnce(InputMapping& mapping);
 
 }
 
