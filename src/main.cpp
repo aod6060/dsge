@@ -10,6 +10,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/quaternion_geometric.hpp"
 #include "glm/ext/vector_common.hpp"
+#include "glm/ext/vector_float2.hpp"
 #include "glm/gtc/constants.hpp"
 #include "glm/trigonometric.hpp"
 #include <cmath>
@@ -217,7 +218,7 @@ struct TestApplication : public app::IApplication {
             cpVect vel = playerBody.getVelocity();
 
             vel.x = input::getInputMappingAxisPressed(moveLeft, moveRight);
-            
+
             vel.y += jump * input::getInputMappingValuePressedOnce(jumpIM);
 
             vel.x *= speed;
@@ -232,6 +233,11 @@ struct TestApplication : public app::IApplication {
             gravity.y = g.y;
 
             physics::setGravity(gravity);
+
+            glm::vec2 w = input::getMouseWheel();
+
+            std::cout << w.x << ", " << -w.y << "\n";
+
         }
 
         void renderMenu() {

@@ -9,6 +9,7 @@ namespace input {
     std::vector<InputState> mouseButtons;
     glm::vec2 position;
     glm::vec2 relative;
+    glm::vec2 wheel;
 
     float time = 0.0;
     float maxTime = 1.0;
@@ -34,6 +35,10 @@ namespace input {
 
         // Mouse Relative
         relative = glm::vec2(0.0f, 0.0f);
+
+        // Mouse Wheel
+        wheel = glm::vec2(0.0f, 0.0f);
+
     }
 
     void handleEvent(SDL_Event* e) {
@@ -59,7 +64,11 @@ namespace input {
             relative.x = e->motion.xrel;
             relative.y = e->motion.yrel;
             time = 0.0f;
+        } else if(e->type == SDL_MOUSEWHEEL) {
+            wheel.x = e->wheel.x;
+            wheel.y = e->wheel.y;
         }
+
     }
 
     void update(float delta) {
@@ -90,6 +99,9 @@ namespace input {
         }
 
         relative = toZero(relative, time * (1.0 / maxTime));
+
+        wheel.x = 0.0f;
+        wheel.y = 0.0f;
     }
 
     void release() {
@@ -137,6 +149,10 @@ namespace input {
 
     glm::vec2 getRelative() {
         return relative;
+    }
+
+    glm::vec2 getMouseWheel() {
+        return wheel;
     }
 
     void setGrab(bool grab) {
