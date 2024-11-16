@@ -227,8 +227,8 @@ struct TestApplication : public app::IApplication {
             }
             */
 
-            vel.x = input::getInputMappingAxis(moveLeft, moveRight);
-            
+            vel.x = input::getInputMappingAxisPressed(moveLeft, moveRight);
+
             if(input::isInputMappingPressedOnce(jumpIM)) {
                 vel.y = jump;
             }

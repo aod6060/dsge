@@ -314,7 +314,10 @@ namespace input {
     /*
         Basically this will 
     */
-    float getInputMappingAxis(InputMapping& negative, InputMapping& positive);
+    float getInputMappingAxisReleased(InputMapping& negative, InputMapping& positive);
+    float getInputMappingAxisPressedOnce(InputMapping& negative, InputMapping& positive);
+    float getInputMappingAxisPressed(InputMapping& negative, InputMapping& positive);
+    float getInputMappingAxisReleasedOnce(InputMapping& negative, InputMapping& positive);
 
 }
 
