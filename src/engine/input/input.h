@@ -310,6 +310,12 @@ namespace input {
     bool isInputMappingPressedOnce(InputMapping& mapping);
     bool isInputMappingPressed(InputMapping& mapping);
     bool isInputMappingReleasedOnce(InputMapping& mapping);
+
+    /*
+        Basically this will 
+    */
+    float getInputMappingAxis(InputMapping& negative, InputMapping& positive);
+
 }
 
 #endif

@@ -51,4 +51,21 @@ namespace input {
         return b;
     }
 
+    /*
+        Basically this will 
+    */
+    float getInputMappingAxis(InputMapping& negative, InputMapping& positive) {
+        float n = 0.0f;
+        float p = 0.0f;
+
+        if(isInputMappingPressed(negative)) {
+            n = 1.0f;
+        }
+
+        if(isInputMappingPressed(positive)) {
+            p = 1.0f;
+        }
+
+        return p - n;
+    }
 }

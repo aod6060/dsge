@@ -217,6 +217,7 @@ struct TestApplication : public app::IApplication {
             cpVect vel = playerBody.getVelocity();
 
             // Horizontal
+            /*
             if(input::isInputMappingPressed(moveLeft)) {
                 vel.x = -1;
             } else if(input::isInputMappingPressed(moveRight)) {
@@ -224,7 +225,10 @@ struct TestApplication : public app::IApplication {
             } else {
                 vel.x = 0;
             }
+            */
 
+            vel.x = input::getInputMappingAxis(moveLeft, moveRight);
+            
             if(input::isInputMappingPressedOnce(jumpIM)) {
                 vel.y = jump;
             }
