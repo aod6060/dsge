@@ -87,6 +87,8 @@ struct TestApplication : public app::IApplication {
 
         input::InputMapping jumpIM;
 
+        input::gamepad::InputMapping jumpIMCtrl;
+
         virtual void init() {
 
             IMGUI_CHECKVERSION();
@@ -201,9 +203,11 @@ struct TestApplication : public app::IApplication {
             physics::addShape(&ballShape);
             // In the update function
 
-            input::initInputMapping(moveLeft, input::Keyboard::KEYS_LEFT);
-            input::initInputMapping(moveRight, input::Keyboard::KEYS_RIGHT);
-            input::initInputMapping(jumpIM, input::Keyboard::KEYS_SPACE);
+            input::initInputMapping(&moveLeft, input::Keyboard::KEYS_LEFT);
+            input::initInputMapping(&moveRight, input::Keyboard::KEYS_RIGHT);
+            input::initInputMapping(&jumpIM, input::Keyboard::KEYS_SPACE);
+
+            input::gamepad::initInputMapping(&jumpIMCtrl, input::gamepad::PlayerControllerName::PCN_PLAYER_1, input::gamepad::ControllerButton::CB_A);
 
         }
 
@@ -217,24 +221,8 @@ struct TestApplication : public app::IApplication {
             //cpVect vel = playerBody.getVelocity();
             cpVect vel = playerBody.getVelocity();
 
-            vel.x = input::getInputMappingAxisPressed(moveLeft, moveRight);
-            vel.y += jump * input::getInputMappingValuePressedOnce(jumpIM);
-
-            if(input::gamepad::isControllerConnected(input::gamepad::PlayerControllerName::PCN_PLAYER_1)) {
-
-                //vel.x = input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1).x;
-
-                glm::vec2 leftAxis = input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1);
-
-                std::cout << leftAxis.x << ", " << leftAxis.y << "\n";
-
-                vel.x += leftAxis.x;
-                
-                if(input::gamepad::isButtonPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, input::gamepad::ControllerButton::CB_A)) {
-                    vel.y += jump;
-                }
-            }
-
+            vel.x = input::getInputMappingAxisPressed(&moveLeft, &moveRight) + input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1).x;
+            vel.y += jump * input::getInputMappingValuePressedOnce(&jumpIM) + jump * input::gamepad::getInputMappingValuePressedOnce(&jumpIMCtrl);
 
             vel.x *= speed;
 
@@ -250,9 +238,6 @@ struct TestApplication : public app::IApplication {
             physics::setGravity(gravity);
 
             glm::vec2 w = input::getMouseWheel();
-
-            std::cout << w.x << ", " << -w.y << "\n";
-
         }
 
         void renderMenu() {
@@ -341,7 +326,7 @@ struct TestApplication : public app::IApplication {
             
             std::stringstream ss;
 
-            ss << "Position: [" << postion.x << ", " << postion.y << "]";
+            ss << "Position: [" << p.x << ", " << -p.y << "]";
 
             render::font::getSize("regular", ss.str(), &width, &height);
             render::font::update("regular", ss.str());
