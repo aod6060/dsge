@@ -3,7 +3,9 @@
 
 
 #include "SDL_events.h"
+#include "SDL_gamecontroller.h"
 #include <glm/glm.hpp>
+#include <vector>
 
 namespace input {
     enum InputState {
@@ -301,7 +303,7 @@ namespace input {
     glm::vec2 getRelative();
 
     glm::vec2 getMouseWheel();
-    
+
     void setGrab(bool grab);
     bool getGrab();
     void toggleGrab();
@@ -327,6 +329,77 @@ namespace input {
     float getInputMappingValuePressed(InputMapping& mapping);
     float getInputMappingValueReleasedOnce(InputMapping& mapping);
 
+
+    namespace gamepad {
+        enum PlayerControllerName {
+			PCN_PLAYER_1 = 0,
+			PCN_PLAYER_2,
+			PCN_PLAYER_3,
+			PCN_PLAYER_4,
+			PCN_PLAYER_MAX_SIZE
+        };
+
+        enum ControllerButton {
+			CB_INVALID = -1,
+			CB_A,
+			CB_B,
+			CB_X,
+			CB_Y,
+			CB_BACK,
+			CB_GUIDE,
+			CB_START,
+			CB_LEFTSTICK,
+			CB_RIGHTSTICK,
+			CB_LEFTSHOULDER,
+			CB_RIGHTSHOULDER,
+			CB_DPAD_UP,
+			CB_DPAD_DOWN,
+			CB_DPAD_LEFT,
+			CB_DPAD_RIGHT,
+			CB_MISC1,
+			CB_PADDLE1,
+			CB_PADDLE2,
+			CB_PADDLE3,
+			CB_PADDLE4,
+			CB_TOUCHPAD,
+			CB_MAX_SIZE
+        };
+
+
+        struct PlayerControllerData {
+            SDL_GameController* controller = nullptr;
+            SDL_GameControllerType gamePadType;
+            PlayerControllerName name;
+            // -1.0f -> 1.0f
+            glm::vec2 leftAxis;
+            // -1.0f -> 1.0f
+            glm::vec2 rightAxis;
+            // 0.0f -> 1.0f
+            float leftTrigger;
+            // 0.0f -> 1.0f
+            float rightTrigger;
+            // Input Buttons
+            std::vector<InputState> cButtons;
+        };
+
+        void init();
+        void release();
+        void handleEvent(SDL_Event* e);
+        void update();
+
+        glm::vec2 getLeftAxis(PlayerControllerName name);
+        glm::vec2 getRightAxis(PlayerControllerName name);
+
+        float getLeftTriggerAxis(PlayerControllerName name);
+        float getRightTriggerAxis(PlayerControllerName name);
+
+        bool isButtonReleased(PlayerControllerName name, ControllerButton button);
+        bool isButtonPressedOnce(PlayerControllerName name, ControllerButton button);
+        bool isButtonPressed(PlayerControllerName name, ControllerButton button);
+        bool isButtonReleasedOnce(PlayerControllerName name, ControllerButton button);
+
+        bool isControllerConnected(PlayerControllerName name);
+    }
 }
 
 #endif

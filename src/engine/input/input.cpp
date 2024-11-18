@@ -1,3 +1,4 @@
+#include "input.h"
 #include "../sys.h"
 
 namespace input {
@@ -39,6 +40,7 @@ namespace input {
         // Mouse Wheel
         wheel = glm::vec2(0.0f, 0.0f);
 
+        gamepad::init();
     }
 
     void handleEvent(SDL_Event* e) {
@@ -69,6 +71,7 @@ namespace input {
             wheel.y = e->wheel.y;
         }
 
+        gamepad::handleEvent(e);
     }
 
     void update(float delta) {
@@ -102,9 +105,13 @@ namespace input {
 
         wheel.x = 0.0f;
         wheel.y = 0.0f;
+
+        gamepad::update();
     }
 
     void release() {
+        gamepad::release();
+
         keys.clear();
         mouseButtons.clear();
     }
