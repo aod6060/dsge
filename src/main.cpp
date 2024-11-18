@@ -232,6 +232,7 @@ struct TestApplication : public app::IApplication {
 
             physics::step(1.0f / 60.0f);
 
+
             gravity.x = g.x;
             gravity.y = g.y;
 

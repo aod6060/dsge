@@ -71,6 +71,38 @@ namespace render {
         void setColor(const glm::vec3& color);
         void render();
     }
+
+
+    namespace texture2D_manager {
+        // This one creates an empty texture
+        void add(std::string name);
+        // Release all textures
+        void release();
+        // Re inits all texutre
+        void reloadInit();
+        // Soft releases all texture
+        void reloadRelease();
+
+        void loadFromFile(std::string name, std::string path);
+
+        void texParameter(std::string name, GLenum pname, int32_t param);
+        
+        void bind(std::string name, GLenum tex);
+        void unbind(std::string name, GLenum tex);
+
+    }
+
+    namespace texture2D_array_manager {
+
+    }
+
+    namespace vertex_buffer_manager {
+
+    }
+
+    namespace index_buffer_manager {
+
+    }
 }
 
 #endif

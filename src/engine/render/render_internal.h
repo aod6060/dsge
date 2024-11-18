@@ -146,6 +146,26 @@ namespace render {
     // Hidden drawing function
     void draw(IShader* shader, glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies);
 
+
+    namespace texture2D_manager {
+        struct Texture2DData {
+            render::glw::Texture2D texture;
+            bool hasFile = false;
+            std::string path;
+        };
+    }
+
+    namespace texture2D_array_manager {
+
+    }
+
+    namespace vertex_buffer_manager {
+
+    }
+
+    namespace index_buffer_manager {
+        
+    }
 }
 
 #endif
