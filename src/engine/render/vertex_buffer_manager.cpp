@@ -18,11 +18,16 @@ namespace render {
         }
 
         void reloadInit() {
-
+            for(std::map<std::string, VertexBufferData>::iterator it = vbData.begin(); it != vbData.end(); it++ ){
+                it->second.buffer.init();
+                it->second.buffer.update();
+            }
         }
 
         void reloadRelease() {
-
+            for(std::map<std::string, VertexBufferData>::iterator it = vbData.begin(); it != vbData.end(); it++ ){
+                it->second.buffer.release();
+            }
         }
 
         void add1(std::string name, float x) {
