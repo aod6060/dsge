@@ -119,6 +119,7 @@ namespace render {
     }
 
     void release() {
+        vertex_buffer_manager::release();
         texture2D_array_manager::release();
         texture2D_manager::release();
 
@@ -289,6 +290,11 @@ namespace render {
         } else if(shaderType == ShaderType::ST_FONT) {
             draw(&fontShader, defCenterVertices, texCoords, defIndex);
         }    
+    }
+
+    void draw_center(std::string texCoord) {
+        glw::VertexBuffer* b = vertex_buffer_manager::getBuffer(texCoord);
+        draw_center(*b);
     }
 
     // Sending a custom vertices, texCoords, and indencies to 

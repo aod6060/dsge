@@ -167,11 +167,17 @@ namespace render {
     }
 
     namespace vertex_buffer_manager {
+        struct VertexBufferData {
+            render::glw::VertexBuffer buffer;
+        };
 
+        glw::VertexBuffer* getBuffer(std::string name);
     }
 
     namespace index_buffer_manager {
-        
+        struct IndexBufferData {
+            render::glw::IndexBuffer buffer;
+        };
     }
 }
 

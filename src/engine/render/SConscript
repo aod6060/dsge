@@ -11,7 +11,8 @@ env["source_files"] += [
     source("output_postprocessor.cpp"),
     source("font_postprocessing.cpp"),
     source("texture2D_manager.cpp"),
-    source("texture2D_array_manager.cpp")
+    source("texture2D_array_manager.cpp"),
+    source("vertex_buffer_manager.cpp")
 ]
 
 SConscript("#/src/engine/render/glw/SConscript", exports="env")

@@ -26,17 +26,8 @@
 struct TestApplication : public app::IApplication {
         int i = 0;
 
-        /*
-        render::glw::Texture2D icon_32;
-        render::glw::Texture2D box_tex;
-        render::glw::Texture2D brick_tex;
-        render::glw::Texture2D ball_tex;
-        */
-
-        //render::glw::Texture2DArray icon_array;
-
         // Custom TexCoords for texture array example
-        render::glw::VertexBuffer icon_array_texCoords;
+        //render::glw::VertexBuffer icon_array_texCoords;
 
         glm::vec2 postion = glm::vec2(32.0f);
 
@@ -117,13 +108,12 @@ struct TestApplication : public app::IApplication {
                 "data/icon/icon_32_magenta.png"
             });
 
-            icon_array_texCoords.init();
-            icon_array_texCoords.add3(0.0f, 0.0f, 0.0f);
-            icon_array_texCoords.add3(1.0f, 0.0f, 1.0f);
-            icon_array_texCoords.add3(0.0f, 1.0f, 2.0f);
-            icon_array_texCoords.add3(1.0f, 1.0f, 3.0f);
-            icon_array_texCoords.update();
-
+            render::vertex_buffer_manager::add("icon_array_texCoords");
+            render::vertex_buffer_manager::add3("icon_array_texCoords", 0.0f, 0.0f, 0.0f);
+            render::vertex_buffer_manager::add3("icon_array_texCoords", 1.0f, 0.0f, 1.0f);
+            render::vertex_buffer_manager::add3("icon_array_texCoords", 0.0f, 1.0f, 2.0f);
+            render::vertex_buffer_manager::add3("icon_array_texCoords", 1.0f, 1.0f, 3.0f);
+            render::vertex_buffer_manager::update("icon_array_texCoords");
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
 
@@ -294,7 +284,8 @@ struct TestApplication : public app::IApplication {
             );
 
             render::texture2D_array_manager::bind(name, GL_TEXTURE0);
-            render::draw_center(this->icon_array_texCoords);
+            //render::draw_center(this->icon_array_texCoords);
+            render::draw_center("icon_array_texCoords");
             render::texture2D_array_manager::unbind(name, GL_TEXTURE0);
 
             render::endShader();
@@ -424,16 +415,6 @@ struct TestApplication : public app::IApplication {
             physics::removeShape(&this->platShape);
             platShape.release();
             platBody.release();
-
-            icon_array_texCoords.release();
-            //icon_array.release();
-
-            /*
-            ball_tex.release();
-            brick_tex.release();
-            box_tex.release();
-            icon_32.release();
-            */
         }
 
 };
