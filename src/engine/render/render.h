@@ -87,6 +87,17 @@ namespace render {
 
         void texParameter(std::string name, GLenum pname, int32_t param);
         
+        void texImage2D(
+            std::string name,
+            int32_t level,
+            int32_t internalFormat,
+            size_t width,
+            size_t height,
+            GLenum format,
+            GLenum type,
+            const void* data
+        );
+        
         void bind(std::string name, GLenum tex);
         void unbind(std::string name, GLenum tex);
 

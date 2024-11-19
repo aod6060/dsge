@@ -26,10 +26,12 @@
 struct TestApplication : public app::IApplication {
         int i = 0;
 
+        /*
         render::glw::Texture2D icon_32;
         render::glw::Texture2D box_tex;
         render::glw::Texture2D brick_tex;
         render::glw::Texture2D ball_tex;
+        */
 
         render::glw::Texture2DArray icon_array;
 
@@ -103,11 +105,17 @@ struct TestApplication : public app::IApplication {
             ImGui_ImplSDL2_InitForOpenGL(app::getWindow(), app::getContext());
             ImGui_ImplOpenGL3_Init("#version 400");
 
-
+            /*
             render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
             render::glw::Texture2D::createTexture2DFromFile(&this->box_tex, "data/icon/Box.png");
             render::glw::Texture2D::createTexture2DFromFile(&this->brick_tex, "data/icon/Brick.png");
             render::glw::Texture2D::createTexture2DFromFile(&this->ball_tex, "data/icon/Ball.png");
+            */
+
+            render::texture2D_manager::loadFromFile("icon_32", "data/icon/icon_32.png");
+            render::texture2D_manager::loadFromFile("box_tex", "data/icon/Box.png");
+            render::texture2D_manager::loadFromFile("brick_tex", "data/icon/Brick.png");
+            render::texture2D_manager::loadFromFile("ball_tex", "data/icon/Ball.png");
 
             render::glw::Texture2DArray::createTexture2DArrayFromFiles(&icon_array, {
                 "data/icon/icon_32.png",
@@ -261,7 +269,7 @@ struct TestApplication : public app::IApplication {
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
-        void drawTexture(render::glw::Texture2D& tex, const glm::vec2& p, float r, const glm::vec2& s) {
+        void drawTexture(std::string name, const glm::vec2& p, float r, const glm::vec2& s) {
             render::startShader(render::ShaderType::ST_MAIN);
 
             //render::setView(glm::mat4(1.0f));
@@ -271,9 +279,11 @@ struct TestApplication : public app::IApplication {
                 glm::scale(glm::mat4(1.0f), glm::vec3(s, 0.0f))
             );
 
-            tex.bind(GL_TEXTURE0);
+            //tex.bind(GL_TEXTURE0);
+            render::texture2D_manager::bind(name, GL_TEXTURE0);
             render::draw_center();
-            tex.unbind(GL_TEXTURE0);
+            render::texture2D_manager::unbind(name, GL_TEXTURE0);
+            //tex.unbind(GL_TEXTURE0);
 
             render::endShader();
         }
@@ -290,38 +300,38 @@ struct TestApplication : public app::IApplication {
             float r = this->boxBody.getAngle();
 
             // Draw Box
-            drawTexture(this->box_tex, glm::vec2(p.x, -p.y), -r, glm::vec2(32.0f, 32.0f));
+            drawTexture("box_tex", glm::vec2(p.x, -p.y), -r, glm::vec2(32.0f, 32.0f));
 
             p = this->ballBody.getPosition();
             r = this->ballBody.getAngle();
 
             // Draw Ball
             render::enableBlend();
-            drawTexture(this->ball_tex, glm::vec2(p.x, -p.y), -r, glm::vec2(32.0f, 32.0f));
+            drawTexture("ball_tex", glm::vec2(p.x, -p.y), -r, glm::vec2(32.0f, 32.0f));
             render::disableBlend();
 
             p = this->platBody.getPosition();
             // Draw Brick
-            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
+            drawTexture("brick_tex", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
             // Wall Left
             p = this->leftWallBody.getPosition();
             
             // Draw Brick
-            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 288.0f));
+            drawTexture("brick_tex", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 288.0f));
             // Wall Right
             p = this->rightWallBody.getPosition();
             
             // Draw Brick
-            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 288.0f));
+            drawTexture("brick_tex", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 288.0f));
 
             p = this->ceilingBody.getPosition();
             // Draw Brick
-            drawTexture(this->brick_tex, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
+            drawTexture("brick_tex", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
             // Draw Player
             p = this->playerBody.getPosition();
-            drawTexture(this->icon_32, glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
+            drawTexture("icon_32", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
             render::endFrame();
 
             
@@ -398,10 +408,13 @@ struct TestApplication : public app::IApplication {
 
             icon_array_texCoords.release();
             icon_array.release();
+
+            /*
             ball_tex.release();
             brick_tex.release();
             box_tex.release();
             icon_32.release();
+            */
         }
 
 };

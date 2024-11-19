@@ -3,7 +3,7 @@
 
 #include "../sys.h"
 #include "glw/glw.h"
-
+#include <string>
 
 
 
@@ -152,6 +152,8 @@ namespace render {
             render::glw::Texture2D texture;
             bool hasFile = false;
             std::string path;
+            uint32_t width;
+            uint32_t height;
         };
     }
 

@@ -119,6 +119,8 @@ namespace render {
     }
 
     void release() {
+        texture2D_manager::release();
+        
         font::release();
         
         screen_framebuffer.release();
