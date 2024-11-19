@@ -4,6 +4,7 @@
 #include "../sys.h"
 #include "glw/glw.h"
 #include <string>
+#include <vector>
 
 
 
@@ -158,7 +159,11 @@ namespace render {
     }
 
     namespace texture2D_array_manager {
-
+        struct Texture2DArrayData {
+            render::glw::Texture2DArray texture;
+            bool hasFiles = false;
+            std::vector<std::string> paths;
+        };
     }
 
     namespace vertex_buffer_manager {

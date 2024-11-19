@@ -4,6 +4,7 @@
 
 #include "glw/glw.h"
 #include "font/font.h"
+#include <vector>
 
 namespace render {
 
@@ -42,6 +43,8 @@ namespace render {
     // Sending a custom texCoord buffer to the render
     void draw(glw::VertexBuffer& texCoords);
 
+    void draw_center(glw::VertexBuffer& texCoords);
+    
     // Sending a custom vertices, texCoords, and indencies to 
     // the render
     void draw(glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies);
@@ -97,14 +100,31 @@ namespace render {
             GLenum type,
             const void* data
         );
-        
+
         void bind(std::string name, GLenum tex);
         void unbind(std::string name, GLenum tex);
-
     }
 
     namespace texture2D_array_manager {
+        void add(std::string name);
 
+        void release();
+
+        void reloadInit();
+
+        void reloadRelease();
+
+        void loadFromFile(std::string name, std::vector<std::string> paths);
+
+        void texStorage3D(std::string name, size_t levels, GLenum internalFormat, size_t width, size_t height, size_t depth);
+
+        void texSubImage3D(std::string name, int32_t level, int32_t index, size_t width, size_t height, GLenum format, GLenum type, const void* data);
+
+        void texParameter(std::string name, GLenum pname, int32_t param);
+
+        void bind(std::string name, GLenum tex);
+
+        void unbind(std::string name, GLenum tex);
     }
 
     namespace vertex_buffer_manager {

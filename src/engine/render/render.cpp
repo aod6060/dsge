@@ -119,8 +119,9 @@ namespace render {
     }
 
     void release() {
+        texture2D_array_manager::release();
         texture2D_manager::release();
-        
+
         font::release();
         
         screen_framebuffer.release();
@@ -278,6 +279,16 @@ namespace render {
         } else if(shaderType == ShaderType::ST_FONT) {
             draw(&fontShader, defVertices, texCoords, defIndex);
         }
+    }
+
+    void draw_center(glw::VertexBuffer& texCoords) {
+        if(shaderType == ShaderType::ST_MAIN) {
+            draw(&mainShader, defCenterVertices, texCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_TEXTURE2D_ARRAY) {
+            draw(&tex2DArrayShader, defCenterVertices, texCoords, defIndex);
+        } else if(shaderType == ShaderType::ST_FONT) {
+            draw(&fontShader, defCenterVertices, texCoords, defIndex);
+        }    
     }
 
     // Sending a custom vertices, texCoords, and indencies to 

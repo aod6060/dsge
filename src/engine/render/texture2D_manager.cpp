@@ -53,8 +53,6 @@ namespace render {
             for(std::map<std::string, Texture2DData>::iterator it = texture2DData.begin(); it != texture2DData.end(); it++) {
                 it->second.texture.release();
             }
-
-
         }
 
         void loadFromFile(std::string name, std::string path) {

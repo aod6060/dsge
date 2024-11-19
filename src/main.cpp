@@ -33,7 +33,7 @@ struct TestApplication : public app::IApplication {
         render::glw::Texture2D ball_tex;
         */
 
-        render::glw::Texture2DArray icon_array;
+        //render::glw::Texture2DArray icon_array;
 
         // Custom TexCoords for texture array example
         render::glw::VertexBuffer icon_array_texCoords;
@@ -105,19 +105,12 @@ struct TestApplication : public app::IApplication {
             ImGui_ImplSDL2_InitForOpenGL(app::getWindow(), app::getContext());
             ImGui_ImplOpenGL3_Init("#version 400");
 
-            /*
-            render::glw::Texture2D::createTexture2DFromFile(&icon_32, "data/icon/icon_32.png");
-            render::glw::Texture2D::createTexture2DFromFile(&this->box_tex, "data/icon/Box.png");
-            render::glw::Texture2D::createTexture2DFromFile(&this->brick_tex, "data/icon/Brick.png");
-            render::glw::Texture2D::createTexture2DFromFile(&this->ball_tex, "data/icon/Ball.png");
-            */
-
             render::texture2D_manager::loadFromFile("icon_32", "data/icon/icon_32.png");
             render::texture2D_manager::loadFromFile("box_tex", "data/icon/Box.png");
             render::texture2D_manager::loadFromFile("brick_tex", "data/icon/Brick.png");
             render::texture2D_manager::loadFromFile("ball_tex", "data/icon/Ball.png");
 
-            render::glw::Texture2DArray::createTexture2DArrayFromFiles(&icon_array, {
+            render::texture2D_array_manager::loadFromFile("icon_array", {
                 "data/icon/icon_32.png",
                 "data/icon/icon_32_green.png",
                 "data/icon/icon_32_blue.png",
@@ -247,6 +240,10 @@ struct TestApplication : public app::IApplication {
             physics::setGravity(gravity);
 
             glm::vec2 w = input::getMouseWheel();
+
+            if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
+                isArrayTest = !isArrayTest;
+            }
         }
 
         void renderMenu() {
@@ -284,6 +281,21 @@ struct TestApplication : public app::IApplication {
             render::draw_center();
             render::texture2D_manager::unbind(name, GL_TEXTURE0);
             //tex.unbind(GL_TEXTURE0);
+
+            render::endShader();
+        }
+
+        void drawTextureArray(std::string name, const glm::vec2& p, float r, const glm::vec2& s) {
+            render::startShader(render::ShaderType::ST_TEXTURE2D_ARRAY);
+            render::setModel(
+                glm::translate(glm::mat4(1.0f), glm::vec3(p, 0.0f)) *
+                glm::rotate(glm::mat4(1.0f), r, glm::vec3(0.0f, 0.0f, 1.0f)) *
+                glm::scale(glm::mat4(1.0f), glm::vec3(s, 0.0f))
+            );
+
+            render::texture2D_array_manager::bind(name, GL_TEXTURE0);
+            render::draw_center(this->icon_array_texCoords);
+            render::texture2D_array_manager::unbind(name, GL_TEXTURE0);
 
             render::endShader();
         }
@@ -330,9 +342,16 @@ struct TestApplication : public app::IApplication {
             drawTexture("brick_tex", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f * 16.0f, 32.0f));
 
             // Draw Player
-            p = this->playerBody.getPosition();
-            drawTexture("icon_32", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
-            render::endFrame();
+
+            if(this->isArrayTest) {
+                p = this->playerBody.getPosition();
+                drawTextureArray("icon_array", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
+                render::endFrame();
+            } else {
+                p = this->playerBody.getPosition();
+                drawTexture("icon_32", glm::vec2(p.x, -p.y), 0.0f, glm::vec2(32.0f, 32.0f));
+                render::endFrame();
+            }
 
             
             std::stringstream ss;
@@ -407,7 +426,7 @@ struct TestApplication : public app::IApplication {
             platBody.release();
 
             icon_array_texCoords.release();
-            icon_array.release();
+            //icon_array.release();
 
             /*
             ball_tex.release();
