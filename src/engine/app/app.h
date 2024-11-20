@@ -36,6 +36,9 @@ namespace app {
     SDL_Window* getWindow();
     SDL_GLContext getContext();
     
+    void reloadInit();
+    void reloadRelease();
+    
 }
 
 #endif

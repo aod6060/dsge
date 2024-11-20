@@ -157,5 +157,31 @@ namespace app {
         return context;
     }
     
+    void reloadInit() {
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+        window = SDL_CreateWindow(
+            config->caption.c_str(), 
+            SDL_WINDOWPOS_UNDEFINED, 
+            SDL_WINDOWPOS_UNDEFINED, 
+            config->width, 
+            config->height, 
+            SDL_WINDOW_OPENGL);
+
+        context = SDL_GL_CreateContext(window);
+        glewInit();
+
+        render::reloadInit();
+    }
+
+    void reloadRelease() {
+        render::reloadRelease();
+
+        SDL_GL_DeleteContext(context);
+        SDL_DestroyWindow(window);
+    }
+
+    
 }
