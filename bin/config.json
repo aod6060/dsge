@@ -1,7 +1,45 @@
 {
     "app": {
         "caption": "DSGE: Engine",
-        "width": 1280,
-        "height": 720
+        "width": 640,
+        "height": 480,
+        "fullscreen": false,
+        "display": 0,
+        "resolution": 55
+    },
+    "input": {
+        "mapping": [
+            {
+                "name": "move-left",
+                "input": "KEYS_LEFT",
+                "is-mouse": false
+            },
+            {
+                "name": "move-right",
+                "input": "KEYS_RIGHT",
+                "is-mouse": false
+            },
+            {
+                "name": "jump-im",
+                "input": "KEYS_SPACE",
+                "is-mouse": false
+            }
+        ],
+        "gamepad": {
+            "mapping": [
+                {
+                    "name": "jump-im-ctrl",
+                    "player-name": "PCN_PLAYER_1",
+                    "controller-button": "CB_A"
+                }
+            ]
+        }
+    },
+    "render": {},
+    "physics": {},
+    "sound": {
+        "master-volume": 1.0,
+        "music-volume": 1.0,
+        "sound-fx-volume": 1.0
     }
 }

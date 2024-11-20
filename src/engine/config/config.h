@@ -2,10 +2,53 @@
 #define CONFIG_H
 
 
-
+#include <string>
+#include <map>
+#include "../input/input.h"
 
 namespace config {
+    struct Application {
+        std::string caption;
+        bool fullscreen;
+        uint32_t display;
+        uint32_t resolution;
+    };
 
+    struct Gamepad {
+        std::map<std::string, input::gamepad::InputMapping> mapping;
+    };
+
+    struct Input {
+        std::map<std::string, input::InputMapping> mapping;
+        Gamepad gamepad;
+    };
+    
+    struct Render {};
+    
+    struct Physics {};
+
+    struct Sound {
+        float masterVolume;
+        float musicVolume;
+        float soundFXVolume;
+    };
+
+    struct Config {
+        Application application;
+        Input input;
+        Render render;
+        Physics physics;
+        Sound sound;
+    };
+
+    void init();
+    void release();
+
+    Config* getConfig();
+
+    void reload();
+
+    void save();
 }
 
 #endif

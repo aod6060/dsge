@@ -1,6 +1,10 @@
 Import("env")
 
 
+
+# Compile the config module
+SConscript("#/src/engine/config/SConscript", exports="env")
+
 # Compile the app
 SConscript("#/src/engine/app/SConscript", exports="env")
 

@@ -45,7 +45,7 @@ namespace app {
 
                 SDL_GetDisplayMode(i, j, &mode);
 
-                std::cout << mode.w << ", " << mode.h << " @ " << mode.refresh_rate << " : " << SDL_GetPixelFormatName(mode.format) << "\n";
+                std::cout << "[" << j <<"]" << mode.w << ", " << mode.h << " @ " << mode.refresh_rate << " : " << SDL_GetPixelFormatName(mode.format) << "\n";
             }
         }
 
