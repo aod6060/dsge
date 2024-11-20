@@ -31,5 +31,6 @@
 #include "render/render.h"
 #include "sound/sound.h"
 #include "physics/physics.h"
+#include "config/config.h"
 
 #endif
