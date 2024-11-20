@@ -200,6 +200,19 @@ struct TestApplication : public app::IApplication {
 
             input::gamepad::initInputMapping(&jumpIMCtrl, input::gamepad::PlayerControllerName::PCN_PLAYER_1, input::gamepad::ControllerButton::CB_A);
 
+
+            float w_test = 1280.0f;
+            float h_test = 720.0f;
+
+            std::cout << w_test << ", " << h_test << "\n";
+
+            float aspect = w_test / h_test;
+
+            std::cout << "aspect: " << aspect << "\n";
+
+            float h = 640.0f / aspect;
+
+            std::cout << 640.0f << ", " << h << "\n";
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -296,7 +309,11 @@ struct TestApplication : public app::IApplication {
 
             render::clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
-            render::setView(glm::mat4(1.0f));
+            cpVect test = playerBody.getPosition();
+            render::setView(
+                glm::translate(glm::mat4(1.0f), glm::vec3(render::getWidth() * 0.5f, render::getHeight() * 0.5f, 0.0f)) *
+                glm::translate(glm::mat4(1.0f), -glm::vec3(test.x, -test.y, 0.0f))
+            );
             render::updateCameraBuffer();
 
             cpVect p = this->boxBody.getPosition();

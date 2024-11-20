@@ -20,6 +20,10 @@ namespace render {
         void unbind(GLenum unit);
 
         void getSize(std::string name, std::string message, int32_t* width, int32_t* height);
+
+        void reloadInit();
+        void reloadRelease();
+        
     }
 }
 

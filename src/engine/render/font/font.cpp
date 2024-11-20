@@ -89,5 +89,18 @@ namespace render {
             fontFaces.at(name).getSize(message, width, height);
         }
 
+        void reloadInit() {
+            texture.init();
+            texture.bind(GL_TEXTURE0);
+            texture.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            texture.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            texture.unbind(GL_TEXTURE0);     
+        }
+
+        void reloadRelease() {
+            texture.release();
+        }
+
+        
     }
 }

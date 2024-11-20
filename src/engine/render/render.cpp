@@ -6,10 +6,6 @@
 #include "glw/glw.h"
 
 namespace render {
-
-    uint32_t width = 640;
-    uint32_t height = 480;
-
     // Shaders
     MainShader mainShader;
     Texture2DArrayShader tex2DArrayShader;
@@ -340,11 +336,98 @@ namespace render {
         640x360 if w/h * 9 == 11   wide screen
     */
     uint32_t getWidth() {
-        return width;
+        return 640; // This will never change
     }
 
     uint32_t getHeight() {
-        return height;
+        //float aspect = (float)app::get_width() / (float)app::get_height();
+        float aspect = (float)app::get_width() / (float)app::get_height();
+        return (float)getWidth() / aspect;
+        //return 480;
+    }
+
+    void reloadInit() {
+        glDisable(GL_DEPTH_TEST);
+
+        // Init Shaders
+        mainShader.init();
+        tex2DArrayShader.init();
+        fontShader.init();
+
+        // Init Postprocessors
+        outputPostprocessor.init();
+        fontPostprocessing.init();
+
+        defVertices.init();
+        defVertices.update();
+
+        defCenterVertices.init();
+        defCenterVertices.update();
+
+        defTexCoords.init();
+        defTexCoords.update();
+
+        defTexCoords3D.init();
+        defTexCoords3D.update();
+
+        defIndex.init();
+        defIndex.update();
+
+        cameraBuffer.init();
+        cameraBuffer.update();
+        cameraBuffer.bufferRange(0);
+
+        // Initialize Screen
+        screen.init();
+        screen.bind(GL_TEXTURE0);
+        screen.texImage2D(0, GL_RGBA, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        screen.unbind(GL_TEXTURE0);
+
+        // Initialize Screen Framebuffer
+        screen_framebuffer.init();
+        screen_framebuffer.bind();
+        screen_framebuffer.attachTexture2D(GL_COLOR_ATTACHMENT0, &screen, 0);
+        if(!screen_framebuffer.isComplete()) {
+            std::cout << "Framebuffer: wasn't created correctly!\n";
+        }
+        screen_framebuffer.unbind();
+
+        font::reloadInit();
+        index_buffer_manager::reloadInit();
+        vertex_buffer_manager::reloadInit();
+        texture2D_array_manager::reloadInit();
+        texture2D_manager::reloadInit();
+    }
+
+    void reloadRelease() {
+        index_buffer_manager::reloadRelease();
+        vertex_buffer_manager::reloadRelease();
+        texture2D_array_manager::reloadRelease();
+        texture2D_manager::reloadRelease();
+
+        font::reloadRelease();
+        
+        screen_framebuffer.release();
+
+        screen.release();
+
+        cameraBuffer.release();
+
+        defIndex.release();
+
+        defTexCoords3D.release();
+        defTexCoords.release();
+        defCenterVertices.release();
+        defVertices.release();
+
+        fontPostprocessing.release();
+        outputPostprocessor.release();
+
+        fontShader.release();
+        tex2DArrayShader.release();
+        mainShader.release();
     }
 
 

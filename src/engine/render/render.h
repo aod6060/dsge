@@ -55,6 +55,9 @@ namespace render {
     void enableBlend();
     void disableBlend();
 
+    void reloadInit();
+    void reloadRelease();
+    
     /*
         The render will draw at 
         640x480 if w/h * 3 == 4 or standard screen (4:3)
@@ -76,7 +79,6 @@ namespace render {
         void setColor(const glm::vec3& color);
         void render();
     }
-
 
     namespace texture2D_manager {
         // This one creates an empty texture
