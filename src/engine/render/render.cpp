@@ -119,6 +119,7 @@ namespace render {
     }
 
     void release() {
+        index_buffer_manager::release();
         vertex_buffer_manager::release();
         texture2D_array_manager::release();
         texture2D_manager::release();

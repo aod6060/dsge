@@ -46,7 +46,7 @@ namespace render {
     void draw_center(glw::VertexBuffer& texCoords);
 
     void draw_center(std::string texCoord);
-    
+
     // Sending a custom vertices, texCoords, and indencies to 
     // the render
     void draw(glw::VertexBuffer& vertices, glw::VertexBuffer& texCoords, glw::IndexBuffer& indencies);
@@ -150,7 +150,22 @@ namespace render {
     }
 
     namespace index_buffer_manager {
+        void add(std::string name);
+        void release();
 
+        void reloadInit();
+        void reloadRelease();
+
+        void add1(std::string name, int x);
+        void add2(std::string name, int x, int y);
+        void add3(std::string name, int x, int y, int z);
+        void add4(std::string name, int x, int y, int z, int w);
+        void clear(std::string name);
+
+        void bind(std::string name);
+        void unbind(std::string name);
+
+        void update(std::string name);
     }
 }
 
