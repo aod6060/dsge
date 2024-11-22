@@ -868,7 +868,7 @@ namespace config {
     "CB_TOUCHPAD",
     };
 
-    void init() {
+    void _reload() {
         std::ifstream in("config.json");
         Json::Value root;
         in >> root;
@@ -921,9 +921,11 @@ namespace config {
         Json::Value sound = root["sound"];
         _config.sound.masterVolume = sound["master-volume"].asFloat();
         _config.sound.musicVolume = sound["music-volume"].asFloat();
-        _config.sound.soundFXVolume = sound["sound-fx-volume"].asFloat();
+        _config.sound.soundFXVolume = sound["sound-fx-volume"].asFloat(); 
+    }
 
-        save();
+    void init() {
+        _reload();
     }
 
     void release() {
@@ -936,6 +938,10 @@ namespace config {
 
     void reload() {
         save();
+        _config.input.mapping.clear();
+        _config.input.gamepad.mapping.clear();
+        _reload();
+        
         app::reloadRelease();
         app::reloadInit();
     }
@@ -995,7 +1001,7 @@ namespace config {
         gamepad["mapping"] = gim;
 
         input["gamepad"] = gamepad;
-        
+
         root["input"] = input;
 
         // Render (TODO: Add stuff the render configuration)
@@ -1011,7 +1017,7 @@ namespace config {
 
         root["sound"] = sound;
 
-        std::ofstream out("test.json");
+        std::ofstream out("config.json");
 
         out << root;
 
