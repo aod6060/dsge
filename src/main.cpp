@@ -253,13 +253,6 @@ struct TestApplication : public app::IApplication {
         }
 
         void renderMenu() {
-            /*
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplSDL2_NewFrame();
-
-            ImGui::NewFrame();
-            */
-
             igw::bind();
 
             ImGui::Begin("Configuration");
@@ -275,12 +268,6 @@ struct TestApplication : public app::IApplication {
             }
 
             igw::unbind();
-
-            //ImGui::EndFrame();
-
-            //ImGui::Render();
-
-            //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
         void drawTexture(std::string name, const glm::vec2& p, float r, const glm::vec2& s) {
