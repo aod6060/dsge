@@ -4,6 +4,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 #include "../input/input.h"
 
 namespace config {
@@ -48,6 +49,11 @@ namespace config {
 
     void reload();
 
+    void getKeysList(std::vector<std::string>& keyList);
+    void getMouseButtonList(std::vector<std::string>& list);
+    void getPlayerNameList(std::vector<std::string>& list);
+    void getGamePadButtonList(std::vector<std::string>& list);
+     
     void save();
 }
 

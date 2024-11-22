@@ -1,5 +1,6 @@
 #include "config_hidden.h"
 #include "json/value.h"
+#include <algorithm>
 
 
 
@@ -635,6 +636,7 @@ namespace config {
         _config.sound.musicVolume = sound["music-volume"].asFloat();
         _config.sound.soundFXVolume = sound["sound-fx-volume"].asFloat();
 
+        save();
     }
 
     void release() {
@@ -652,6 +654,62 @@ namespace config {
     }
 
     void save() {
+        Json::Value root;
 
+        Json::Value app;
+
+        // App
+        app["caption"] = _config.application.caption;
+        app["fullscreen"] = _config.application.fullscreen;
+        app["display"] = _config.application.display;
+        app["resolution"] = _config.application.resolution;
+
+        root["app"] = app;
+
+        // Input
+        
+        // Render (TODO: Add stuff the render configuration)
+        root["render"] = Json::Value(Json::objectValue);
+
+        // Physics (TODO: Add stuff to physics configuration)
+        root["physics"] = Json::Value(Json::objectValue);
+        // Sound
+        Json::Value sound;
+        sound["master-volume"] = _config.sound.masterVolume;
+        sound["music-volume"] = _config.sound.musicVolume;
+        sound["sound-fx-volume"] = _config.sound.soundFXVolume;
+
+        root["sound"] = sound;
+
+        std::ofstream out("test.json");
+
+        out << root;
+
+        out.close();
     }
+
+    void getKeysList(std::vector<std::string>& list) {
+        std::for_each(keyList.begin(), keyList.end(), [&](std::string item) {
+            list.push_back(item);
+        });
+    }
+
+    void getMouseButtonList(std::vector<std::string>& list) {
+        std::for_each(mouseButtonsList.begin(), mouseButtonsList.end(), [&](std::string item) {
+            list.push_back(item);
+        });
+    }
+
+    void getPlayerNameList(std::vector<std::string>& list) {
+        std::for_each(playerNameList.begin(), playerNameList.end(), [&](std::string item) {
+            list.push_back(item);
+        });
+    }
+
+    void getGamePadButtonList(std::vector<std::string>& list) {
+        std::for_each(controllerButtonsList.begin(), controllerButtonsList.end(), [&](std::string item) {
+            list.push_back(item);
+        });
+    }
+
 }

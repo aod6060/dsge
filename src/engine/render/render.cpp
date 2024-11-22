@@ -154,16 +154,16 @@ namespace render {
 
 
         // Draw to screen...
-        glViewport(0, 0, app::get_width(), app::get_height());
+        glViewport(0, 0, app::getWidth(), app::getHeight());
         clear(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
         outputPostprocessor.bind();
 
-        outputPostprocessor.setProjection(glm::ortho(0.0f, (float)app::get_width(), 0.0f, (float)app::get_height()));
+        outputPostprocessor.setProjection(glm::ortho(0.0f, (float)app::getWidth(), 0.0f, (float)app::getHeight()));
         outputPostprocessor.setView(glm::mat4(1.0f));
         outputPostprocessor.setModel(
             glm::translate(glm::mat4(1.0f), glm::vec3(0.0f)) *
-            glm::scale(glm::mat4(1.0f), glm::vec3((float)app::get_width(), (float)app::get_height(), 0.0f))
+            glm::scale(glm::mat4(1.0f), glm::vec3((float)app::getWidth(), (float)app::getHeight(), 0.0f))
         );
 
         screen.bind(GL_TEXTURE0);
@@ -341,7 +341,7 @@ namespace render {
 
     uint32_t getHeight() {
         //float aspect = (float)app::get_width() / (float)app::get_height();
-        float aspect = (float)app::get_width() / (float)app::get_height();
+        float aspect = (float)app::getWidth() / (float)app::getHeight();
         return (float)getWidth() / aspect;
         //return 480;
     }

@@ -16,21 +16,15 @@ namespace app {
         virtual void release() = 0;
     };
 
-    struct Config {
-        std::string caption;
-        uint32_t width;
-        uint32_t height;
-        IApplication* app;
-    };
-
-    void init(Config* config);
+    void init(IApplication* app);
     void update();
     void release();
 
-    std::string get_caption();
-    uint32_t get_width();
-    uint32_t get_height();
-
+    //std::string get_caption();
+    uint32_t getWidth();
+    uint32_t getHeight();
+    float getAspect();
+    
     void exit();
 
     SDL_Window* getWindow();

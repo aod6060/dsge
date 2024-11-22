@@ -1,0 +1,17 @@
+{
+	"app" : 
+	{
+		"caption" : "DSGE: Engine",
+		"display" : 0,
+		"fullscreen" : false,
+		"resolution" : 55
+	},
+	"physics" : {},
+	"render" : {},
+	"sound" : 
+	{
+		"master-volume" : 1.0,
+		"music-volume" : 1.0,
+		"sound-fx-volume" : 1.0
+	}
+}

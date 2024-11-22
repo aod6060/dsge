@@ -372,7 +372,7 @@ struct TestApplication : public app::IApplication {
             render::font_postprocess::bind();
             render::enableBlend();
 
-            render::font_postprocess::setProjection(glm::ortho(0.0f, (float)app::get_width(), (float)app::get_height(), 0.0f));
+            render::font_postprocess::setProjection(glm::ortho(0.0f, (float)app::getWidth(), (float)app::getHeight(), 0.0f));
             render::font_postprocess::setView(glm::mat4(1.0f));
             render::font_postprocess::setModel(
                 glm::translate(glm::mat4(1.0f), glm::vec3(1.0, 1.0f, 0.0f)) *
@@ -436,7 +436,7 @@ struct TestApplication : public app::IApplication {
 
 };
 
-
+/*
 void load_config(app::Config* config) {
     std::ifstream in("config.json");
     Json::Value root;
@@ -451,19 +451,20 @@ void load_config(app::Config* config) {
     config->width = app["width"].asUInt();
     config->height = app["height"].asUInt();
 }
+*/
 
 int main(int argc, char** argv) { 
     TestApplication testApp;
-    app::Config config;
+    //app::Config config;
     //config.caption = "Test Application";
     //config.width = 640 * 2; // 1280
     //config.height = 480 * 2; // 960
 
-    load_config(&config);
+    //load_config(&config);
     
-    config.app = &testApp;
+   // config.app = &testApp;
 
-    app::init(&config);
+    app::init(&testApp);
     app::update();
     app::release();
 

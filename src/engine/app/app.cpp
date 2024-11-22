@@ -1,18 +1,22 @@
+#include "app.h"
+#include "SDL_video.h"
 #include "app_hidden.h"
 
 
 namespace app {
 
-    Config* config = nullptr;
+    //Config* config = nullptr;
+    IApplication* app = nullptr;
+
+    SDL_DisplayMode displayMode;
 
     SDL_Window* window = nullptr;
     SDL_GLContext context = nullptr;
 
     bool is_running = true;
 
-    void init(Config* _config) {
-        config = _config;
-
+    void init(IApplication* _app) {
+        app = _app;
 
         /*
             Load print logo
@@ -30,7 +34,7 @@ namespace app {
 
 
         SDL_Init(SDL_INIT_EVERYTHING);
-
+        /*
         int32_t numberOfDisplays = SDL_GetNumVideoDisplays();
 
         std::cout << "This system has " << numberOfDisplays << " displays hooked up to graphics card.\n";
@@ -48,19 +52,31 @@ namespace app {
                 std::cout << "[" << j <<"]" << mode.w << ", " << mode.h << " @ " << mode.refresh_rate << " : " << SDL_GetPixelFormatName(mode.format) << "\n";
             }
         }
+        */
+
+        config::init();
+
+        uint32_t flags = SDL_WINDOW_OPENGL;
+
+        if(config::getConfig()->application.fullscreen) {
+            flags |= SDL_WINDOW_FULLSCREEN;
+        }
+
+        SDL_GetDisplayMode(config::getConfig()->application.display, config::getConfig()->application.resolution, &displayMode);
 
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-
         window = SDL_CreateWindow(
-            config->caption.c_str(), 
+            config::getConfig()->application.caption.c_str(), 
             SDL_WINDOWPOS_UNDEFINED, 
             SDL_WINDOWPOS_UNDEFINED, 
-            config->width, 
-            config->height, 
-            SDL_WINDOW_OPENGL);
+            displayMode.w, 
+            displayMode.h, 
+            flags);
+
+        SDL_SetWindowDisplayMode(window, &displayMode);
 
         context = SDL_GL_CreateContext(window);
         glewInit();
@@ -70,8 +86,8 @@ namespace app {
         sound::init();
         physics::init();
 
-        if(config->app) {
-            config->app->init();
+        if(app) {
+            app->init();
         }
     }
     
@@ -83,6 +99,11 @@ namespace app {
         SDL_Event e;
 
         while(is_running) {
+            // Sound Volume
+            sound::setMasterVolume(config::getConfig()->sound.masterVolume);
+            sound::setMusicVolume(config::getConfig()->sound.musicVolume);
+            sound::setSoundFXVolume(config::getConfig()->sound.soundFXVolume);
+            
             // Calculate Delta
             curr_time = SDL_GetTicks();
             delta = (curr_time - pre_time) / 1000.0f;
@@ -97,16 +118,16 @@ namespace app {
                 //this->input.handleEvent(this);
                 input::handleEvent(&e);
 
-                if(config->app) {
-                    config->app->handleEvent(&e);
+                if(app) {
+                    app->handleEvent(&e);
                 }
             }
 
-            if(config->app) {
+            if(app) {
                 // Update Method
-                config->app->update(delta);
+                app->update(delta);
                 // Render Method
-                config->app->render();
+                app->render();
             }
 
             input::update(delta);
@@ -118,8 +139,8 @@ namespace app {
     }
 
     void release() {
-        if(config->app) {
-            config->app->release();
+        if(app) {
+            app->release();
         }
         
         physics::release();
@@ -133,16 +154,22 @@ namespace app {
         SDL_Quit();
     }
     
+    /*
     std::string get_caption() {
         return config->caption;
     }
-    
-    uint32_t get_width() {
-        return config->width;
+    */
+
+    uint32_t getWidth() {
+        return displayMode.w;
     }
     
-    uint32_t get_height() {
-        return config->height;
+    uint32_t getHeight() {
+        return displayMode.h;
+    }
+
+    float getAspect() {
+        return (float)getWidth() / (float)getHeight();
     }
 
     void exit() {
@@ -158,17 +185,27 @@ namespace app {
     }
     
     void reloadInit() {
+        uint32_t flags = SDL_WINDOW_OPENGL;
+
+        if(config::getConfig()->application.fullscreen) {
+            flags |= SDL_WINDOW_FULLSCREEN;
+        }
+
+        SDL_GetDisplayMode(config::getConfig()->application.display, config::getConfig()->application.resolution, &displayMode);
+
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
         window = SDL_CreateWindow(
-            config->caption.c_str(), 
+            config::getConfig()->application.caption.c_str(), 
             SDL_WINDOWPOS_UNDEFINED, 
             SDL_WINDOWPOS_UNDEFINED, 
-            config->width, 
-            config->height, 
-            SDL_WINDOW_OPENGL);
+            displayMode.w, 
+            displayMode.h, 
+            flags);
+
+        SDL_SetWindowDisplayMode(window, &displayMode);
 
         context = SDL_GL_CreateContext(window);
         glewInit();
