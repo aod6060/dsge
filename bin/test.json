@@ -6,6 +6,38 @@
 		"fullscreen" : false,
 		"resolution" : 55
 	},
+	"input" : 
+	{
+		"gamepad" : 
+		{
+			"mapping" : 
+			[
+				{
+					"controller-button" : "CB_A",
+					"name" : "jump-im-ctrl",
+					"player-name" : "PCN_PLAYER_1"
+				}
+			]
+		},
+		"mapping" : 
+		[
+			{
+				"input" : "KEYS_SPACE",
+				"is-mouse" : false,
+				"name" : "jump-im"
+			},
+			{
+				"input" : "KEYS_LEFT",
+				"is-mouse" : false,
+				"name" : "move-left"
+			},
+			{
+				"input" : "KEYS_RIGHT",
+				"is-mouse" : false,
+				"name" : "move-right"
+			}
+		]
+	},
 	"physics" : {},
 	"render" : {},
 	"sound" : 
