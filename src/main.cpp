@@ -1,5 +1,6 @@
 #include "chipmunk/chipmunk_types.h"
 #include "engine/app/app.h"
+#include "engine/config/config.h"
 #include "engine/input/input.h"
 #include "engine/physics/physics.h"
 #include "engine/render/font/font.h"
@@ -261,6 +262,8 @@ struct TestApplication : public app::IApplication {
             ImGui::SliderFloat2("Gravity", &g[0], -100.0f, 100.0f);
 
             ImGui::End();
+            
+            config::drawConfigSystem();
 
             ImGui::EndFrame();
 
@@ -438,7 +441,7 @@ struct TestApplication : public app::IApplication {
 
 int main(int argc, char** argv) { 
     TestApplication testApp;
-    
+
     app::init(&testApp);
     app::update();
     app::release();

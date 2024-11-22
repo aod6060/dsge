@@ -1,43 +1,49 @@
 {
-    "app": {
-        "caption": "DSGE: Engine",
-        "fullscreen": false,
-        "display": 0,
-        "resolution": 55
-    },
-    "input": {
-        "mapping": [
-            {
-                "name": "move-left",
-                "input": "KEYS_LEFT",
-                "is-mouse": false
-            },
-            {
-                "name": "move-right",
-                "input": "KEYS_RIGHT",
-                "is-mouse": false
-            },
-            {
-                "name": "jump-im",
-                "input": "KEYS_SPACE",
-                "is-mouse": false
-            }
-        ],
-        "gamepad": {
-            "mapping": [
-                {
-                    "name": "jump-im-ctrl",
-                    "player-name": "PCN_PLAYER_1",
-                    "controller-button": "CB_A"
-                }
-            ]
-        }
-    },
-    "render": {},
-    "physics": {},
-    "sound": {
-        "master-volume": 1.0,
-        "music-volume": 1.0,
-        "sound-fx-volume": 1.0
-    }
+	"app" : 
+	{
+		"caption" : "DSGE: Engine",
+		"display" : 0,
+		"fullscreen" : false,
+		"resolution" : 55
+	},
+	"input" : 
+	{
+		"gamepad" : 
+		{
+			"mapping" : 
+			[
+				{
+					"controller-button" : "CB_A",
+					"name" : "jump-im-ctrl",
+					"player-name" : "PCN_PLAYER_1"
+				}
+			]
+		},
+		"mapping" : 
+		[
+			{
+				"input" : "KEYS_SPACE",
+				"is-mouse" : false,
+				"name" : "jump-im"
+			},
+			{
+				"input" : "KEYS_LEFT",
+				"is-mouse" : false,
+				"name" : "move-left"
+			},
+			{
+				"input" : "KEYS_RIGHT",
+				"is-mouse" : false,
+				"name" : "move-right"
+			}
+		]
+	},
+	"physics" : {},
+	"render" : {},
+	"sound" : 
+	{
+		"master-volume" : 1.0,
+		"music-volume" : 1.0,
+		"sound-fx-volume" : 1.0
+	}
 }

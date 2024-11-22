@@ -1,11 +1,14 @@
 #include "config_hidden.h"
 #include "json/value.h"
 #include <algorithm>
+#include "../../thirdparty/imgui/imgui.h"
 
 
 
 namespace config {
     Config _config;
+
+    bool showSystemConfig = false;
 
     std::map<std::string, input::Keyboard> keys = {
     {"KEYS_UNKNOWN", input::Keyboard::KEYS_UNKNOWN},
@@ -941,7 +944,7 @@ namespace config {
         _config.input.mapping.clear();
         _config.input.gamepad.mapping.clear();
         _reload();
-        
+
         app::reloadRelease();
         app::reloadInit();
     }
@@ -1046,6 +1049,92 @@ namespace config {
         std::for_each(controllerButtonsList.begin(), controllerButtonsList.end(), [&](std::string item) {
             list.push_back(item);
         });
+    }
+
+
+    // Menu Systems
+    static bool needsReload = false;
+
+    void appTab() {
+        ImGui::Text("Application Config");
+
+        ImGui::Text("Caption: %s", _config.application.caption.c_str());
+
+        if(ImGui::Checkbox("Is Fullscreen?", &_config.application.fullscreen)) {
+            needsReload = true;
+        }
+
+
+    }
+
+    void inputTab() {
+        ImGui::Text("Input Config");
+    }
+
+    void renderTab() {
+        ImGui::Text("Render Tab");
+    }
+
+    void physicsTab() {
+        ImGui::Text("Physics Tab");
+    }
+
+    void soundTab() {
+        ImGui::Text("Sound Tab");
+    }
+
+    void drawConfigSystem() {
+
+        if(input::isKeyPressedOnce(input::Keyboard::KEYS_F1)) {
+            showSystemConfig = !showSystemConfig;
+        }
+
+
+        if(showSystemConfig) {
+            ImGui::Begin("System Config");
+
+            ImGui::BeginTabBar("System Config TabBar");
+
+            if(ImGui::BeginTabItem("Application")) {
+                appTab();
+                ImGui::EndTabItem();
+            }
+
+            if(ImGui::BeginTabItem("Input")) {
+                inputTab();
+                ImGui::EndTabItem();
+            }
+
+            if(ImGui::BeginTabItem("Render")) {
+                renderTab();
+                ImGui::EndTabItem();
+            }
+
+            if(ImGui::BeginTabItem("Physics")) {
+                physicsTab();
+                ImGui::EndTabItem();
+            }
+
+            if(ImGui::BeginTabItem("Sound")) {
+                soundTab();
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+            ImGui::Separator();
+
+            if(needsReload) {
+                if(ImGui::Button("Reload/Save")) {
+                    reload();
+                }
+            } else {
+                if(ImGui::Button("Save")) {
+                    save();
+                }
+            }
+
+            ImGui::End();
+        }
     }
 
 }

@@ -348,34 +348,43 @@ namespace render {
 
     void reloadInit() {
         glDisable(GL_DEPTH_TEST);
+        std::cout << "glDisable\n";
 
         // Init Shaders
         mainShader.init();
         tex2DArrayShader.init();
         fontShader.init();
+        std::cout << "Init Shaders\n";
 
         // Init Postprocessors
         outputPostprocessor.init();
         fontPostprocessing.init();
+        std::cout << "Init Postprocessors\n";
 
         defVertices.init();
         defVertices.update();
+        std::cout << "defVertices\n";
 
         defCenterVertices.init();
         defCenterVertices.update();
+        std::cout << "defCenterVertices\n";
 
         defTexCoords.init();
         defTexCoords.update();
+        std::cout << "defTexCoords\n";
 
         defTexCoords3D.init();
         defTexCoords3D.update();
+        std::cout << "defTexCoords3D\n";
 
         defIndex.init();
         defIndex.update();
+        std::cout << "defIndex\n";
 
         cameraBuffer.init();
         cameraBuffer.update();
         cameraBuffer.bufferRange(0);
+        std::cout << "cameraBuffer\n";
 
         // Initialize Screen
         screen.init();
@@ -384,6 +393,7 @@ namespace render {
         screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         screen.unbind(GL_TEXTURE0);
+        std::cout << "screen\n";
 
         // Initialize Screen Framebuffer
         screen_framebuffer.init();
@@ -393,12 +403,23 @@ namespace render {
             std::cout << "Framebuffer: wasn't created correctly!\n";
         }
         screen_framebuffer.unbind();
+        std::cout << "screen framebuffer\n";
 
         font::reloadInit();
+        std::cout << "reloadInit\n";
+
         index_buffer_manager::reloadInit();
+        std::cout << "index buffer manager\n";
+
         vertex_buffer_manager::reloadInit();
+        std::cout << "vertex buffer manager\n";
+
         texture2D_array_manager::reloadInit();
+        std::cout << "texture2D array manager\n";
+
         texture2D_manager::reloadInit();
+        std::cout << "texture2D manager\n";
+
     }
 
     void reloadRelease() {
@@ -418,8 +439,11 @@ namespace render {
         defIndex.release();
 
         defTexCoords3D.release();
+
         defTexCoords.release();
+
         defCenterVertices.release();
+
         defVertices.release();
 
         fontPostprocessing.release();

@@ -55,6 +55,9 @@ namespace config {
     void getGamePadButtonList(std::vector<std::string>& list);
      
     void save();
+
+    void drawConfigSystem();
+    
 }
 
 #endif
