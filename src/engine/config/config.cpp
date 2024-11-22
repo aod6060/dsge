@@ -1126,6 +1126,7 @@ namespace config {
             if(needsReload) {
                 if(ImGui::Button("Reload/Save")) {
                     reload();
+                    needsReload = false;
                     return true;
                 }
             } else {
