@@ -14,6 +14,9 @@ SConscript("#/src/engine/input/SConscript", exports="env")
 # Compile the render
 SConscript("#/src/engine/render/SConscript", exports="env")
 
+# Compile the igw
+SConscript("#/src/engine/igw/SConscript", exports="env")
+
 # Compile the sound module
 SConscript("#/src/engine/sound/SConscript", exports="env")
 

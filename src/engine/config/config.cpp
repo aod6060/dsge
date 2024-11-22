@@ -1083,7 +1083,7 @@ namespace config {
         ImGui::Text("Sound Tab");
     }
 
-    void drawConfigSystem() {
+    bool drawConfigSystem() {
 
         if(input::isKeyPressedOnce(input::Keyboard::KEYS_F1)) {
             showSystemConfig = !showSystemConfig;
@@ -1126,6 +1126,7 @@ namespace config {
             if(needsReload) {
                 if(ImGui::Button("Reload/Save")) {
                     reload();
+                    return true;
                 }
             } else {
                 if(ImGui::Button("Save")) {
@@ -1135,6 +1136,8 @@ namespace config {
 
             ImGui::End();
         }
+
+        return false;
     }
 
 }

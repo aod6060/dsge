@@ -56,8 +56,8 @@ namespace config {
      
     void save();
 
-    void drawConfigSystem();
-    
+    bool drawConfigSystem();
+
 }
 
 #endif

@@ -32,27 +32,7 @@ namespace app {
 
         std::cout << VERSION_FULL_NAME << "\n\n";
 
-
         SDL_Init(SDL_INIT_EVERYTHING);
-        /*
-        int32_t numberOfDisplays = SDL_GetNumVideoDisplays();
-
-        std::cout << "This system has " << numberOfDisplays << " displays hooked up to graphics card.\n";
-
-        for(int i = 0; i < numberOfDisplays; i++) {
-            int numDisplayModes = SDL_GetNumDisplayModes(i);
-
-            std::cout << i << " display has " << numDisplayModes << " display modes!\n";
-
-            for(int j = 0; j < numDisplayModes; j++) {
-                SDL_DisplayMode mode;
-
-                SDL_GetDisplayMode(i, j, &mode);
-
-                std::cout << "[" << j <<"]" << mode.w << ", " << mode.h << " @ " << mode.refresh_rate << " : " << SDL_GetPixelFormatName(mode.format) << "\n";
-            }
-        }
-        */
 
         config::init();
 
@@ -83,6 +63,7 @@ namespace app {
 
         input::init();
         render::init();
+        igw::init();
         sound::init();
         physics::init();
 
@@ -118,6 +99,8 @@ namespace app {
                 //this->input.handleEvent(this);
                 input::handleEvent(&e);
 
+                igw::handleEvent(&e);
+
                 if(app) {
                     app->handleEvent(&e);
                 }
@@ -132,8 +115,6 @@ namespace app {
 
             input::update(delta);
 
-            //this->input.update(this);
-
             SDL_GL_SwapWindow(window);
         }
     }
@@ -145,6 +126,7 @@ namespace app {
         
         physics::release();
         sound::release();
+        igw::release();
         render::release();
         input::release();
 
@@ -154,12 +136,6 @@ namespace app {
         SDL_Quit();
     }
     
-    /*
-    std::string get_caption() {
-        return config->caption;
-    }
-    */
-
     uint32_t getWidth() {
         return displayMode.w;
     }
@@ -211,9 +187,11 @@ namespace app {
         glewInit();
 
         render::reloadInit();
+        igw::reloadInit();
     }
 
     void reloadRelease() {
+        igw::reloadRelease();
         render::reloadRelease();
 
         SDL_GL_DeleteContext(context);

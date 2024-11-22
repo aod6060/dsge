@@ -1,6 +1,7 @@
 #include "chipmunk/chipmunk_types.h"
 #include "engine/app/app.h"
 #include "engine/config/config.h"
+#include "engine/igw/igw.h"
 #include "engine/input/input.h"
 #include "engine/physics/physics.h"
 #include "engine/render/font/font.h"
@@ -84,7 +85,7 @@ struct TestApplication : public app::IApplication {
         input::gamepad::InputMapping jumpIMCtrl;
 
         virtual void init() {
-
+            /*
             IMGUI_CHECKVERSION();
 
             ImGui::CreateContext();
@@ -96,6 +97,7 @@ struct TestApplication : public app::IApplication {
 
             ImGui_ImplSDL2_InitForOpenGL(app::getWindow(), app::getContext());
             ImGui_ImplOpenGL3_Init("#version 400");
+            */
 
             render::texture2D_manager::loadFromFile("icon_32", "data/icon/icon_32.png");
             render::texture2D_manager::loadFromFile("box_tex", "data/icon/Box.png");
@@ -217,7 +219,7 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void handleEvent(SDL_Event* e) {
-            ImGui_ImplSDL2_ProcessEvent(e);
+            //ImGui_ImplSDL2_ProcessEvent(e);
         }
 
         virtual void update(float delta) {
@@ -251,10 +253,15 @@ struct TestApplication : public app::IApplication {
         }
 
         void renderMenu() {
+            /*
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplSDL2_NewFrame();
 
             ImGui::NewFrame();
+            */
+
+            igw::bind();
+
             ImGui::Begin("Configuration");
 
             ImGui::Text("Physics System Controls");
@@ -262,14 +269,18 @@ struct TestApplication : public app::IApplication {
             ImGui::SliderFloat2("Gravity", &g[0], -100.0f, 100.0f);
 
             ImGui::End();
-            
-            config::drawConfigSystem();
 
-            ImGui::EndFrame();
+            if(config::drawConfigSystem()) {
+                return;
+            }
 
-            ImGui::Render();
+            igw::unbind();
 
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            //ImGui::EndFrame();
+
+            //ImGui::Render();
+
+            //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         }
 
         void drawTexture(std::string name, const glm::vec2& p, float r, const glm::vec2& s) {
