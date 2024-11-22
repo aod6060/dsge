@@ -24,6 +24,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <chipmunk/chipmunk.h>
+#include <json/json.h>
 
 #include "version.h"
 #include "app/app.h"
