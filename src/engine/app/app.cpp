@@ -50,13 +50,16 @@ namespace app {
 
         window = SDL_CreateWindow(
             config::getConfig()->application.caption.c_str(), 
-            SDL_WINDOWPOS_UNDEFINED, 
-            SDL_WINDOWPOS_UNDEFINED, 
+            SDL_WINDOWPOS_CENTERED_DISPLAY(config::getConfig()->application.display), 
+            SDL_WINDOWPOS_CENTERED_DISPLAY(config::getConfig()->application.display), 
             displayMode.w, 
             displayMode.h, 
             flags);
 
         SDL_SetWindowDisplayMode(window, &displayMode);
+
+        
+        //SDL_SetWindowBrightness(window, 0.0f);
 
         context = SDL_GL_CreateContext(window);
         glewInit();
@@ -175,12 +178,13 @@ namespace app {
 
         window = SDL_CreateWindow(
             config::getConfig()->application.caption.c_str(), 
-            SDL_WINDOWPOS_UNDEFINED, 
-            SDL_WINDOWPOS_UNDEFINED, 
+            SDL_WINDOWPOS_CENTERED_DISPLAY(config::getConfig()->application.display), 
+            SDL_WINDOWPOS_CENTERED_DISPLAY(config::getConfig()->application.display), 
             displayMode.w, 
             displayMode.h, 
             flags);
 
+        
         SDL_SetWindowDisplayMode(window, &displayMode);
 
         context = SDL_GL_CreateContext(window);

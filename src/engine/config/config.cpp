@@ -1,3 +1,4 @@
+#include "SDL_pixels.h"
 #include "config_hidden.h"
 #include "json/value.h"
 #include <algorithm>
@@ -871,6 +872,13 @@ namespace config {
     "CB_TOUCHPAD",
     };
 
+
+    std::vector<std::string> displayList;
+    std::string currentDisplay;
+
+    std::vector<std::vector<std::string>> resList;
+    std::string currentRes;
+
     void _reload() {
         std::ifstream in("config.json");
         Json::Value root;
@@ -928,6 +936,38 @@ namespace config {
     }
 
     void init() {
+        // Grabbing
+        for(int i = 0; i < SDL_GetNumVideoDisplays(); i++) {
+            std::stringstream ss;
+
+            ss << "Display " << i;
+
+            displayList.push_back(ss.str());
+        }
+
+        currentDisplay = displayList[_config.application.display];
+
+        resList.resize(displayList.size());
+
+        for(int i = 0; i < SDL_GetNumVideoDisplays(); i++) {
+
+            for(int j = 0; j < SDL_GetNumDisplayModes(i); j++) {
+                SDL_DisplayMode mode;
+
+                SDL_GetDisplayMode(i, j, &mode);
+
+                std::stringstream ss;
+
+                ss << mode.w << "x" << mode.h << " @" << mode.refresh_rate << " format: " << SDL_GetPixelFormatName(mode.format);
+
+                resList[i].push_back(ss.str());
+            }
+
+        }
+
+        currentRes = resList[_config.application.display][_config.application.resolution];
+
+
         _reload();
     }
 
@@ -1064,7 +1104,41 @@ namespace config {
             needsReload = true;
         }
 
+        if(ImGui::BeginCombo("Display", currentDisplay.data())) {
+            for(int i = 0; i < displayList.size(); i++) {
+                bool is_selected = (currentDisplay == displayList[i]);
 
+                if(ImGui::Selectable(displayList[i].data(), is_selected)) {
+                    currentDisplay = displayList[i];
+                    _config.application.display = i;
+                    needsReload = true;
+                }
+
+                if(is_selected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+
+            ImGui::EndCombo();
+        }
+
+        if(ImGui::BeginCombo("Resolution", currentRes.data())) {
+            for(int i = 0; i < resList[_config.application.display].size(); i++) {
+                bool is_selected = (currentRes == resList[_config.application.display][i]);
+
+                if(ImGui::Selectable(resList[_config.application.display][i].data(), is_selected)) {
+                    currentRes = resList[_config.application.display][i];
+                    _config.application.resolution = i;
+                    needsReload = true;
+                }
+
+                if(is_selected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+
+            ImGui::EndCombo();
+        }
     }
 
     void inputTab() {

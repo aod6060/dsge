@@ -100,6 +100,8 @@ namespace render {
         screen.texImage2D(0, GL_RGBA, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        screen.texParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        screen.texParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         screen.unbind(GL_TEXTURE0);
 
         // Initialize Screen Framebuffer
@@ -340,9 +342,8 @@ namespace render {
     }
 
     uint32_t getHeight() {
-        //float aspect = (float)app::get_width() / (float)app::get_height();
-        float aspect = (float)app::getWidth() / (float)app::getHeight();
-        return (float)getWidth() / aspect;
+        //float aspect = (float)app::get_width() / (float)app::get_height();;
+        return (float)getWidth() / app::getAspect();
         //return 480;
     }
 
@@ -382,9 +383,14 @@ namespace render {
         std::cout << "defIndex\n";
 
         cameraBuffer.init();
+
+        cameraBuffer.value.proj = glm::ortho(0.0f, (float)getWidth(), (float)getHeight(), 0.0f);
+
         cameraBuffer.update();
         cameraBuffer.bufferRange(0);
         std::cout << "cameraBuffer\n";
+
+        std::cout << getWidth() << ", " << getHeight() << "\n";
 
         // Initialize Screen
         screen.init();
@@ -392,6 +398,8 @@ namespace render {
         screen.texImage2D(0, GL_RGBA, getWidth(), getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         screen.texParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         screen.texParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        screen.texParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+        screen.texParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
         screen.unbind(GL_TEXTURE0);
         std::cout << "screen\n";
 
