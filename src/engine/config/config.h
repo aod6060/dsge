@@ -19,8 +19,15 @@ namespace config {
         std::map<std::string, input::gamepad::InputMapping> mapping;
     };
 
+    struct KeyboardMouseInputMap {
+        std::string name;
+        std::string currentMouseButton = "MBS_LEFT";
+        std::string currentKey = "KEYS_UNKNOWN";
+        input::InputMapping mapping;
+    };
+
     struct Input {
-        std::map<std::string, input::InputMapping> mapping;
+        std::map<std::string, KeyboardMouseInputMap> mapping;
         Gamepad gamepad;
     };
     

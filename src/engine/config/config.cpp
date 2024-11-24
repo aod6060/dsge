@@ -872,12 +872,14 @@ namespace config {
     "CB_TOUCHPAD",
     };
 
-
     std::vector<std::string> displayList;
     std::string currentDisplay;
 
     std::vector<std::vector<std::string>> resList;
     std::string currentRes;
+
+    std::string currentKey = keyList[0];
+    std::string currentMouse = mouseButtonsList[0];
 
     void _reload() {
         std::ifstream in("config.json");
@@ -901,12 +903,19 @@ namespace config {
             std::string name = item["name"].asString();
             bool isMouse = item["is-mouse"].asBool();
 
+            _config.input.mapping[name].name = name;
+            //_config.input.mapping[name].currentValue = item["input"].asString();
+
             if(isMouse) {
+                _config.input.mapping[name].currentMouseButton = item["input"].asString();
+
                 input::MouseButtons mb = mouseButtons.at(item["input"].asString());
-                input::initInputMapping(&_config.input.mapping[name], mb, isMouse);
+                input::initInputMapping(&_config.input.mapping[name].mapping, mb, isMouse);
             } else {
+                _config.input.mapping[name].currentKey = item["input"].asString();
+
                 input::Keyboard key = keys.at(item["input"].asString());
-                input::initInputMapping(&_config.input.mapping[name], key);
+                input::initInputMapping(&_config.input.mapping[name].mapping, key);
             }
         }
 
@@ -1007,17 +1016,17 @@ namespace config {
 
         Json::Value im;
 
-        for(std::map<std::string, input::InputMapping>::iterator it = _config.input.mapping.begin(); it != _config.input.mapping.end(); it++) {
+        for(std::map<std::string, KeyboardMouseInputMap>::iterator it = _config.input.mapping.begin(); it != _config.input.mapping.end(); it++) {
             Json::Value item;
 
             item["name"] = it->first;
             //item["input"] = 
-            item["is-mouse"] = it->second.isMouse;
+            item["is-mouse"] = it->second.mapping.isMouse;
 
-            if(it->second.isMouse) {
-                item["input"] = mouseButtons_rev[(input::MouseButtons)it->second.input];
+            if(it->second.mapping.isMouse) {
+                item["input"] = mouseButtons_rev[(input::MouseButtons)it->second.mapping.input];
             } else {
-                item["input"] = keys_rev[(input::Keyboard)it->second.input];
+                item["input"] = keys_rev[(input::Keyboard)it->second.mapping.input];
             }
 
             im.append(item);
@@ -1131,7 +1140,7 @@ namespace config {
                     _config.application.resolution = i;
                     needsReload = true;
                 }
-
+                
                 if(is_selected) {
                     ImGui::SetItemDefaultFocus();
                 }
@@ -1143,6 +1152,69 @@ namespace config {
 
     void inputTab() {
         ImGui::Text("Input Config");
+
+        ImGui::Separator();
+
+        ImGui::Text("Keyboard/Mouse");
+
+        for(std::map<std::string, KeyboardMouseInputMap>::iterator it = _config.input.mapping.begin(); it != _config.input.mapping.end(); it++) {
+
+            std::stringstream id;
+
+            id << "mapping_" << it->first.c_str();
+
+            ImGui::PushID(id.str().c_str());
+
+            ImGui::Text("Name: %s", it->first.c_str());
+
+            ImGui::Checkbox("Is Mouse? ", &it->second.mapping.isMouse);
+
+            if(it->second.mapping.isMouse) {
+                if(ImGui::BeginCombo("Mouse Buttons", it->second.currentMouseButton.data())) {
+
+                    for(int i = 0; i < mouseButtonsList.size(); i++) {
+                        bool is_selected = (it->second.currentMouseButton == mouseButtonsList[i]);
+
+                        if(ImGui::Selectable(mouseButtonsList[i].data(), is_selected)) {
+                            it->second.currentMouseButton = mouseButtonsList[i];
+                            input::initInputMapping(&it->second.mapping, mouseButtons[it->second.currentMouseButton], it->second.mapping.isMouse);
+                        }
+
+                        if(is_selected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+
+                    ImGui::EndCombo();
+                }
+            } else {
+                if(ImGui::BeginCombo("Keys", it->second.currentKey.data())) {
+
+                    for(int i = 0; i < keyList.size(); i++) {
+                        bool is_selected = (it->second.currentKey == keyList[i]);
+
+                        if(ImGui::Selectable(keyList[i].data(), is_selected)) {
+                            it->second.currentKey = keyList[i];
+                            input::initInputMapping(&it->second.mapping, keys[it->second.currentKey], it->second.mapping.isMouse);
+                        }
+
+                        if(is_selected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+
+                    ImGui::EndCombo();
+                }
+            }
+
+            ImGui::PopID();
+        }
+
+        ImGui::Separator();
+
+        ImGui::Text("Gamepads");
+
+
     }
 
     void renderTab() {

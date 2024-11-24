@@ -77,10 +77,10 @@ struct TestApplication : public app::IApplication {
 
         cpVect gravity;
 
-        input::InputMapping moveLeft;
-        input::InputMapping moveRight;
+        //input::InputMapping moveLeft;
+        //input::InputMapping moveRight;
 
-        input::InputMapping jumpIM;
+        //input::InputMapping jumpIM;
 
         input::gamepad::InputMapping jumpIMCtrl;
 
@@ -197,9 +197,11 @@ struct TestApplication : public app::IApplication {
             physics::addShape(&ballShape);
             // In the update function
 
+            /*
             input::initInputMapping(&moveLeft, input::Keyboard::KEYS_LEFT);
             input::initInputMapping(&moveRight, input::Keyboard::KEYS_RIGHT);
             input::initInputMapping(&jumpIM, input::Keyboard::KEYS_SPACE);
+            */
 
             input::gamepad::initInputMapping(&jumpIMCtrl, input::gamepad::PlayerControllerName::PCN_PLAYER_1, input::gamepad::ControllerButton::CB_A);
 
@@ -228,8 +230,8 @@ struct TestApplication : public app::IApplication {
             //cpVect vel = playerBody.getVelocity();
             cpVect vel = playerBody.getVelocity();
 
-            vel.x = input::getInputMappingAxisPressed(&moveLeft, &moveRight) + input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1).x;
-            vel.y += jump * input::getInputMappingValuePressedOnce(&jumpIM) + jump * input::gamepad::getInputMappingValuePressedOnce(&jumpIMCtrl);
+            vel.x = input::getInputMappingAxisPressed(&config::getConfig()->input.mapping.at("move-left").mapping, &config::getConfig()->input.mapping.at("move-right").mapping) + input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1).x;
+            vel.y += jump * input::getInputMappingValuePressedOnce(&config::getConfig()->input.mapping.at("jump-im").mapping) + jump * input::gamepad::getInputMappingValuePressedOnce(&jumpIMCtrl);
 
             vel.x *= speed;
 
