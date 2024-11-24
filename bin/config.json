@@ -22,7 +22,7 @@
 		"mapping" : 
 		[
 			{
-				"input" : "KEYS_Z",
+				"input" : "KEYS_SPACE",
 				"is-mouse" : false,
 				"name" : "jump-im"
 			},

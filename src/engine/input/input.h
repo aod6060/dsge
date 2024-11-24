@@ -329,6 +329,23 @@ namespace input {
     float getInputMappingValuePressed(InputMapping* mapping);
     float getInputMappingValueReleasedOnce(InputMapping* mapping);
 
+    // Regular boolean check
+    bool isInputMappingReleased(std::string name);
+    bool isInputMappingPressedOnce(std::string name);
+    bool isInputMappingPressed(std::string name);
+    bool isInputMappingReleasedOnce(std::string name);
+
+    // Axis Functions
+    float getInputMappingAxisReleased(std::string negative, std::string positive);
+    float getInputMappingAxisPressedOnce(std::string negative, std::string positive);
+    float getInputMappingAxisPressed(std::string negative, std::string positive);
+    float getInputMappingAxisReleasedOnce(std::string negative, std::string positive);
+
+    // Value Functions
+    float getInputMappingValueReleased(std::string name);
+    float getInputMappingValuePressedOnce(std::string name);
+    float getInputMappingValuePressed(std::string name);
+    float getInputMappingValueReleasedOnce(std::string name);
 
     namespace gamepad {
         enum PlayerControllerName {
@@ -429,7 +446,6 @@ namespace input {
         float getInputMappingValuePressedOnce(InputMapping* mapping);
         float getInputMappingValuePressed(InputMapping* mapping);
         float getInputMappingValueReleasedOnce(InputMapping* mapping);
-
     }
 }
 
