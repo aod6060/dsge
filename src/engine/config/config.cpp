@@ -929,7 +929,7 @@ namespace config {
             std::string name = item["name"].asString();
             input::gamepad::PlayerControllerName playerName = playerNames[item["player-name"].asString()];
             input::gamepad::ControllerButton cb = controllerButtons[item["controller-button"].asString()];
-            input::gamepad::initInputMapping(&_config.input.gamepad.mapping[name], playerName, cb);
+            //input::gamepad::initInputMapping(&_config.input.gamepad.mapping[name], playerName, cb);
         }
 
         Json::Value render = root["render"];
@@ -991,7 +991,7 @@ namespace config {
     void reload() {
         save();
         _config.input.mapping.clear();
-        _config.input.gamepad.mapping.clear();
+        //_config.input.gamepad.mapping.clear();
         _reload();
 
         app::reloadRelease();
@@ -1038,6 +1038,7 @@ namespace config {
 
         Json::Value gim;
 
+        /*
         for(std::map<std::string, input::gamepad::InputMapping>::iterator it = _config.input.gamepad.mapping.begin(); it != _config.input.gamepad.mapping.end(); it++) {
             Json::Value item;
 
@@ -1049,7 +1050,8 @@ namespace config {
 
             gim.append(item);
         }
-
+        */
+        
         gamepad["mapping"] = gim;
 
         input["gamepad"] = gamepad;

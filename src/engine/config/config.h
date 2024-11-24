@@ -15,8 +15,20 @@ namespace config {
         uint32_t resolution;
     };
 
+    struct GamepadInputMapping {
+        std::string name;
+
+        input::gamepad::InputMapping mapping;
+    };
+
+    struct Player {
+        input::gamepad::PlayerControllerName name;
+        std::map<std::string, GamepadInputMapping> mapping;
+    };
+
     struct Gamepad {
-        std::map<std::string, input::gamepad::InputMapping> mapping;
+        //std::map<std::string, input::gamepad::InputMapping> mapping;
+        std::vector<Player> players; // This will
     };
 
     struct KeyboardMouseInputMap {
