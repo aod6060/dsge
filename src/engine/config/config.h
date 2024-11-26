@@ -17,7 +17,7 @@ namespace config {
 
     struct GamepadInputMapping {
         std::string name;
-
+        std::string currentButton = "CB_INVALID";
         input::gamepad::InputMapping mapping;
     };
 

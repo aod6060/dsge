@@ -10,12 +10,43 @@
 	{
 		"gamepad" : 
 		{
-			"mapping" : 
+			"players" : 
 			[
 				{
-					"controller-button" : "CB_A",
-					"name" : "jump-im-ctrl",
-					"player-name" : "PCN_PLAYER_1"
+					"mapping" : 
+					[
+						{
+							"controller-button" : "CB_B",
+							"name" : "jump-im-ctrl"
+						}
+					]
+				},
+				{
+					"mapping" : 
+					[
+						{
+							"controller-button" : "CB_A",
+							"name" : "jump-im-ctrl"
+						}
+					]
+				},
+				{
+					"mapping" : 
+					[
+						{
+							"controller-button" : "CB_B",
+							"name" : "jump-im-ctrl"
+						}
+					]
+				},
+				{
+					"mapping" : 
+					[
+						{
+							"controller-button" : "CB_A",
+							"name" : "jump-im-ctrl"
+						}
+					]
 				}
 			]
 		},

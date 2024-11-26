@@ -1,7 +1,9 @@
+#include "config.h"
 #include "SDL_pixels.h"
 #include "config_hidden.h"
 #include "json/value.h"
 #include <algorithm>
+#include <vector>
 #include "../../thirdparty/imgui/imgui.h"
 
 
@@ -921,8 +923,37 @@ namespace config {
 
         // Gamepad Mapping
         Json::Value gamepad = input["gamepad"];
-        im = gamepad["mapping"];
+        Json::Value players = gamepad["players"];
 
+        std::cout << "Player Size: " << players.size() << "\n";
+
+        for(int i = 0; i < players.size(); i++) {
+            Json::Value item = players[i];
+
+            Json::Value mapping = item["mapping"];
+
+            Player player;
+
+            player.name = (input::gamepad::PlayerControllerName)i;
+
+            for(int j = 0; j < mapping.size(); j++) {
+                Json::Value item2 = mapping[j];
+
+                std::string name2 = item2["name"].asString();
+
+                player.mapping[name2].name = name2;
+
+                player.mapping[name2].currentButton = item2["controller-button"].asString();
+
+                std::cout << player.mapping[name2].name << ": " << player.mapping[name2].currentButton << "\n";
+
+                input::gamepad::initInputMapping(&player.mapping[name2].mapping, player.name, controllerButtons[player.mapping[name2].currentButton]);
+            }
+
+            _config.input.gamepad.players.push_back(player);
+        }
+
+        /*
         for(int i = 0; i < im.size(); i++) {
             Json::Value item = im[i];
 
@@ -931,6 +962,7 @@ namespace config {
             input::gamepad::ControllerButton cb = controllerButtons[item["controller-button"].asString()];
             //input::gamepad::initInputMapping(&_config.input.gamepad.mapping[name], playerName, cb);
         }
+        */
 
         Json::Value render = root["render"];
         // Will add stuff here later
@@ -1036,7 +1068,31 @@ namespace config {
 
         Json::Value gamepad;
 
-        Json::Value gim;
+        Json::Value players;
+
+        for(std::vector<Player>::iterator it = _config.input.gamepad.players.begin(); it != _config.input.gamepad.players.end(); it++) {
+            Json::Value player;
+            Json::Value mapping;
+            //players.append(mapping);
+
+            for(std::map<std::string, GamepadInputMapping>::iterator it2 = it->mapping.begin(); it2 != it->mapping.end(); it2++) {
+                Json::Value item;
+
+                std::cout << it2->second.name << ": " << it2->second.currentButton << "\n";
+
+                item["name"] = it2->second.name;
+                item["controller-button"] = it2->second.currentButton;
+
+                mapping.append(item);
+            }
+
+            player["mapping"] = mapping;
+            players.append(player);
+        }
+        
+        gamepad["players"] = players;
+
+        //Json::Value gim;
 
         /*
         for(std::map<std::string, input::gamepad::InputMapping>::iterator it = _config.input.gamepad.mapping.begin(); it != _config.input.gamepad.mapping.end(); it++) {
@@ -1052,7 +1108,7 @@ namespace config {
         }
         */
         
-        gamepad["mapping"] = gim;
+        //gamepad["mapping"] = gim;
 
         input["gamepad"] = gamepad;
 
@@ -1216,7 +1272,47 @@ namespace config {
 
         ImGui::Text("Gamepads");
 
+        ImGui::BeginTabBar("Gamepads Tabs");
 
+        for(int i = 0; i < config::getConfig()->input.gamepad.players.size(); i++) {
+            std::stringstream ss;
+
+            ss << "Player " << (i+1);
+
+            if(ImGui::BeginTabItem(ss.str().c_str())) {
+
+                ImGui::PushID(ss.str().c_str());
+
+                for(std::map<std::string, GamepadInputMapping>::iterator it = config::getConfig()->input.gamepad.players[i].mapping.begin(); it != config::getConfig()->input.gamepad.players[i].mapping.end(); it++) {
+                    ImGui::Text("Name: %s", it->second.name.c_str());
+
+                    if(ImGui::BeginCombo("Buttons", it->second.currentButton.data())) {
+
+                        for(int j = 0; j < controllerButtonsList.size(); j++) {
+                            bool is_selected = (it->second.currentButton == controllerButtonsList[j]);
+
+                            if(ImGui::Selectable(controllerButtonsList[j].data(), is_selected)) {
+                                it->second.currentButton = controllerButtonsList[j];
+                                input::gamepad::initInputMapping(&it->second.mapping, config::getConfig()->input.gamepad.players[i].name, controllerButtons[it->second.currentButton]);
+                            }
+
+                            if(is_selected) {
+                                ImGui::SetItemDefaultFocus();
+                            }
+                        }
+
+                        ImGui::EndCombo();
+                        
+                    }
+                }
+
+                ImGui::PopID();
+
+                ImGui::EndTabItem();
+            }
+        }
+
+        ImGui::EndTabBar();
     }
 
     void renderTab() {
