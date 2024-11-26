@@ -1,0 +1,9 @@
+Import("env")
+
+def source(file):
+    return "#/src/engine/lw/" + file
+
+env["source_files"] += [
+    source("lw.cpp"),
+    source("lua_exports.cpp")
+]

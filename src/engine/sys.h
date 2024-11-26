@@ -34,5 +34,7 @@
 #include "sound/sound.h"
 #include "physics/physics.h"
 #include "config/config.h"
+#include "lw/lw.h"
+
 
 #endif

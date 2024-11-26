@@ -22,3 +22,6 @@ SConscript("#/src/engine/sound/SConscript", exports="env")
 
 # Compile the physics module
 SConscript("#/src/engine/physics/SConscript", exports="env")
+
+# Compile the lua wrapper module
+SConscript("#/src/engine/lw/SConscript")
