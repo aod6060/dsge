@@ -446,6 +446,27 @@ namespace input {
         float getInputMappingValuePressedOnce(InputMapping* mapping);
         float getInputMappingValuePressed(InputMapping* mapping);
         float getInputMappingValueReleasedOnce(InputMapping* mapping);
+
+
+        // Regular boolean check
+        bool isInputMappingReleased(PlayerControllerName name, std::string mapping);
+        bool isInputMappingPressedOnce(PlayerControllerName name, std::string mapping);
+        bool isInputMappingPressed(PlayerControllerName name, std::string mapping);
+        bool isInputMappingReleasedOnce(PlayerControllerName name, std::string mapping);
+
+        // Axis Functions
+        float getInputMappingAxisReleased(PlayerControllerName name, std::string negative, std::string positive);
+        float getInputMappingAxisPressedOnce(PlayerControllerName name, std::string negative, std::string positive);
+        float getInputMappingAxisPressed(PlayerControllerName name, std::string negative, std::string positive);
+        float getInputMappingAxisReleasedOnce(PlayerControllerName name, std::string negative, std::string positive);
+
+        // Value Functions
+        float getInputMappingValueReleased(PlayerControllerName name, std::string mapping);
+        float getInputMappingValuePressedOnce(PlayerControllerName name, std::string mapping);
+        float getInputMappingValuePressed(PlayerControllerName name, std::string mapping);
+        float getInputMappingValueReleasedOnce(PlayerControllerName name, std::string mapping);
+
+
     }
 }
 

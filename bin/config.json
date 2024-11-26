@@ -16,7 +16,7 @@
 					"mapping" : 
 					[
 						{
-							"controller-button" : "CB_B",
+							"controller-button" : "CB_A",
 							"name" : "jump-im-ctrl"
 						}
 					]

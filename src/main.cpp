@@ -233,7 +233,7 @@ struct TestApplication : public app::IApplication {
             //vel.x = input::getInputMappingAxisPressed(&config::getConfig()->input.mapping.at("move-left").mapping, &config::getConfig()->input.mapping.at("move-right").mapping) + input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1).x;
             vel.x = input::getInputMappingAxisPressed("move-left", "move-right") + input::gamepad::getLeftAxis(input::gamepad::PlayerControllerName::PCN_PLAYER_1).x;
             //vel.y += jump * input::getInputMappingValuePressedOnce(&config::getConfig()->input.mapping.at("jump-im").mapping) + jump * input::gamepad::getInputMappingValuePressedOnce(&jumpIMCtrl);
-            vel.y += jump * input::getInputMappingValuePressedOnce("jump-im");
+            vel.y += jump * input::getInputMappingValuePressedOnce("jump-im") + jump * input::gamepad::getInputMappingValuePressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, "jump-im-ctrl");
 
             vel.x *= speed;
 
