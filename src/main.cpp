@@ -84,6 +84,9 @@ struct TestApplication : public app::IApplication {
 
         input::gamepad::InputMapping jumpIMCtrl;
 
+        sound::MusicPlayer jungle;
+        sound::SoundFXPlayer lazer;
+
         virtual void init() {
             /*
             IMGUI_CHECKVERSION();
@@ -119,6 +122,15 @@ struct TestApplication : public app::IApplication {
             render::vertex_buffer_manager::update("icon_array_texCoords");
 
             render::font::loadFont("regular", "data/font/londrina_sketch_regular.ttf", 64);
+
+            sound::addMusicStream("jungle", "data/sound/music/jungle.mp3");
+            sound::addSoundFXStream("lazer", "data/sound/sfx/lazer.wav");
+
+            jungle.init("jungle");
+            lazer.init("lazer");
+            
+            jungle.play(-1);
+
 
             gravity = cpv(0.0f, -100.0f);
 
@@ -253,6 +265,10 @@ struct TestApplication : public app::IApplication {
 
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_TAB)) {
                 isArrayTest = !isArrayTest;
+            }
+
+            if(input::isKeyPressedOnce(input::Keyboard::KEYS_1)) {
+                lazer.play(-1, 0);
             }
         }
 

@@ -1302,7 +1302,7 @@ namespace config {
                         }
 
                         ImGui::EndCombo();
-                        
+
                     }
                 }
 
@@ -1325,6 +1325,13 @@ namespace config {
 
     void soundTab() {
         ImGui::Text("Sound Tab");
+        ImGui::Separator();
+
+        ImGui::SliderFloat("Master Volume", &_config.sound.masterVolume, 0.0f, 1.0f);
+
+        ImGui::SliderFloat("Music Volume", &_config.sound.musicVolume, 0.0f, 1.0f);
+
+        ImGui::SliderFloat("Sound FX Volume", &_config.sound.soundFXVolume, 0.0f, 1.0f);
     }
 
     bool drawConfigSystem() {
@@ -1377,6 +1384,10 @@ namespace config {
                 if(ImGui::Button("Save")) {
                     save();
                 }
+            }
+
+            if(ImGui::Button("Close")) {
+                showSystemConfig = false;
             }
 
             ImGui::End();
