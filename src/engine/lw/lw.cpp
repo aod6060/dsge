@@ -9,12 +9,40 @@ namespace lua_wrapper {
         this->exports.init(this);
 
         this->state = luaL_newstate();
+
+        initLibs(this);
+
+        int result = luaL_loadfile(this->state, this->path.c_str());
+
+        if(result != LUA_OK) {
+            const char* message = lua_tostring(state, -1);
+            std::cout << message << "\n";
+            lua_pop(this->state, 1);
+        }
+
+        result = lua_pcall(this->state, 0, LUA_MULTRET, 0);
+
+        if(result != LUA_OK) {
+            const char* message = lua_tostring(state, -1);
+            std::cout << message << "\n";
+            lua_pop(this->state, 1);
+        }
     }
 
     void LWState::close() {
         lua_close(this->state);
 
         this->exports.release();
+    }
+
+
+    void initLibs(LWState* state) {
+        luaL_openlibs(state->state);
+
+        lua_pushlightuserdata(state->state, state);
+        lua_setglobal(state->state, "state");
+
+        export_initLibs(state);
     }
 
     /*

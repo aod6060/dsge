@@ -5,12 +5,12 @@
 
 #include "../sys.h"
 
-namespace lw {
-    /*
-    void initLibs(LuaState* state);
+namespace lua_wrapper {
+
+    void initLibs(LWState* state);
 
     // Export
-    void export_initLibs(LuaState* state);
+    void export_initLibs(LWState* state);
     
     int lw_setInteger(lua_State* l);
     int lw_setNumber(lua_State* l);
@@ -33,7 +33,6 @@ namespace lw {
     // Sound
 
     // igw
-    */
     
 }
 
