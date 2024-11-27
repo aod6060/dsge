@@ -65,7 +65,7 @@ if platform == "win32":
             'jsoncpp.lib',
             'freetype.lib',
             'chipmunk.lib',
-            'lua_5_4_7.lib',
+            'lua53.lib',
             'kernel32.lib',
             'user32.lib',
             'gdi32.lib',
@@ -89,7 +89,8 @@ if platform == "win32":
         ],
         LINKFLAGS=[
             '/SUBSYSTEM:CONSOLE',
-            '/MACHINE:X86'])
+            '/MACHINE:X86',
+            '/NODEFAULTLIB:library'])
 elif platform == "linux":
     env = Environment(
         TARGET_ARCH='x86',

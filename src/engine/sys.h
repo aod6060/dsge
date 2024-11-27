@@ -33,8 +33,8 @@
 #include "igw/igw.h"
 #include "sound/sound.h"
 #include "physics/physics.h"
-#include "config/config.h"
 #include "lw/lw.h"
+#include "config/config.h"
 
 
 #endif

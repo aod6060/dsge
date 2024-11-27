@@ -3,6 +3,7 @@
 #include "engine/config/config.h"
 #include "engine/igw/igw.h"
 #include "engine/input/input.h"
+#include "engine/lw/lw.h"
 #include "engine/physics/physics.h"
 #include "engine/render/font/font.h"
 #include "engine/render/glw/glw.h"
@@ -21,6 +22,7 @@
 #include <climits>
 #include <sstream>
 #include <vector>
+#include "lauxlib.h"
 #include "thirdparty/imgui/imgui.h"
 #include "thirdparty/imgui/imgui_impl_sdl2.h"
 #include "thirdparty/imgui/imgui_impl_opengl3.h"
@@ -230,6 +232,29 @@ struct TestApplication : public app::IApplication {
             float h = 640.0f / aspect;
 
             std::cout << 640.0f << ", " << h << "\n";
+
+
+            // We're going to test the lua interface
+            //lw::LuaState state;
+
+            //state.open("data/script/test.lua");
+
+            
+            //state.close();
+
+            /*
+            lua_State* s = luaL_newstate();
+
+            lua_close(s);
+            */
+
+
+
+            lua_wrapper::LWState state;
+
+            state.open("data/script/test.lua");
+
+            state.close();
         }
 
         virtual void handleEvent(SDL_Event* e) {

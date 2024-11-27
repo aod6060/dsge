@@ -5,6 +5,9 @@ Import("env")
 # Compile the config module
 SConscript("#/src/engine/config/SConscript", exports="env")
 
+# Compile the lua wrapper module
+SConscript("#/src/engine/lw/SConscript", exports="env")
+
 # Compile the app
 SConscript("#/src/engine/app/SConscript", exports="env")
 
@@ -22,6 +25,3 @@ SConscript("#/src/engine/sound/SConscript", exports="env")
 
 # Compile the physics module
 SConscript("#/src/engine/physics/SConscript", exports="env")
-
-# Compile the lua wrapper module
-SConscript("#/src/engine/lw/SConscript")
