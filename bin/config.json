@@ -4,7 +4,7 @@
 		"caption" : "DSGE: Engine",
 		"display" : 0,
 		"fullscreen" : false,
-		"resolution" : 16
+		"resolution" : 19
 	},
 	"input" : 
 	{
@@ -16,7 +16,7 @@
 					"mapping" : 
 					[
 						{
-							"controller-button" : "CB_A",
+							"controller-button" : "CB_B",
 							"name" : "jump-im-ctrl"
 						}
 					]
@@ -73,8 +73,8 @@
 	"render" : {},
 	"sound" : 
 	{
-		"master-volume" : 0.027000000700354576,
-		"music-volume" : 1.0,
-		"sound-fx-volume" : 1.0
+		"master-volume" : 0.063000001013278961,
+		"music-volume" : 0.057000000029802322,
+		"sound-fx-volume" : 0.071999996900558472
 	}
 }

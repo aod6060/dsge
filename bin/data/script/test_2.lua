@@ -16,6 +16,9 @@ test_num = 3.16
 export(state, "test_bool", LWType.LWT_BOOL)
 test_bool = true
 
+export(state, "test_int_2", LWType.LWT_INTEGER)
+test_int_2 = 100
+
 function callme()
     print("Hello, World")
 
@@ -29,6 +32,7 @@ function callme()
         Thank you roblox forum. :/
     ]]
     print("test_bool: "..tostring(test_bool))
+    print("test_int_2: "..test_int_2)
 
     print()
 

@@ -927,6 +927,8 @@ namespace config {
 
         std::cout << "Player Size: " << players.size() << "\n";
 
+        _config.input.gamepad.players.clear();
+        
         for(int i = 0; i < players.size(); i++) {
             Json::Value item = players[i];
 
@@ -1387,7 +1389,7 @@ namespace config {
             }
 
             ImGui::SameLine();
-            
+
             if(ImGui::Button("Close")) {
                 showSystemConfig = false;
             }
