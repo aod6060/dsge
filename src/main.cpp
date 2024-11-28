@@ -79,31 +79,14 @@ struct TestApplication : public app::IApplication {
 
         cpVect gravity;
 
-        //input::InputMapping moveLeft;
-        //input::InputMapping moveRight;
-
-        //input::InputMapping jumpIM;
-
         input::gamepad::InputMapping jumpIMCtrl;
 
         sound::MusicPlayer jungle;
         sound::SoundFXPlayer lazer;
 
+        lua_wrapper::LWState state;
+
         virtual void init() {
-            /*
-            IMGUI_CHECKVERSION();
-
-            ImGui::CreateContext();
-            
-            // If I need it
-            ImGuiIO& io = ImGui::GetIO();
-
-            ImGui::StyleColorsDark();
-
-            ImGui_ImplSDL2_InitForOpenGL(app::getWindow(), app::getContext());
-            ImGui_ImplOpenGL3_Init("#version 400");
-            */
-
             render::texture2D_manager::loadFromFile("icon_32", "data/icon/icon_32.png");
             render::texture2D_manager::loadFromFile("box_tex", "data/icon/Box.png");
             render::texture2D_manager::loadFromFile("brick_tex", "data/icon/Brick.png");
@@ -211,12 +194,6 @@ struct TestApplication : public app::IApplication {
             physics::addShape(&ballShape);
             // In the update function
 
-            /*
-            input::initInputMapping(&moveLeft, input::Keyboard::KEYS_LEFT);
-            input::initInputMapping(&moveRight, input::Keyboard::KEYS_RIGHT);
-            input::initInputMapping(&jumpIM, input::Keyboard::KEYS_SPACE);
-            */
-
             input::gamepad::initInputMapping(&jumpIMCtrl, input::gamepad::PlayerControllerName::PCN_PLAYER_1, input::gamepad::ControllerButton::CB_A);
 
 
@@ -233,45 +210,8 @@ struct TestApplication : public app::IApplication {
 
             std::cout << 640.0f << ", " << h << "\n";
 
-
-            // We're going to test the lua interface
-            //lw::LuaState state;
-
-            //state.open("data/script/test.lua");
-
-            
-            //state.close();
-
-            /*
-            lua_State* s = luaL_newstate();
-
-            lua_close(s);
-            */
-
-
-
-            lua_wrapper::LWState state;
-
             state.open("data/script/test_2.lua");
 
-            //int32_t test_int = state.exports.getInteger("test_int");
-            //float test_num = state.exports.getNumber("test_num");
-            //bool test_bool = state.exports.getBool("test_bool");
-
-            int32_t test_int = state.getInteger("test_int");
-            float test_num = state.getNumber("test_num");
-            bool test_bool = state.getBoolean("test_bool");
-
-            state.callFunction("callme");
-
-            state.setNumber("test_num", 2.71828f);
-
-            test_num = state.getNumber("test_num");
-
-            state.callFunction("callme");
-
-            //std::cout << "test_int: " << test_int << " test_num: " << test_num << " test_bool: " << ((test_bool) ? "true" : "false") << "\n";
-            state.close();
         }
 
         virtual void handleEvent(SDL_Event* e) {
@@ -322,6 +262,34 @@ struct TestApplication : public app::IApplication {
             ImGui::Text("Physics System Controls");
 
             ImGui::SliderFloat2("Gravity", &g[0], -100.0f, 100.0f);
+
+            ImGui::End();
+
+            ImGui::Begin("Test Lua");
+
+            if(ImGui::Button("Reload")) {
+                state.reload();
+            }
+
+            if(ImGui::Button("Call \"callme\" lua function")) {
+                state.callFunction("callme");
+            }
+
+            for(int i = 0; i < state.exports.size(); i++) {
+                if(state.exports[i].type == lua_wrapper::LWType::LWT_INTEGER) {
+                    if(ImGui::DragInt(state.exports[i].name.c_str(), &state.exports[i].ivalue)) {
+                        state.setInteger(state.exports[i].name, state.exports[i].ivalue);
+                    }
+                } else if(state.exports[i].type == lua_wrapper::LWType::LWT_NUMBER) {
+                    if(ImGui::DragFloat(state.exports[i].name.c_str(), &state.exports[i].nvalue)) {
+                        state.setNumber(state.exports[i].name, state.exports[i].nvalue);
+                    }
+                } else if(state.exports[i].type == lua_wrapper::LWType::LWT_BOOL) {
+                    if(ImGui::Checkbox(state.exports[i].name.c_str(), &state.exports[i].bvalue)) {
+                        state.setBoolean(state.exports[i].name, state.exports[i].bvalue);
+                    }
+                }
+            }
 
             ImGui::End();
 
@@ -457,6 +425,8 @@ struct TestApplication : public app::IApplication {
         }
 
         virtual void release() {
+            state.close();
+
             // Ball
             physics::removeShape(&this->ballShape);
             physics::removeBody(&this->ballBody);

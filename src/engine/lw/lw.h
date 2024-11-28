@@ -18,6 +18,9 @@ namespace lua_wrapper {
     struct LWVariable {
         std::string name;
         LWType type;
+        int ivalue;
+        float nvalue;
+        bool bvalue;
     };
 
     struct LWState {
@@ -30,6 +33,7 @@ namespace lua_wrapper {
         void open();
         void open(std::string path);
         void close();
+        void reload();
 
         int getInteger(std::string name);
         float getNumber(std::string name);
@@ -41,8 +45,6 @@ namespace lua_wrapper {
 
         // For now I don't care about arguments
         void callFunction(std::string name);
-
-        void getVariables(std::vector<LWVariable>& variables);
     };
 }
 

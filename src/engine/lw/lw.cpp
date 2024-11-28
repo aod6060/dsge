@@ -5,9 +5,7 @@
 
 namespace lua_wrapper {
 
-    void LWState::open(std::string path) {
-        this->path = path; // For reloading scripts
-
+    void LWState::open() {
         this->state = luaL_newstate();
 
         initLibs(this);
@@ -27,12 +25,33 @@ namespace lua_wrapper {
             std::cout << message << "\n";
             lua_pop(this->state, 1);
         }
+
+        // Handle Exports
+        for(int i = 0; i < exports.size(); i++) {
+            if(this->exports[i].type == lua_wrapper::LWType::LWT_INTEGER) {
+                this->exports[i].ivalue = getInteger(this->exports[i].name);
+            } else if(this->exports[i].type == lua_wrapper::LWType::LWT_NUMBER) {
+                this->exports[i].nvalue = getNumber(this->exports[i].name);
+            } else if(this->exports[i].type == lua_wrapper::LWType::LWT_BOOL) {
+                this->exports[i].bvalue = getBoolean(this->exports[i].name);
+            }
+        }
+    }
+
+    void LWState::open(std::string path) {
+        this->path = path; // For reloading scripts
+        this->open();
     }
 
     void LWState::close() {
         lua_close(this->state);
     }
 
+    void LWState::reload() {
+        this->exports.clear();
+        this->close();
+        this->open();
+    }
 
     void initLibs(LWState* state) {
         luaL_openlibs(state->state);
@@ -75,6 +94,14 @@ namespace lua_wrapper {
         LWVariable v;
         v.name = name;
         v.type = type;
+
+        if(v.type == LWType::LWT_INTEGER) {
+            v.ivalue = state->getInteger(v.name);
+        } else if(v.type == LWType::LWT_NUMBER) {
+            v.nvalue = state->getNumber(v.name);
+        } else if(v.type == LWType::LWT_BOOL) {
+            v.bvalue = state->getBoolean(v.name);
+        }
 
         state->exports.push_back(v);
 

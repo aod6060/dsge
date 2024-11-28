@@ -1386,6 +1386,8 @@ namespace config {
                 }
             }
 
+            ImGui::SameLine();
+            
             if(ImGui::Button("Close")) {
                 showSystemConfig = false;
             }
