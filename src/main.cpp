@@ -252,13 +252,25 @@ struct TestApplication : public app::IApplication {
 
             lua_wrapper::LWState state;
 
-            state.open("data/script/test.lua");
+            state.open("data/script/test_2.lua");
 
-            int32_t test_int = state.exports.getInteger("test_int");
-            float test_num = state.exports.getNumber("test_num");
-            bool test_bool = state.exports.getBool("test_bool");
+            //int32_t test_int = state.exports.getInteger("test_int");
+            //float test_num = state.exports.getNumber("test_num");
+            //bool test_bool = state.exports.getBool("test_bool");
 
-            std::cout << "test_int: " << test_int << " test_num: " << test_num << " test_bool: " << ((test_bool) ? "true" : "false") << "\n";
+            int32_t test_int = state.getInteger("test_int");
+            float test_num = state.getNumber("test_num");
+            bool test_bool = state.getBoolean("test_bool");
+
+            state.callFunction("callme");
+
+            state.setNumber("test_num", 2.71828f);
+
+            test_num = state.getNumber("test_num");
+
+            state.callFunction("callme");
+
+            //std::cout << "test_int: " << test_int << " test_num: " << test_num << " test_bool: " << ((test_bool) ? "true" : "false") << "\n";
             state.close();
         }
 

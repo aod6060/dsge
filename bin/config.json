@@ -73,7 +73,7 @@
 	"render" : {},
 	"sound" : 
 	{
-		"master-volume" : 1.0,
+		"master-volume" : 0.0,
 		"music-volume" : 1.0,
 		"sound-fx-volume" : 1.0
 	}
