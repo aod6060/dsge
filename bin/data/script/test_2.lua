@@ -37,3 +37,19 @@ function callme()
     print()
 
 end
+
+
+function test_app_interface()
+    -- Add other functions to this in a second.
+
+    width = App.getWidth()
+    height = App.getHeight()
+    aspect = App.getAspect()
+
+    print(width .. ", " .. height .. ", " .. aspect)
+
+end
+
+function test_app_exit()
+    App.exit()
+end

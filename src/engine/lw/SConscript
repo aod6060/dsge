@@ -4,5 +4,6 @@ def source(file):
     return "#/src/engine/lw/" + file
 
 env["source_files"] += [
-    source("lw.cpp")
+    source("lw.cpp"),
+    source("lw_app_wrapper.cpp")
 ]

@@ -83,6 +83,8 @@ namespace lua_wrapper {
         //lua_setglobal(state->state, "LWT_BOOL");
 
         //export_initLibs(state);
+        lw_app_initLib(state);
+        
     }
 
     int lw_export(lua_State* l) {

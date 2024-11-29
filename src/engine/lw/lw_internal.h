@@ -4,6 +4,7 @@
 
 
 #include "../sys.h"
+#include "lw.h"
 
 namespace lua_wrapper {
 
@@ -27,6 +28,17 @@ namespace lua_wrapper {
     // Config
 
     // App
+
+    void lw_app_initLib(LWState* state);
+
+    int lw_app_getWidth(lua_State* l);
+    int lw_app_getHeight(lua_State* l);
+    int lw_app_getAspect(lua_State* l);
+
+    int lw_app_exit(lua_State* l);
+
+    int lw_app_getWindow(lua_State* l);
+    int lw_app_getContext(lua_State* l);
 
     // Input
 

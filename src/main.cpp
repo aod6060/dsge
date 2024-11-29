@@ -275,6 +275,14 @@ struct TestApplication : public app::IApplication {
                 state.callFunction("callme");
             }
 
+            if(ImGui::Button("Application Exit Test")) {
+                state.callFunction("test_app_exit");
+            }
+
+            if(ImGui::Button("Test App Interface")) {
+                state.callFunction("test_app_interface");
+            }   
+
             for(int i = 0; i < state.exports.size(); i++) {
                 if(state.exports[i].type == lua_wrapper::LWType::LWT_INTEGER) {
                     if(ImGui::DragInt(state.exports[i].name.c_str(), &state.exports[i].ivalue)) {
