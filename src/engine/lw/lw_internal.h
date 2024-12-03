@@ -12,18 +12,6 @@ namespace lua_wrapper {
     void initLibs(LWState* state);
 
     // Export
-    /*
-    void export_initLibs(LWState* state);
-    
-    int lw_setInteger(lua_State* l);
-    int lw_setNumber(lua_State* l);
-    int lw_setBool(lua_State* l);
-
-    int lw_getInteger(lua_State* l);
-    int lw_getNumber(lua_State* l);
-    int lw_getBool(lua_State* l);
-    */
-
     int lw_export(lua_State* l);
     
     // Config
@@ -64,6 +52,47 @@ namespace lua_wrapper {
     int lw_input_getGrab(lua_State* l);
     int lw_input_toggleGrab(lua_State* l);
 
+    // Regular boolean check
+    //bool isInputMappingReleased(std::string name);
+    int lw_input_isInputMappingReleased(lua_State* l);
+
+    //bool isInputMappingPressedOnce(std::string name);
+    int lw_input_isInputMappingPressedOnce(lua_State* l);
+
+    //bool isInputMappingPressed(std::string name);
+    int lw_input_isInputMappingPressed(lua_State* l);
+
+    //bool isInputMappingReleasedOnce(std::string name);
+    int lw_input_isInputMappingReleasedOnce(lua_State* l);
+
+    // Axis Functions
+    //float getInputMappingAxisReleased(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisReleased(lua_State* l);
+
+    //float getInputMappingAxisPressedOnce(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisPressedOnce(lua_State* l);
+
+    //float getInputMappingAxisPressed(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisPressed(lua_State* l);
+
+    //float getInputMappingAxisReleasedOnce(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisReleasedOnce(lua_State* l);
+
+
+    // Value Functions
+    //float getInputMappingValueReleased(std::string name);
+    int lw_input_getInputMappingValueReleased(lua_State* l);
+
+    //float getInputMappingValuePressedOnce(std::string name);
+    int lw_input_getInputMappingValuePressedOnce(lua_State* l);
+
+    //float getInputMappingValuePressed(std::string name);
+    int lw_input_getInputMappingValuePressed(lua_State* l);
+
+    //float getInputMappingValueReleasedOnce(std::string name);
+    int lw_input_getInputMappingValueReleasedOnce(lua_State* l);
+
+    
     // Render
 
     // Physics

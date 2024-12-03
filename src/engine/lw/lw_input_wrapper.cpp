@@ -311,6 +311,21 @@ namespace lua_wrapper {
         addToTable(state->state, "getGrab", lw_input_getGrab);
         addToTable(state->state, "toggleGrab", lw_input_toggleGrab);
 
+        addToTable(state->state, "isInputMappingReleased", lw_input_isInputMappingReleased);
+        addToTable(state->state, "isInputMappingPressedOnce", lw_input_isInputMappingPressedOnce);
+        addToTable(state->state, "isInputMappingPressed", lw_input_isInputMappingPressed);
+        addToTable(state->state, "isInputMappingReleasedOnce", lw_input_isInputMappingReleasedOnce);
+
+        addToTable(state->state, "getInputMappingAxisReleased", lw_input_getInputMappingAxisReleased);
+        addToTable(state->state, "getInputMappingAxisPressedOnce", lw_input_getInputMappingAxisPressedOnce);
+        addToTable(state->state, "getInputMappingAxisPressed", lw_input_getInputMappingAxisPressed);
+        addToTable(state->state, "getInputMappingAxisReleasedOnce", lw_input_getInputMappingAxisReleasedOnce);
+
+        addToTable(state->state, "getInputMappingValueReleased", lw_input_getInputMappingValueReleased);
+        addToTable(state->state, "getInputMappingValuePressedOnce", lw_input_getInputMappingValuePressedOnce);
+        addToTable(state->state, "getInputMappingValuePressed", lw_input_getInputMappingValuePressed);
+        addToTable(state->state, "getInputMappingValueReleasedOnce", lw_input_getInputMappingValueReleasedOnce);
+
         lua_setglobal(state->state, "Input");
     }
 
@@ -396,5 +411,108 @@ namespace lua_wrapper {
         input::toggleGrab();
         return 0;
     }
+
+    //bool isInputMappingReleased(std::string name);
+    int lw_input_isInputMappingReleased(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushboolean(l, input::isInputMappingReleased(name));
+        return 1;
+    }
+
+
+    //bool isInputMappingPressedOnce(std::string name);
+    int lw_input_isInputMappingPressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushboolean(l, input::isInputMappingPressedOnce(name));
+        return 1;
+    }
+
+
+    //bool isInputMappingPressed(std::string name);
+    int lw_input_isInputMappingPressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushboolean(l, input::isInputMappingPressed(name));
+        return 1;
+    }
+
+
+    //bool isInputMappingReleasedOnce(std::string name);
+    int lw_input_isInputMappingReleasedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushboolean(l, input::isInputMappingPressedOnce(name));
+        return 1;
+    }
+
+
+    // Axis Functions
+    //float getInputMappingAxisReleased(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisReleased(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        lua_pushnumber(l, input::getInputMappingAxisReleased(negative, positive));
+        return 1;
+    }
+
+
+    //float getInputMappingAxisPressedOnce(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisPressedOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        lua_pushnumber(l, input::getInputMappingAxisPressedOnce(negative, positive));
+        return 1;
+    }
+
+
+    //float getInputMappingAxisPressed(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisPressed(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        lua_pushnumber(l, input::getInputMappingAxisPressed(negative, positive));
+        return 1;
+    }
+
+
+    //float getInputMappingAxisReleasedOnce(std::string negative, std::string positive);
+    int lw_input_getInputMappingAxisReleasedOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        lua_pushnumber(l, input::getInputMappingAxisReleasedOnce(negative, positive));
+        return 1;
+    }
+
+
+
+    // Value Functions
+    //float getInputMappingValueReleased(std::string name);
+    int lw_input_getInputMappingValueReleased(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::getInputMappingValueReleased(name));
+        return 1;
+    }
+
+
+    //float getInputMappingValuePressedOnce(std::string name);
+    int lw_input_getInputMappingValuePressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::getInputMappingValuePressedOnce(name));
+        return 1;
+    }
+
+
+    //float getInputMappingValuePressed(std::string name);
+    int lw_input_getInputMappingValuePressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::getInputMappingValuePressed(name));
+        return 1;
+    }
+
+
+    //float getInputMappingValueReleasedOnce(std::string name);
+    int lw_input_getInputMappingValueReleasedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::getInputMappingValueReleasedOnce(name));
+        return 1;
+    }
+
 
 }
