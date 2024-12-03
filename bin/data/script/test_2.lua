@@ -53,3 +53,9 @@ end
 function test_app_exit()
     App.exit()
 end
+
+i = 0
+
+-- This function will be called in the update function
+function update(delta)
+end

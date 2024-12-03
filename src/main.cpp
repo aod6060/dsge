@@ -252,6 +252,9 @@ struct TestApplication : public app::IApplication {
             if(input::isKeyPressedOnce(input::Keyboard::KEYS_1)) {
                 lazer.play(-1, 0);
             }
+
+
+            state.callUpdateFunction(delta);
         }
 
         void renderMenu() {

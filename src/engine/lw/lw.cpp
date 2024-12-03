@@ -84,7 +84,7 @@ namespace lua_wrapper {
 
         //export_initLibs(state);
         lw_app_initLib(state);
-        
+        lw_input_initLib(state);
     }
 
     int lw_export(lua_State* l) {
@@ -152,6 +152,17 @@ namespace lua_wrapper {
     void LWState::callFunction(std::string name) {
         lua_getglobal(this->state, name.c_str());
         int result = lua_pcall(this->state, 0, 0, 0);
+
+        if(result != LUA_OK) {
+            std::string msg = lua_tostring(this->state, -1);
+            std::cout << msg << "\n";
+        }
+    }
+
+    void LWState::callUpdateFunction(float delta) {
+        lua_getglobal(this->state, "update");
+        lua_pushnumber(this->state, delta);
+        int result = lua_pcall(this->state, 1, 1, 0);
 
         if(result != LUA_OK) {
             std::string msg = lua_tostring(this->state, -1);

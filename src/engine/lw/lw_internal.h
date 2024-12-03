@@ -4,6 +4,7 @@
 
 
 #include "../sys.h"
+#include "lua.h"
 #include "lw.h"
 
 namespace lua_wrapper {
@@ -27,6 +28,7 @@ namespace lua_wrapper {
     
     // Config
 
+
     // App
 
     void lw_app_initLib(LWState* state);
@@ -41,6 +43,26 @@ namespace lua_wrapper {
     int lw_app_getContext(lua_State* l);
 
     // Input
+    void lw_input_initLib(LWState* state);
+
+    int lw_input_isKeyReleased(lua_State* l);
+    int lw_input_isKeyPressedOnce(lua_State* l);
+    int lw_input_isKeyPressed(lua_State* l);
+    int lw_input_isKeyReleasedOnce(lua_State* l);
+
+    int lw_input_isMouseButtonReleased(lua_State* l);
+    int lw_input_isMouseButtonPressedOnce(lua_State* l);
+    int lw_input_isMouseButtonPressed(lua_State* l);
+    int lw_input_isMouseButtonReleasedOnce(lua_State* l);
+
+    int lw_input_getPosition(lua_State* l);
+    int lw_input_getRelative(lua_State* l);
+    
+    int lw_input_getMouseWheel(lua_State* l);
+    
+    int lw_input_setGrab(lua_State* l);
+    int lw_input_getGrab(lua_State* l);
+    int lw_input_toggleGrab(lua_State* l);
 
     // Render
 

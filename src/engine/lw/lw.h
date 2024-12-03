@@ -45,6 +45,8 @@ namespace lua_wrapper {
 
         // For now I don't care about arguments
         void callFunction(std::string name);
+        void callUpdateFunction(float delta);
+
     };
 }
 
