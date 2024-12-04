@@ -58,4 +58,19 @@ i = 0
 
 -- This function will be called in the update function
 function update(delta)
+
+    --x, y = GamepadPlayer1.getRightAxis()
+
+    --print(x .. ", " .. y)
+    --left = GamepadPlayer1.getLeftTriggerAxis()
+    --right = GamepadPlayer1.getRightTriggerAxis()
+
+    --print(left .. ", " .. right)
+
+    --[[
+    if GamepadPlayer1.isButtonReleasedOnce(ControllerButton.CB_A) then
+        print(i .. "> Press Button")
+        i = i + 1
+    end
+    ]]
 end

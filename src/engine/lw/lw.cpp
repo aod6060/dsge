@@ -85,6 +85,7 @@ namespace lua_wrapper {
         //export_initLibs(state);
         lw_app_initLib(state);
         lw_input_initLib(state);
+        lw_gamepad_initLib(state);
     }
 
     int lw_export(lua_State* l) {

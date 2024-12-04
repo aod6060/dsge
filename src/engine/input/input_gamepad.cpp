@@ -121,7 +121,7 @@ namespace input {
                                if(e->caxis.value > DEAD_ZONE) {
                                     playerData[index].rightAxis.x = e->caxis.value / (float)(SDL_JOYSTICK_AXIS_MAX);
                                 } else if(e->caxis.value < -DEAD_ZONE) {
-                                    playerData[index].rightAxis.x = e->caxis.value / (float)(SDL_JOYSTICK_AXIS_MIN);
+                                    playerData[index].rightAxis.x = -(e->caxis.value / (float)(SDL_JOYSTICK_AXIS_MIN));
                                 } else {
                                     playerData[index].rightAxis.x = 0.0f;
                                 }
@@ -131,7 +131,7 @@ namespace input {
                                 if(e->caxis.value > DEAD_ZONE) {
                                     playerData[index].rightAxis.y = e->caxis.value / (float)(SDL_JOYSTICK_AXIS_MAX);
                                 } else if(e->caxis.value < -DEAD_ZONE) {
-                                    playerData[index].rightAxis.y = e->caxis.value / (float)(SDL_JOYSTICK_AXIS_MIN);
+                                    playerData[index].rightAxis.y = -(e->caxis.value / (float)(SDL_JOYSTICK_AXIS_MIN));
                                 } else {
                                     playerData[index].rightAxis.y = 0.0f;
                                 }
