@@ -1210,12 +1210,80 @@ namespace config {
         }
     }
 
+    #define SIZE_OF_BUFFER 128
+    char im_name_buf[SIZE_OF_BUFFER];
+
+    bool im_is_mouse = false;
+    std::string im_current_key = "KEYS_UNKNOWN";
+    std::string im_current_mouse = "MBS_LEFT";
+    
     void inputTab() {
         ImGui::Text("Input Config");
 
         ImGui::Separator();
 
         ImGui::Text("Keyboard/Mouse");
+
+        // Add in input mapping
+        ImGui::PushID("Add IM");
+
+        ImGui::InputText("IM Name", im_name_buf, SIZE_OF_BUFFER);
+        ImGui::Checkbox("Is Mouse?", &im_is_mouse);
+
+        if(im_is_mouse) {
+            if(ImGui::BeginCombo("Mouse Buttons", im_current_mouse.data())) {
+
+                for(int i = 0; i < mouseButtonsList.size(); i++) {
+                    bool is_selected = (im_current_mouse == mouseButtonsList[i]);
+
+                    if(ImGui::Selectable(mouseButtonsList[i].data(), is_selected)) {
+                        im_current_mouse = mouseButtonsList[i];
+                        //input::initInputMapping(&it->second.mapping, mouseButtons[it->second.currentMouseButton], it->second.mapping.isMouse);
+                    }
+
+                    if(is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+        } else {
+            if(ImGui::BeginCombo("Keys", im_current_key.data())) {
+
+                for(int i = 0; i < keyList.size(); i++) {
+                    bool is_selected = (im_current_key == keyList[i]);
+
+                    if(ImGui::Selectable(keyList[i].data(), is_selected)) {
+                        im_current_key = keyList[i];
+                        //input::initInputMapping(&it->second.mapping, keys[it->second.currentKey], it->second.mapping.isMouse);
+                    }
+
+                    if(is_selected) {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+        }
+
+        if(ImGui::Button("Add Keyboard/MouseButton Mapping")) {
+            _config.input.mapping[im_name_buf].name = im_name_buf;
+            _config.input.mapping[im_name_buf].currentMouseButton = "KEYS_UNKNOWN";
+            _config.input.mapping[im_name_buf].currentKey = "MBS_LEFT";
+            if(im_is_mouse) {
+                _config.input.mapping[im_name_buf].currentMouseButton = im_current_mouse;
+                input::initInputMapping(&_config.input.mapping[im_name_buf].mapping, mouseButtons.at(im_current_mouse), true);
+            } else {
+                _config.input.mapping[im_name_buf].currentMouseButton = im_current_key;
+                input::initInputMapping(&_config.input.mapping[im_name_buf].mapping, keys.at(im_current_key), false);
+            }
+        }
+
+        ImGui::PopID();
+
+        ImGui::Separator();
 
         for(std::map<std::string, KeyboardMouseInputMap>::iterator it = _config.input.mapping.begin(); it != _config.input.mapping.end(); it++) {
 
