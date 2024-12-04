@@ -60,6 +60,14 @@ i2 = 0
 -- This function will be called in the update function
 function update(delta)
 
+    if Input.isInputMappingPressed("lua-test-3") then
+        print(i .. "> dynamic test 2")
+        i = i + 1
+    end
+
+
+
+    --[[
     if Input.isInputMappingPressed("lua-test") then
         print(i .. "> testing dynamic input mapping :)")
         i = i + 1
@@ -69,7 +77,7 @@ function update(delta)
         print(i2 .. "> testing dynamic input mapping 2 :)")
         i2 = i2 + 1
     end
-
+    ]]
     --x, y = GamepadPlayer1.getRightAxis()
 
     --print(x .. ", " .. y)

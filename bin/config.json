@@ -60,12 +60,7 @@
 			{
 				"input" : "KEYS_RETURN",
 				"is-mouse" : false,
-				"name" : "lua-test"
-			},
-			{
-				"input" : "KEYS_TAB",
-				"is-mouse" : false,
-				"name" : "lua-test2"
+				"name" : "lua-test-3"
 			},
 			{
 				"input" : "KEYS_LEFT",

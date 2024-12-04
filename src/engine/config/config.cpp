@@ -1285,6 +1285,8 @@ namespace config {
 
         ImGui::Separator();
 
+        std::vector<std::map<std::string, KeyboardMouseInputMap>::iterator> dels;
+
         for(std::map<std::string, KeyboardMouseInputMap>::iterator it = _config.input.mapping.begin(); it != _config.input.mapping.end(); it++) {
 
             std::stringstream id;
@@ -1295,7 +1297,11 @@ namespace config {
 
             ImGui::Text("Name: %s", it->first.c_str());
 
+            ImGui::SameLine();
+
             ImGui::Checkbox("Is Mouse? ", &it->second.mapping.isMouse);
+
+            ImGui::SameLine();
 
             if(it->second.mapping.isMouse) {
                 if(ImGui::BeginCombo("Mouse Buttons", it->second.currentMouseButton.data())) {
@@ -1335,9 +1341,20 @@ namespace config {
                 }
             }
 
+            if(ImGui::Button("Remove")) {
+                dels.push_back(it);
+            }
+
             ImGui::PopID();
         }
 
+        // Remove
+        for(int i =0; i < dels.size(); i++) {
+            _config.input.mapping.erase(dels[i]);
+        }
+
+        dels.clear();
+        
         ImGui::Separator();
 
         ImGui::Text("Gamepads");
