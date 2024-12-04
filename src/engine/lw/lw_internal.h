@@ -148,6 +148,43 @@ namespace lua_wrapper {
     int lw_gamepad_player3_isControllerConnect(lua_State* l);
     int lw_gamepad_player4_isControllerConnect(lua_State* l);
 
+    // Regular boolean check
+    //bool isInputMappingReleased(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingReleased(lua_State* l);
+    int lw_gamepad_player2_isInputMappingReleased(lua_State* l);
+    int lw_gamepad_player3_isInputMappingReleased(lua_State* l);
+    int lw_gamepad_player4_isInputMappingReleased(lua_State* l);
+
+    //bool isInputMappingPressedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingPressedOnce(lua_State* l);
+    int lw_gamepad_player2_isInputMappingPressedOnce(lua_State* l);
+    int lw_gamepad_player3_isInputMappingPressedOnce(lua_State* l);
+    int lw_gamepad_player4_isInputMappingPressedOnce(lua_State* l);
+
+    //bool isInputMappingPressed(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingPressed(lua_State* l);
+    int lw_gamepad_player2_isInputMappingPressed(lua_State* l);
+    int lw_gamepad_player3_isInputMappingPressed(lua_State* l);
+    int lw_gamepad_player4_isInputMappingPressed(lua_State* l);
+
+    //bool isInputMappingReleasedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingReleasedOnce(lua_State* l);
+    int lw_gamepad_player2_isInputMappingReleasedOnce(lua_State* l);
+    int lw_gamepad_player3_isInputMappingReleasedOnce(lua_State* l);
+    int lw_gamepad_player4_isInputMappingReleasedOnce(lua_State* l);
+
+    // Axis Functions
+    //float getInputMappingAxisReleased(PlayerControllerName name, std::string negative, std::string positive);
+    //float getInputMappingAxisPressedOnce(PlayerControllerName name, std::string negative, std::string positive);
+    //float getInputMappingAxisPressed(PlayerControllerName name, std::string negative, std::string positive);
+    //float getInputMappingAxisReleasedOnce(PlayerControllerName name, std::string negative, std::string positive);
+
+    // Value Functions
+    //float getInputMappingValueReleased(PlayerControllerName name, std::string mapping);
+    //float getInputMappingValuePressedOnce(PlayerControllerName name, std::string mapping);
+    //float getInputMappingValuePressed(PlayerControllerName name, std::string mapping);
+    //float getInputMappingValueReleasedOnce(PlayerControllerName name, std::string mapping);
+
     // Render
 
     // Physics

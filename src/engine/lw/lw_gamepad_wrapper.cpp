@@ -65,6 +65,11 @@ namespace lua_wrapper {
         addToTable(state->state, "isButtonPressed", lw_gamepad_player1_isButtonPressed);
         addToTable(state->state, "isButtonReleasedOnce", lw_gamepad_player1_isButtonReleasedOnce);
         addToTable(state->state, "isControllerConnect", lw_gamepad_player1_isControllerConnect);
+        // InputMapping
+        addToTable(state->state, "isInputMappingReleased", lw_gamepad_player1_isInputMappingReleased);
+        addToTable(state->state, "isInputMappingPressedOnce", lw_gamepad_player1_isInputMappingPressedOnce);
+        addToTable(state->state, "isInputMappingPressed", lw_gamepad_player1_isInputMappingPressed);
+        addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player1_isInputMappingReleasedOnce);
 
         lua_setglobal(state->state, "GamepadPlayer1");
 
@@ -80,7 +85,12 @@ namespace lua_wrapper {
         addToTable(state->state, "isButtonPressed", lw_gamepad_player2_isButtonPressed);
         addToTable(state->state, "isButtonReleasedOnce", lw_gamepad_player2_isButtonReleasedOnce);
         addToTable(state->state, "isControllerConnect", lw_gamepad_player2_isControllerConnect);
-        
+        // InputMapping
+        addToTable(state->state, "isInputMappingReleased", lw_gamepad_player2_isInputMappingReleased);
+        addToTable(state->state, "isInputMappingPressedOnce", lw_gamepad_player2_isInputMappingPressedOnce);
+        addToTable(state->state, "isInputMappingPressed", lw_gamepad_player2_isInputMappingPressed);
+        addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player2_isInputMappingReleasedOnce);
+
         lua_setglobal(state->state, "GamepadPlayer2");
 
         // Create GamepadPlayer3
@@ -95,7 +105,12 @@ namespace lua_wrapper {
         addToTable(state->state, "isButtonPressed", lw_gamepad_player3_isButtonPressed);
         addToTable(state->state, "isButtonReleasedOnce", lw_gamepad_player3_isButtonReleasedOnce);
         addToTable(state->state, "isControllerConnect", lw_gamepad_player3_isControllerConnect);
-        
+        // InputMapping
+        addToTable(state->state, "isInputMappingReleased", lw_gamepad_player3_isInputMappingReleased);
+        addToTable(state->state, "isInputMappingPressedOnce", lw_gamepad_player3_isInputMappingPressedOnce);
+        addToTable(state->state, "isInputMappingPressed", lw_gamepad_player3_isInputMappingPressed);
+        addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player3_isInputMappingReleasedOnce);
+
         lua_setglobal(state->state, "GamepadPlayer3");
 
         // Create GamepadPlayer4
@@ -110,7 +125,12 @@ namespace lua_wrapper {
         addToTable(state->state, "isButtonPressed", lw_gamepad_player4_isButtonPressed);
         addToTable(state->state, "isButtonReleasedOnce", lw_gamepad_player4_isButtonReleasedOnce);
         addToTable(state->state, "isControllerConnect", lw_gamepad_player4_isControllerConnect);
-        
+        // InputMapping
+        addToTable(state->state, "isInputMappingReleased", lw_gamepad_player4_isInputMappingReleased);
+        addToTable(state->state, "isInputMappingPressedOnce", lw_gamepad_player4_isInputMappingPressedOnce);
+        addToTable(state->state, "isInputMappingPressed", lw_gamepad_player4_isInputMappingPressed);
+        addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player4_isInputMappingReleasedOnce);
+
         lua_setglobal(state->state, "GamepadPlayer4");
 
     }
@@ -374,5 +394,121 @@ namespace lua_wrapper {
         return 1;
     }
 
+    // Regular boolean check
+    //bool isInputMappingReleased(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingReleased(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player2_isInputMappingReleased(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player3_isInputMappingReleased(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player4_isInputMappingReleased(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    //bool isInputMappingPressedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingPressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player2_isInputMappingPressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player3_isInputMappingPressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player4_isInputMappingPressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    //bool isInputMappingPressed(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingPressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player2_isInputMappingPressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player3_isInputMappingPressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player4_isInputMappingPressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    //bool isInputMappingReleasedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_isInputMappingReleasedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player2_isInputMappingReleasedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player3_isInputMappingReleasedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
+
+    int lw_gamepad_player4_isInputMappingReleasedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        bool ret = input::gamepad::isInputMappingReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name);
+        lua_pushboolean(l, ret);
+        return 1;
+    }
 
 }

@@ -73,4 +73,11 @@ function update(delta)
         i = i + 1
     end
     ]]
+
+    --[[
+    if GamepadPlayer1.isInputMappingReleasedOnce("jump-im-ctrl") then
+        print(i .. "> Pressed Button with Input mapping")
+        i = i + 1
+    end
+    ]]
 end
