@@ -4,8 +4,6 @@
 
 
 #include "../sys.h"
-#include "lua.h"
-#include "lw.h"
 
 namespace lua_wrapper {
 
@@ -92,7 +90,64 @@ namespace lua_wrapper {
     //float getInputMappingValueReleasedOnce(std::string name);
     int lw_input_getInputMappingValueReleasedOnce(lua_State* l);
 
-    
+    // Gamepad Section
+    void lw_gamepad_initLib(LWState* state);
+
+    // glm::vec2 getLeftAxis(PlayerControllerName name);
+    int lw_gamepad_player1_getLeftAxis(lua_State* l);
+    int lw_gamepad_player2_getLeftAxis(lua_State* l);
+    int lw_gamepad_player3_getLeftAxis(lua_State* l);
+    int lw_gamepad_player4_getLeftAxis(lua_State* l);
+
+    // glm::vec2 getRightAxis(PlayerControllerName name);
+    int lw_gamepad_player1_getRightAxis(lua_State* l);
+    int lw_gamepad_player2_getRightAxis(lua_State* l);
+    int lw_gamepad_player3_getRightAxis(lua_State* l);
+    int lw_gamepad_player4_getRightAxis(lua_State* l);
+
+    // float getLeftTriggerAxis(PlayerControllerName name);
+    int lw_gamepad_player1_getLeftTriggerAxis(lua_State* l);
+    int lw_gamepad_player2_getLeftTriggerAxis(lua_State* l);
+    int lw_gamepad_player3_getLeftTriggerAxis(lua_State* l);
+    int lw_gamepad_player4_getLeftTriggerAxis(lua_State* l);
+
+    // float getRightTriggerAxis(PlayerControllerName name);
+    int lw_gamepad_player1_getRightTriggerAxis(lua_State* l);
+    int lw_gamepad_player2_getRightTriggerAxis(lua_State* l);
+    int lw_gamepad_player3_getRightTriggerAxis(lua_State* l);
+    int lw_gamepad_player4_getRightTriggerAxis(lua_State* l);
+
+    // bool isButtonReleased(PlayerControllerName name, ControllerButton button);
+    int lw_gamepad_player1_isButtonReleased(lua_State* l);
+    int lw_gamepad_player2_isButtonReleased(lua_State* l);
+    int lw_gamepad_player3_isButtonReleased(lua_State* l);
+    int lw_gamepad_player4_isButtonReleased(lua_State* l);
+
+    // bool isButtonPressedOnce(PlayerControllerName name, ControllerButton button);
+    int lw_gamepad_player1_isButtonPressedOnce(lua_State* l);
+    int lw_gamepad_player2_isButtonPressedOnce(lua_State* l);
+    int lw_gamepad_player3_isButtonPressedOnce(lua_State* l);
+    int lw_gamepad_player4_isButtonPressedOnce(lua_State* l);
+
+    // bool isButtonPressed(PlayerControllerName name, ControllerButton button);
+    int lw_gamepad_player1_isButtonPressed(lua_State* l);
+    int lw_gamepad_player2_isButtonPressed(lua_State* l);
+    int lw_gamepad_player3_isButtonPressed(lua_State* l);
+    int lw_gamepad_player4_isButtonPressed(lua_State* l);
+
+    // bool isButtonReleasedOnce(PlayerControllerName name, ControllerButton button);
+    int lw_gamepad_player1_isButtonReleasedOnce(lua_State* l);
+    int lw_gamepad_player2_isButtonReleasedOnce(lua_State* l);
+    int lw_gamepad_player3_isButtonReleasedOnce(lua_State* l);
+    int lw_gamepad_player4_isButtonReleasedOnce(lua_State* l);
+
+
+    // bool isControllerConnected(PlayerControllerName name);
+    int lw_gamepad_player1_isControllerConnect(lua_State* l);
+    int lw_gamepad_player2_isControllerConnect(lua_State* l);
+    int lw_gamepad_player3_isControllerConnect(lua_State* l);
+    int lw_gamepad_player4_isControllerConnect(lua_State* l);
+
     // Render
 
     // Physics
