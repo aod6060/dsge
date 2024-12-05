@@ -1,0 +1,769 @@
+# Lua Wrapper Documentation
+
+This page will contain information about the lua wrapper which is the primary scripting language for DSGE. This document contains all interfaces that you'll have access to when diving into the project. It is divided into sections.
+
+## Core
+
+### LWType
+
+    enum LWType:
+        LWT_INTEGER
+        LWT_NUMBER
+        LWT_BOOL
+
+LWT_INTEGER ~ This specifies that the export will be an integer type (C++ int32_t)
+
+LWT_NUMBER ~ This specifies that the export will be a number type (C++ float)
+
+LWT_BOOL ~ This specifies that the export will be of bool type (C++ bool)
+
+### state
+
+state ~ This variable is LWState that is being used. The only function that interacts with
+it currently is the "export" function.
+
+### export
+
+export(state:LWState*, name:string, type:integer) -> void
+
+The "export" function tells LWState* that a global variable will be exported back to the engine
+so that the user (game developer) can interact with it in any of the editores that has access to
+it. Here is an example of how the "export" function is used with in a lua script.
+
+    export(state, "test_int", LWType.LWT_INTEGER)
+    test_int = 1
+
+    export(state, "test_num", LWType.LWT_NUMBER)
+    test_num = 3.16
+
+    export(state, "test_bool", LWType.LWT_BOOL)
+    test_bool = true
+
+    export(state, "test_int_2", LWType.LWT_INTEGER)
+    test_int_2 = 100
+
+These will allow you to have access from with in the editor which currently I haven't implemented any as of
+yet but soon. I do how ever have a example of how they will be used with in the engine.
+
+...Example image Here
+
+
+## Application
+
+    interface App
+        getWidth() -> integer
+        getHeight() -> integer
+        getAspect() -> number
+        exit() -> void
+        getWindow() -> SDL_Window*
+        getContext() -> SDL_GLContext
+
+
+## Application Interface Functions
+
+### App.getWidth()
+
+This will return the windows width. Note: this won't return the renders width. See Render.getWidth().
+
+### App.getHeight()
+
+This will return the windows height. Note: this won't return the renders height. See Render.getHeight().
+
+### App.getAspect()
+
+This will return the window aspect ratio.
+
+### App.exit()
+
+This will allow the applicaton to exit from with in a script.
+
+### App.getWindow()
+
+This will return the SDL_Window* pointer. Note: This might get removed because I'm not planning to add in direct SDL2
+access in lua because its too lowlevel.
+
+### App.getContext()
+
+This will return the SDL_GLContext pointer. Note: This might get removed because I'm not planning to add in direct SDL2
+access in lua because its too lowlevel.
+
+## Input
+
+
+Keyboard enum contains all of the possible keys a user (game developers) has access to.
+
+    enum Keyboard
+        KEYS_UNKNOWN
+        KEYS_A
+        KEYS_B
+        KEYS_C
+        KEYS_D
+        KEYS_E
+        KEYS_F
+        KEYS_G
+        KEYS_H
+        KEYS_I
+        KEYS_J
+        KEYS_K
+        KEYS_L
+        KEYS_M
+        KEYS_N
+        KEYS_O
+        KEYS_P
+        KEYS_Q
+        KEYS_R
+        KEYS_S
+        KEYS_T
+        KEYS_U
+        KEYS_V
+        KEYS_W
+        KEYS_X
+        KEYS_Y
+        KEYS_Z
+        KEYS_1
+        KEYS_2
+        KEYS_3
+        KEYS_4
+        KEYS_5
+        KEYS_6
+        KEYS_7
+        KEYS_8
+        KEYS_9
+        KEYS_0
+        KEYS_RETURN
+        KEYS_ESCAPE
+        KEYS_BACKSPACE
+        KEYS_TAB
+        KEYS_SPACE
+        KEYS_MINUS
+        KEYS_EQUALS
+        KEYS_LEFTBRACKET
+        KEYS_RIGHTBRACKET
+        KEYS_BACKSLASH
+        KEYS_NONUSHASH
+        KEYS_SEMICOLON
+        KEYS_APOSTROPHE
+        KEYS_GRAVE
+        KEYS_COMMA
+        KEYS_PERIOD
+        KEYS_SLASH
+        KEYS_CAPSLOCK
+        KEYS_F1
+        KEYS_F2
+        KEYS_F3
+        KEYS_F4
+        KEYS_F5
+        KEYS_F6
+        KEYS_F7
+        KEYS_F8
+        KEYS_F9
+        KEYS_F10
+        KEYS_F11
+        KEYS_F12
+        KEYS_PRINTSCREEN
+        KEYS_SCROLLLOCK
+        KEYS_PAUSE
+        KEYS_INSERT
+        KEYS_HOME
+        KEYS_PAGEUP
+        KEYS_DELETE
+        KEYS_END
+        KEYS_PAGEDOWN
+        KEYS_RIGHT
+        KEYS_LEFT
+        KEYS_DOWN
+        KEYS_UP
+        KEYS_NUMLOCKCLEAR
+        KEYS_KP_DIVIDE
+        KEYS_KP_MULTIPLY
+        KEYS_KP_MINUS
+        KEYS_KP_PLUS
+        KEYS_KP_ENTER
+        KEYS_KP_1
+        KEYS_KP_2
+        KEYS_KP_3
+        KEYS_KP_4
+        KEYS_KP_5
+        KEYS_KP_6
+        KEYS_KP_7
+        KEYS_KP_8
+        KEYS_KP_9
+        KEYS_KP_0
+        KEYS_KP_PERIOD
+        KEYS_NONUSBACKSLASH
+        KEYS_APPLICATION
+        KEYS_POWER
+        KEYS_KP_EQUALS
+        KEYS_F13
+        KEYS_F14
+        KEYS_F15
+        KEYS_F16
+        KEYS_F17
+        KEYS_F18
+        KEYS_F19
+        KEYS_F20
+        KEYS_F21
+        KEYS_F22
+        KEYS_F23
+        KEYS_F24
+        KEYS_EXECUTE
+        KEYS_HELP
+        KEYS_MENU
+        KEYS_SELECT
+        KEYS_STOP
+        KEYS_AGAIN
+        KEYS_UNDO
+        KEYS_CUT
+        KEYS_COPY
+        KEYS_PASTE
+        KEYS_FIND
+        KEYS_MUTE
+        KEYS_VOLUMEUP
+        KEYS_VOLUMEDOWN
+        KEYS_KP_COMMA
+        KEYS_KP_EQUALSAS400
+        KEYS_INTERNATIONAL1
+        KEYS_INTERNATIONAL2
+        KEYS_INTERNATIONAL3
+        KEYS_INTERNATIONAL4
+        KEYS_INTERNATIONAL5
+        KEYS_INTERNATIONAL6
+        KEYS_INTERNATIONAL7
+        KEYS_INTERNATIONAL8
+        KEYS_INTERNATIONAL9
+        KEYS_LANG1
+        KEYS_LANG2
+        KEYS_LANG3
+        KEYS_LANG4
+        KEYS_LANG5
+        KEYS_LANG6
+        KEYS_LANG7
+        KEYS_LANG8
+        KEYS_LANG9
+        KEYS_ALTERASE
+        KEYS_SYSREQ
+        KEYS_CANCEL
+        KEYS_CLEAR
+        KEYS_PRIOR
+        KEYS_RETURN2
+        KEYS_SEPARATOR
+        KEYS_OUT
+        KEYS_OPER
+        KEYS_CLEARAGAIN
+        KEYS_CRSEL
+        KEYS_EXSEL
+        KEYS_KP_00
+        KEYS_KP_000
+        KEYS_THOUSANDSSEPARATOR
+        KEYS_DECIMALSEPARATOR
+        KEYS_CURRENCYUNIT
+        KEYS_CURRENCYSUBUNIT
+        KEYS_KP_LEFTPAREN
+        KEYS_KP_RIGHTPAREN
+        KEYS_KP_LEFTBRACE
+        KEYS_KP_RIGHTBRACE
+        KEYS_KP_TAB
+        KEYS_KP_BACKSPACE
+        KEYS_KP_A
+        KEYS_KP_B
+        KEYS_KP_C
+        KEYS_KP_D
+        KEYS_KP_E
+        KEYS_KP_F
+        KEYS_KP_XOR
+        KEYS_KP_POWER
+        KEYS_KP_PERCENT
+        KEYS_KP_LESS
+        KEYS_KP_GREATER
+        KEYS_KP_AMPERSAND
+        KEYS_KP_DBLAMPERSAND
+        KEYS_KP_VERTICALBAR
+        KEYS_KP_DBLVERTICALBAR
+        KEYS_KP_COLON
+        KEYS_KP_HASH
+        KEYS_KP_SPACE
+        KEYS_KP_AT
+        KEYS_KP_EXCLAM
+        KEYS_KP_MEMSTORE
+        KEYS_KP_MEMRECALL
+        KEYS_KP_MEMCLEAR
+        KEYS_KP_MEMADD
+        KEYS_KP_MEMSUBTRACT
+        KEYS_KP_MEMMULTIPLY
+        KEYS_KP_MEMDIVIDE
+        KEYS_KP_PLUSMINUS
+        KEYS_KP_CLEAR
+        KEYS_KP_CLEARENTRY
+        KEYS_KP_BINARY
+        KEYS_KP_OCTAL
+        KEYS_KP_DECIMAL
+        KEYS_KP_HEXADECIMAL
+        KEYS_LCTRL
+        KEYS_LSHIFT
+        KEYS_LALT
+        KEYS_LGUI
+        KEYS_RCTRL
+        KEYS_RSHIFT
+        KEYS_RALT
+        KEYS_RGUI
+        KEYS_MODE
+        KEYS_AUDIONEXT
+        KEYS_AUDIOPREV
+        KEYS_AUDIOSTOP
+        KEYS_AUDIOPLAY
+        KEYS_AUDIOMUTE
+        KEYS_MEDIASELECT
+        KEYS_WWW
+        KEYS_MAIL
+        KEYS_CALCULATOR
+        KEYS_COMPUTER
+        KEYS_AC_SEARCH
+        KEYS_AC_HOME
+        KEYS_AC_BACK
+        KEYS_AC_FORWARD
+        KEYS_AC_STOP
+        KEYS_AC_REFRESH
+        KEYS_AC_BOOKMARKS
+        KEYS_BRIGHTNESSDOWN
+        KEYS_BRIGHTNESSUP
+        KEYS_DISPLAYSWITCH
+        KEYS_KBDILLUMTOGGLE
+        KEYS_KBDILLUMDOWN
+        KEYS_KBDILLUMUP
+        KEYS_EJECT
+        KEYS_SLEEP
+        KEYS_APP1
+        KEYS_APP2
+        KEYS_AUDIOREWIND
+        KEYS_AUDIOFASTFORWARD
+        KEYS_SOFTLEFT
+        KEYS_SOFTRIGHT
+        KEYS_ENDCALL
+
+
+MouseButton enum has the max number of mouse buttons that a user (game developer) has access to. 
+Note: There are devices that have more then 3 buttons on it and there are ways to get access to them
+but for now I'm only supporting 3 button mouse. 
+
+    enum MouseButtons
+        MBS_LEFT
+        MBS_CENTER
+        MBS_RIGHT
+
+
+The input interface contains all input functions that a user (game developer) can use in a lua script.
+
+    interface Input
+        isKeyReleased(key:Keyboard) -> boolean
+        isKeyPressedOnce(key:Keyboard) -> boolean
+        isKeyPressed(key:Keyboard) -> boolean
+        isKeyReleasedOnce(key:Keyboard) -> boolean
+        isMouseButtonReleased(mb:MouseButtons) -> boolean
+        isMouseButtonPressedOnce(mb:MouseButtons) -> boolean
+        isMouseButtonPressed(mb:MouseButtons) -> boolean
+        isMouseButtonReleasedOnce(mb:MouseButtons) -> boolean
+        getPosition() -> [number, number]
+        getRelative() -> [number, number]
+        getMouseWheel() -> [number, number]
+        setGrab(grab:bool) -> void
+        getGrab() -> boolean
+        toggleGrab() -> void
+        isInputMappingReleased(map:string) -> boolean
+        isInputMappingPressedOnce(map:string) -> boolean
+        isInputMappingPressed(map:string) -> boolean
+        isInputMappingReleasedOnce(map:string) -> boolean
+        getInputMappingAxisReleased(negative_map:string, positive_map:string) -> number
+        getInputMappingAxisPressedOnce(negative_map:string, positive_map:string) -> number
+        getInputMappingAxisPressed(negative_map:string, positive_map:string) -> number
+        getInputMappingAxisReleasedOnce(negative_map:string, positive_map:string) -> number
+        getInputMappingValueReleased(map:string) -> number
+        getInputMappingValuePressedOnce(map:string) -> number
+        getInputMappingValuePressed(map:string) -> number
+        getInputMappingValueReleasedOnce(map:string) -> number
+
+
+## Input Interface Functions
+
+### Input.isKeyReleased(key:Keyboard) -> boolean
+
+"isKeyReleased" function check if a given key is released. If it is released it will return true.
+For other cased it will return false.
+
+### Input.isKeyPressedOnce(key:Keyboard) -> boolean
+
+"isKeyPressedOnce" function check if a given key is pressed once. If it is pressed once it will return true.
+For other cased it will return false.
+
+### Input.isKeyPressed(key:Keyboard) -> boolean
+
+"isKeyPressed" function check if a given key is pressed. If it is pressed it will return true.
+For other cased it will return false.
+
+### Input.isKeyReleasedOnce(key:Keyboard) -> boolean
+
+"isKeyReleasedOnce" function check if a given key is released once. If it is released once it will return true.
+For other cased it will return false.
+
+### Input.isMouseButtonReleased(mb:MouseButtons) -> boolean
+
+"isMouseButtonReleased" function check if a given mouse button is released. If it is released it will return true.
+For other cased it will return false.
+
+### Input.isMouseButtonPressedOnce(mb:MouseButtons) -> boolean
+
+"isMouseButtonPressedOnce" function check if a given mouse button is pressed once. If it is pressed once it will return true.
+For other cased it will return false.
+
+### Input.isMouseButtonPressed(mb:MouseButtons) -> boolean
+
+"isMouseButtonPressed" function check if a given mouse button is pressed. If it is pressed it will return true.
+For other cased it will return false.
+
+### Input.isMouseButtonReleasedOnce(mb:MouseButtons) -> boolean
+
+"isMouseButtonReleasedOnce" function check if a given mouse button is released once. If it is released once it will return true.
+For other cased it will return false.
+
+### Input.getPosition() -> [number, number]
+
+"getPosition" will return the absolute position of the pointer's position. Note: It gives the pointers windows position not
+render position. See Render.convertPosition(number, number) -> [number, number] function (TODO: Add in render section)
+
+### Input.getRelative() -> [number, number]
+
+"getRelative()" return the pointer's relative or velocity.
+
+### Input.getMouseWheel() -> [number, number]
+
+"getMouseWheel" return the mouse wheel's value. Note: Up -1.0 Down 1.0 for the y value. 
+
+### Input.setGrab(grab:bool) -> void
+
+"setGrab" sets the input grab state if true the pointer's icon will disapear and it is bound to the window.
+If false the point the icon with be visible and the pointer will not be bound by the window.
+
+### Input.getGrab() -> boolean
+
+"getGrab" will return the currently grab state. Either true if grab is enabled or false if grab is disabled.
+
+### Input.toggleGrab() -> void
+
+"toggleGrab" this will allow input grab to be toggle. I uses this quite a bit in demo's. 
+
+### Input.isInputMappingReleased(map:string) -> boolean
+
+"isInputMappingReleased" function check if a given input map is released. If it is released it will return true.
+For other cased it will return false.
+
+### Input.isInputMappingPressedOnce(map:string) -> boolean
+
+"isInputMappingReleased" function check if a given input map is pressed once. If it is pressed once it will return true.
+For other cased it will return false.
+
+### Input.isInputMappingPressed(map:string) -> boolean
+
+"isInputMappingReleased" function check if a given input map is pressed. If it is pressed it will return true.
+For other cased it will return false.
+
+### Input.isInputMappingReleasedOnce(map:string) -> boolean
+
+"isInputMappingReleased" function check if a given input map is released once. If it is released once it will return true.
+For other cased it will return false.
+
+### Input.getInputMappingAxisReleased(negative_map:string, positive_map:string) -> number
+
+"getInputMappingAxisReleased" function will check between 2 different input maps negative and positive map are released.
+If negative is released and positive isn't then return -1. If negative isn't and positive is released then return 1. If they
+both aren't released or they are released return 0.
+
+### Input.getInputMappingAxisPressedOnce(negative_map:string, positive_map:string) -> number
+
+"getInputMappingAxisPressedOnce" function will check between 2 different input maps negative and positive map are pressed once.
+If negative is pressed once and positive isn't then return -1. If negative isn't and positive is pressed once then return 1. If they
+both aren't pressed once or they are pressed once return 0.
+
+### Input.getInputMappingAxisPressed(negative_map:string, positive_map:string) -> number
+
+"getInputMappingAxisPressed" function will check between 2 different input maps negative and positive map are pressed.
+If negative is pressed and positive isn't then return -1. If negative isn't and positive is pressed then return 1. If they
+both aren't pressed or they are pressed return 0.
+
+### Input.getInputMappingAxisReleasedOnce(negative_map:string, positive_map:string) -> number
+
+"getInputMappingAxisReleasedOnce" function will check between 2 different input maps negative and positive map are released once.
+If negative is released once and positive isn't then return -1. If negative isn't and positive is released once then return 1. If they
+both aren't released once or they are released once return 0.
+
+### Input.getInputMappingValueReleased(map:string) -> number
+
+"getInputMappingValueReleased" function will return a number between 0 -> 1 if the mapping is released.
+
+### Input.getInputMappingValuePressedOnce(map:string) -> number
+
+"getInputMappingValuePressedOnce" function will return a number between 0 -> 1 if the mapping is pressed once.
+
+### Input.getInputMappingValuePressed(map:string) -> number
+
+"getInputMappingValuePressed" function will return a number between 0 -> 1 if the mapping is pressed.
+
+### Input.getInputMappingValueReleasedOnce(map:string) -> number
+
+"getInputMappingValueReleasedOnce" function will return a number between 0 -> 1 if the mapping is released once.
+
+## Gamepad
+
+The ControllerButton contains all of the possible buttons a gamepad contains. Note: every controller under this enum
+is treated like an xbox controller.
+
+    enum ControllerButton
+        CB_INVALID
+        CB_A
+        CB_B
+        CB_X
+        CB_Y
+        CB_BACK
+        CB_GUIDE
+        CB_START
+        CB_LEFTSTICK
+        CB_RIGHTSTICK
+        CB_LEFTSHOULDER
+        CB_RIGHTSHOULDER
+        CB_DPAD_UP
+        CB_DPAD_DOWN
+        CB_DPAD_LEFT
+        CB_DPAD_RIGHT
+        CB_MISC1
+        CB_PADDLE1
+        CB_PADDLE2
+        CB_PADDLE3
+        CB_PADDLE4
+        CB_TOUCHPAD
+
+DSGE allows up the 4 players so therefore allows up to 4 controllers to be access. To get access to a
+controller in DSGE you'll be using these interfaces.
+
+1. GamepadPlayer1
+2. GamepadPlayer2
+3. GamepadPlayer3
+4. GamepadPlayer4
+
+Here are the interfaces for each on the gamepads.
+
+### Player 1
+
+    interface GamepadPlayer1
+        getLeftAxis() -> [number, number]
+        getRightAxis() -> [number, number]
+        getLeftTriggerAxis() -> number
+        getRightTriggerAxis() -> number
+        isButtonRelease(cb:ControllerButton) -> boolean
+        isButtonPressedOnce(cb:ControllerButton) -> boolean
+        isButtonPressed(cb:ControllerButton) -> boolean
+        isButtonReleaseOnce(cb:ControllerButton) -> boolean
+        isControllerConnect() -> boolean
+        isInputMappingReleased(map:string) -> boolean
+        isInputMappingPressedOnce(map:string) -> boolean
+        isInputMappingPressed(map:string) -> boolean
+        isInputMappingReleasedOnce(map:string) -> boolean
+        getInputMappingAxisRelease(negative:string, positive:string) -> number
+        getInputMappingAxisPressedOnce(negative:string, positive:string) -> number
+        getInputMappingAxisPressed(negative:string, positive:string) -> number
+        getInputMappingAxisReleaseOnce(negative:string, positive:string) -> number
+        getInputMappingValueRelease(map:string) -> number
+        getInputMappingValuePressedOnce(map:string) -> number
+        getInputMappingValuePressed(map:string) -> number
+        getInputMappingValueReleaseOnce(map:string) -> number
+
+
+### Player 2
+
+    interface GamepadPlayer2
+        getLeftAxis() -> [number, number]
+        getRightAxis() -> [number, number]
+        getLeftTriggerAxis() -> number
+        getRightTriggerAxis() -> number
+        isButtonRelease(cb:ControllerButton) -> boolean
+        isButtonPressedOnce(cb:ControllerButton) -> boolean
+        isButtonPressed(cb:ControllerButton) -> boolean
+        isButtonReleaseOnce(cb:ControllerButton) -> boolean
+        isControllerConnect() -> boolean
+        isInputMappingReleased(map:string) -> boolean
+        isInputMappingPressedOnce(map:string) -> boolean
+        isInputMappingPressed(map:string) -> boolean
+        isInputMappingReleasedOnce(map:string) -> boolean
+        getInputMappingAxisRelease(negative:string, positive:string) -> number
+        getInputMappingAxisPressedOnce(negative:string, positive:string) -> number
+        getInputMappingAxisPressed(negative:string, positive:string) -> number
+        getInputMappingAxisReleaseOnce(negative:string, positive:string) -> number
+        getInputMappingValueRelease(map:string) -> number
+        getInputMappingValuePressedOnce(map:string) -> number
+        getInputMappingValuePressed(map:string) -> number
+        getInputMappingValueReleaseOnce(map:string) -> number
+
+### Player 3
+
+    interface GamepadPlayer3
+        getLeftAxis() -> [number, number]
+        getRightAxis() -> [number, number]
+        getLeftTriggerAxis() -> number
+        getRightTriggerAxis() -> number
+        isButtonRelease(cb:ControllerButton) -> boolean
+        isButtonPressedOnce(cb:ControllerButton) -> boolean
+        isButtonPressed(cb:ControllerButton) -> boolean
+        isButtonReleaseOnce(cb:ControllerButton) -> boolean
+        isControllerConnect() -> boolean
+        isInputMappingReleased(map:string) -> boolean
+        isInputMappingPressedOnce(map:string) -> boolean
+        isInputMappingPressed(map:string) -> boolean
+        isInputMappingReleasedOnce(map:string) -> boolean
+        getInputMappingAxisRelease(negative:string, positive:string) -> number
+        getInputMappingAxisPressedOnce(negative:string, positive:string) -> number
+        getInputMappingAxisPressed(negative:string, positive:string) -> number
+        getInputMappingAxisReleaseOnce(negative:string, positive:string) -> number
+        getInputMappingValueRelease(map:string) -> number
+        getInputMappingValuePressedOnce(map:string) -> number
+        getInputMappingValuePressed(map:string) -> number
+        getInputMappingValueReleaseOnce(map:string) -> number
+
+### Player 4
+
+    interface GamepadPlayer4
+        getLeftAxis() -> [number, number]
+        getRightAxis() -> [number, number]
+        getLeftTriggerAxis() -> number
+        getRightTriggerAxis() -> number
+        isButtonRelease(cb:ControllerButton) -> boolean
+        isButtonPressedOnce(cb:ControllerButton) -> boolean
+        isButtonPressed(cb:ControllerButton) -> boolean
+        isButtonReleaseOnce(cb:ControllerButton) -> boolean
+        isControllerConnect() -> boolean
+        isInputMappingReleased(map:string) -> boolean
+        isInputMappingPressedOnce(map:string) -> boolean
+        isInputMappingPressed(map:string) -> boolean
+        isInputMappingReleasedOnce(map:string) -> boolean
+        getInputMappingAxisRelease(negative:string, positive:string) -> number
+        getInputMappingAxisPressedOnce(negative:string, positive:string) -> number
+        getInputMappingAxisPressed(negative:string, positive:string) -> number
+        getInputMappingAxisReleaseOnce(negative:string, positive:string) -> number
+        getInputMappingValueRelease(map:string) -> number
+        getInputMappingValuePressedOnce(map:string) -> number
+        getInputMappingValuePressed(map:string) -> number
+        getInputMappingValueReleaseOnce(map:string) -> number
+
+
+## Gamepad Interface Functions
+
+This section will describe the function in the GamepadPlayer* interfaces were *=[1-4].
+
+### GamePlayer*.getLeftAxis() -> [number, number]
+
+"getLeftAxis" function return the axis of the left thumb stick. Both x and y can have values between -1.0 to 1.0.
+
+### GamePlayer*.getRightAxis() -> [number, number]
+
+"getRightAxis" function return the axis of the right thumb stick. Both x and y can have values between -1.0 to 1.0.
+
+### GamePlayer*.getLeftTriggerAxis() -> number
+
+"getLeftTriggerAxis" function return the left trigger. The left trigger can have values between 0 to 1.
+
+### GamePlayer*.getRightTriggerAxis() -> number
+
+"getLeftTriggerAxis" function return the right trigger. The right trigger can have values between 0 to 1.
+
+### GamePlayer*.isButtonRelease(cb:ControllerButton) -> boolean
+
+"isButtonRelease" function check if a given controller button is released. If it is released it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isButtonPressedOnce(cb:ControllerButton) -> boolean
+
+"isButtonPressedOnce" function check if a given controller button is pressed once. If it is pressed once it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isButtonPressed(cb:ControllerButton) -> boolean
+
+"isButtonPressed" function check if a given controller button is pressed. If it is pressed it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isButtonReleaseOnce(cb:ControllerButton) -> boolean
+
+"isButtonReleaseOnce" function check if a given controller button is released once. If it is released once it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isControllerConnect() -> boolean
+
+"isControllerConnect" check if a given controller is connected to the computer.
+
+### GamePlayer*.isInputMappingReleased(map:string) -> boolean
+
+"isInputMappingReleased" function check if a given controller input mapping is released. If it is released it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isInputMappingPressedOnce(map:string) -> boolean
+
+"isInputMappingPressedOnce" function check if a given controller input mapping is pressed once. If it is pressed once it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isInputMappingPressed(map:string) -> boolean
+
+"isInputMappingPressed" function check if a given controller input mapping is pressed. If it is pressed it will return true.
+For other cased it will return false.
+
+### GamePlayer*.isInputMappingReleasedOnce(map:string) -> boolean
+
+"isInputMappingReleasedOnce" function check if a given controller input mapping is released once. If it is released once it will return true.
+For other cased it will return false.
+
+### GamePlayer*.getInputMappingAxisRelease(negative:string, positive:string) -> number
+
+"getInputMappingAxisReleased" function will check between 2 different gamepad input maps negative and positive map are released.
+If negative is released and positive isn't then return -1. If negative isn't and positive is released then return 1. If they
+both aren't released or they are released return 0.
+
+### GamePlayer*.getInputMappingAxisPressedOnce(negative:string, positive:string) -> number
+
+"getInputMappingAxisPressedOnce" function will check between 2 different gamepad input maps negative and positive map are pressed once.
+If negative is pressed once and positive isn't then return -1. If negative isn't and positive is pressed once then return 1. If they
+both aren't pressed once or they are pressed once return 0.
+
+### GamePlayer*.getInputMappingAxisPressed(negative:string, positive:string) -> number
+
+"getInputMappingAxisPressed" function will check between 2 different gamepad input maps negative and positive map are pressed.
+If negative is pressed and positive isn't then return -1. If negative isn't and positive is pressed then return 1. If they
+both aren't pressed or they are pressed return 0.
+
+### GamePlayer*.getInputMappingAxisReleaseOnce(negative:string, positive:string) -> number
+
+"getInputMappingAxisReleasedOnce" function will check between 2 different gamepad input maps negative and positive map are released once.
+If negative is released once and positive isn't then return -1. If negative isn't and positive is released once then return 1. If they
+both aren't released once or they are released once return 0.
+
+### GamePlayer*.getInputMappingValueRelease(map:string) -> number
+
+"getInputMappingValueReleased" function will return a number between 0 -> 1 if the gamepad mapping is released.
+
+### GamePlayer*.getInputMappingValuePressedOnce(map:string) -> number
+
+"getInputMappingValueReleased" function will return a number between 0 -> 1 if the gamepad mapping is pressed once.
+
+### GamePlayer*.getInputMappingValuePressed(map:string) -> number
+
+"getInputMappingValueReleased" function will return a number between 0 -> 1 if the gamepad mapping is pressed.
+
+### GamePlayer*.getInputMappingValueReleaseOnce(map:string) -> number
+
+"getInputMappingValueReleased" function will return a number between 0 -> 1 if the gamepad mapping is released once.
+
+
+## Render
+
+TODO: Add render wrappers
+
+## Physics
+
+TODO: Add physics wrappers
+
+## Sound
+
+TODO: Add sound wrappers
