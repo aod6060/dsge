@@ -71,6 +71,16 @@ namespace lua_wrapper {
         addToTable(state->state, "isInputMappingPressed", lw_gamepad_player1_isInputMappingPressed);
         addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player1_isInputMappingReleasedOnce);
 
+        addToTable(state->state, "getInputMappingAxisRelease", lw_gamepad_player1_getInputMappingAxisRelease);
+        addToTable(state->state, "getInputMappingAxisPressedOnce", lw_gamepad_player1_getInputMappingAxisPressedOnce);
+        addToTable(state->state, "getInputMappingAxisPressed", lw_gamepad_player1_getInputMappingAxisPressed);
+        addToTable(state->state, "getInputMappingAxisReleaseOnce", lw_gamepad_player1_getInputMappingAxisReleaseOnce);
+
+        addToTable(state->state, "getInputMappingValueRelease", lw_gamepad_player1_getInputMappingValueRelease);
+        addToTable(state->state, "getInputMappingValuePressedOnce", lw_gamepad_player1_getInputMappingValuePressedOnce);
+        addToTable(state->state, "getInputMappingValuePressed", lw_gamepad_player1_getInputMappingValuePressed);
+        addToTable(state->state, "getInputMappingValueReleaseOnce", lw_gamepad_player1_getInputMappingValueReleaseOnce);
+
         lua_setglobal(state->state, "GamepadPlayer1");
 
         // Create GamepadPlayer2
@@ -90,6 +100,17 @@ namespace lua_wrapper {
         addToTable(state->state, "isInputMappingPressedOnce", lw_gamepad_player2_isInputMappingPressedOnce);
         addToTable(state->state, "isInputMappingPressed", lw_gamepad_player2_isInputMappingPressed);
         addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player2_isInputMappingReleasedOnce);
+
+
+        addToTable(state->state, "getInputMappingAxisRelease", lw_gamepad_player2_getInputMappingAxisRelease);
+        addToTable(state->state, "getInputMappingAxisPressedOnce", lw_gamepad_player2_getInputMappingAxisPressedOnce);
+        addToTable(state->state, "getInputMappingAxisPressed", lw_gamepad_player2_getInputMappingAxisPressed);
+        addToTable(state->state, "getInputMappingAxisReleaseOnce", lw_gamepad_player2_getInputMappingAxisReleaseOnce);
+
+        addToTable(state->state, "getInputMappingValueRelease", lw_gamepad_player2_getInputMappingValueRelease);
+        addToTable(state->state, "getInputMappingValuePressedOnce", lw_gamepad_player2_getInputMappingValuePressedOnce);
+        addToTable(state->state, "getInputMappingValuePressed", lw_gamepad_player2_getInputMappingValuePressed);
+        addToTable(state->state, "getInputMappingValueReleaseOnce", lw_gamepad_player2_getInputMappingValueReleaseOnce);
 
         lua_setglobal(state->state, "GamepadPlayer2");
 
@@ -111,6 +132,17 @@ namespace lua_wrapper {
         addToTable(state->state, "isInputMappingPressed", lw_gamepad_player3_isInputMappingPressed);
         addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player3_isInputMappingReleasedOnce);
 
+
+        addToTable(state->state, "getInputMappingAxisRelease", lw_gamepad_player3_getInputMappingAxisRelease);
+        addToTable(state->state, "getInputMappingAxisPressedOnce", lw_gamepad_player3_getInputMappingAxisPressedOnce);
+        addToTable(state->state, "getInputMappingAxisPressed", lw_gamepad_player3_getInputMappingAxisPressed);
+        addToTable(state->state, "getInputMappingAxisReleaseOnce", lw_gamepad_player3_getInputMappingAxisReleaseOnce);
+
+        addToTable(state->state, "getInputMappingValueRelease", lw_gamepad_player3_getInputMappingValueRelease);
+        addToTable(state->state, "getInputMappingValuePressedOnce", lw_gamepad_player3_getInputMappingValuePressedOnce);
+        addToTable(state->state, "getInputMappingValuePressed", lw_gamepad_player3_getInputMappingValuePressed);
+        addToTable(state->state, "getInputMappingValueReleaseOnce", lw_gamepad_player3_getInputMappingValueReleaseOnce);
+
         lua_setglobal(state->state, "GamepadPlayer3");
 
         // Create GamepadPlayer4
@@ -130,6 +162,17 @@ namespace lua_wrapper {
         addToTable(state->state, "isInputMappingPressedOnce", lw_gamepad_player4_isInputMappingPressedOnce);
         addToTable(state->state, "isInputMappingPressed", lw_gamepad_player4_isInputMappingPressed);
         addToTable(state->state, "isInputMappingReleasedOnce", lw_gamepad_player4_isInputMappingReleasedOnce);
+
+
+        addToTable(state->state, "getInputMappingAxisRelease", lw_gamepad_player4_getInputMappingAxisRelease);
+        addToTable(state->state, "getInputMappingAxisPressedOnce", lw_gamepad_player4_getInputMappingAxisPressedOnce);
+        addToTable(state->state, "getInputMappingAxisPressed", lw_gamepad_player4_getInputMappingAxisPressed);
+        addToTable(state->state, "getInputMappingAxisReleaseOnce", lw_gamepad_player4_getInputMappingAxisReleaseOnce);
+
+        addToTable(state->state, "getInputMappingValueRelease", lw_gamepad_player4_getInputMappingValueRelease);
+        addToTable(state->state, "getInputMappingValuePressedOnce", lw_gamepad_player4_getInputMappingValuePressedOnce);
+        addToTable(state->state, "getInputMappingValuePressed", lw_gamepad_player4_getInputMappingValuePressed);
+        addToTable(state->state, "getInputMappingValueReleaseOnce", lw_gamepad_player4_getInputMappingValueReleaseOnce);
 
         lua_setglobal(state->state, "GamepadPlayer4");
 
@@ -510,5 +553,247 @@ namespace lua_wrapper {
         lua_pushboolean(l, ret);
         return 1;
     }
+
+    // Axis Functions
+    //float getInputMappingAxisReleased(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisRelease(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingAxisRelease(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_2, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingAxisRelease(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_3, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingAxisRelease(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_4, negative, positive));
+        return 1;
+    }
+
+
+    //float getInputMappingAxisPressedOnce(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisPressedOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingAxisPressedOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_2, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingAxisPressedOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_3, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingAxisPressedOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_4, negative, positive));
+        return 1;
+    }
+
+
+    //float getInputMappingAxisPressed(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisPressed(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_1, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingAxisPressed(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_2, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingAxisPressed(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_3, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingAxisPressed(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisPressed(input::gamepad::PlayerControllerName::PCN_PLAYER_4, negative, positive));
+        return 1;
+    }
+
+
+    //float getInputMappingAxisReleasedOnce(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisReleaseOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingAxisReleaseOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_2, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingAxisReleaseOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_3, negative, positive));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingAxisReleaseOnce(lua_State* l) {
+        std::string negative = lua_tostring(l, 1);
+        std::string positive = lua_tostring(l, 2);
+        //glm::vec2 value = input::gamepad::getInputMappingAxisReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name);
+        lua_pushnumber(l, input::gamepad::getInputMappingAxisReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_4, negative, positive));
+        return 1;
+    }
+
+
+    // Value Functions
+    //float getInputMappingValueReleased(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValueRelease(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingValueRelease(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingValueRelease(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingValueRelease(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleased(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name));
+        return 1;
+    }
+
+
+    //float getInputMappingValuePressedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValuePressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingValuePressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingValuePressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingValuePressedOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name));
+        return 1;
+    }
+
+
+    //float getInputMappingValuePressed(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValuePressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressed(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingValuePressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressed(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingValuePressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressed(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingValuePressed(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValuePressed(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name));
+        return 1;
+    }
+
+
+    //float getInputMappingValueReleasedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValueReleaseOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_1, name));
+        return 1;
+    }
+
+    int lw_gamepad_player2_getInputMappingValueReleaseOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_2, name));
+        return 1;
+    }
+
+    int lw_gamepad_player3_getInputMappingValueReleaseOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_3, name));
+        return 1;
+    }
+
+    int lw_gamepad_player4_getInputMappingValueReleaseOnce(lua_State* l) {
+        std::string name = lua_tostring(l, 1);
+        lua_pushnumber(l, input::gamepad::getInputMappingValueReleasedOnce(input::gamepad::PlayerControllerName::PCN_PLAYER_4, name));
+        return 1;
+    }
+
 
 }

@@ -175,15 +175,53 @@ namespace lua_wrapper {
 
     // Axis Functions
     //float getInputMappingAxisReleased(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisRelease(lua_State* l);
+    int lw_gamepad_player2_getInputMappingAxisRelease(lua_State* l);
+    int lw_gamepad_player3_getInputMappingAxisRelease(lua_State* l);
+    int lw_gamepad_player4_getInputMappingAxisRelease(lua_State* l);
+
     //float getInputMappingAxisPressedOnce(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisPressedOnce(lua_State* l);
+    int lw_gamepad_player2_getInputMappingAxisPressedOnce(lua_State* l);
+    int lw_gamepad_player3_getInputMappingAxisPressedOnce(lua_State* l);
+    int lw_gamepad_player4_getInputMappingAxisPressedOnce(lua_State* l);
+
     //float getInputMappingAxisPressed(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisPressed(lua_State* l);
+    int lw_gamepad_player2_getInputMappingAxisPressed(lua_State* l);
+    int lw_gamepad_player3_getInputMappingAxisPressed(lua_State* l);
+    int lw_gamepad_player4_getInputMappingAxisPressed(lua_State* l);
+
     //float getInputMappingAxisReleasedOnce(PlayerControllerName name, std::string negative, std::string positive);
+    int lw_gamepad_player1_getInputMappingAxisReleaseOnce(lua_State* l);
+    int lw_gamepad_player2_getInputMappingAxisReleaseOnce(lua_State* l);
+    int lw_gamepad_player3_getInputMappingAxisReleaseOnce(lua_State* l);
+    int lw_gamepad_player4_getInputMappingAxisReleaseOnce(lua_State* l);
 
     // Value Functions
     //float getInputMappingValueReleased(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValueRelease(lua_State* l);
+    int lw_gamepad_player2_getInputMappingValueRelease(lua_State* l);
+    int lw_gamepad_player3_getInputMappingValueRelease(lua_State* l);
+    int lw_gamepad_player4_getInputMappingValueRelease(lua_State* l);
+
     //float getInputMappingValuePressedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValuePressedOnce(lua_State* l);
+    int lw_gamepad_player2_getInputMappingValuePressedOnce(lua_State* l);
+    int lw_gamepad_player3_getInputMappingValuePressedOnce(lua_State* l);
+    int lw_gamepad_player4_getInputMappingValuePressedOnce(lua_State* l);
+
     //float getInputMappingValuePressed(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValuePressed(lua_State* l);
+    int lw_gamepad_player2_getInputMappingValuePressed(lua_State* l);
+    int lw_gamepad_player3_getInputMappingValuePressed(lua_State* l);
+    int lw_gamepad_player4_getInputMappingValuePressed(lua_State* l);
+
     //float getInputMappingValueReleasedOnce(PlayerControllerName name, std::string mapping);
+    int lw_gamepad_player1_getInputMappingValueReleaseOnce(lua_State* l);
+    int lw_gamepad_player2_getInputMappingValueReleaseOnce(lua_State* l);
+    int lw_gamepad_player3_getInputMappingValueReleaseOnce(lua_State* l);
+    int lw_gamepad_player4_getInputMappingValueReleaseOnce(lua_State* l);
 
     // Render
 
