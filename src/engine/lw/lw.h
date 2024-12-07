@@ -12,8 +12,11 @@ namespace lua_wrapper {
         LWT_INTEGER = 0,
         LWT_NUMBER,
         LWT_BOOL,
+        LWT_STRING,
         LWT_MAX_SIZE
     };
+
+    #define SVALUE_BUFFER_SIZE 1024
 
     struct LWVariable {
         std::string name;
@@ -21,6 +24,9 @@ namespace lua_wrapper {
         int ivalue;
         float nvalue;
         bool bvalue;
+        std::string svalue;
+        // I hope this works. I'll for the moment limit a string to 1024 length.
+        char svalue_buffer[SVALUE_BUFFER_SIZE];
     };
 
     struct LWState {
@@ -38,10 +44,12 @@ namespace lua_wrapper {
         int getInteger(std::string name);
         float getNumber(std::string name);
         bool getBoolean(std::string name);
+        std::string getString(std::string name);
 
         void setInteger(std::string name, int value);
         void setNumber(std::string name, float value);
         void setBoolean(std::string name, bool value);
+        void setString(std::string name, std::string value);
 
         // For now I don't care about arguments
         void callFunction(std::string name);

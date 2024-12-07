@@ -54,6 +54,13 @@ namespace lua_wrapper {
     }
 
     void initLibs(LWState* state) {
+
+        std::function<void(lua_State*, std::string, lua_Integer)> addIntegerToTable = [](lua_State* l, std::string name, lua_Integer value) {
+            lua_pushstring(l, name.c_str());
+            lua_pushinteger(l, value);
+            lua_settable(l, -3);
+        };
+
         luaL_openlibs(state->state);
 
         lua_pushlightuserdata(state->state, state);
@@ -64,6 +71,7 @@ namespace lua_wrapper {
 
         lua_newtable(state->state);
 
+        /*
         lua_pushstring(state->state, "LWT_INTEGER");
         lua_pushinteger(state->state, LWType::LWT_INTEGER);
         lua_settable(state->state, -3);
@@ -77,6 +85,12 @@ namespace lua_wrapper {
         lua_pushstring(state->state, "LWT_BOOL");
         lua_pushinteger(state->state, LWType::LWT_BOOL);
         lua_settable(state->state, -3);
+        */
+
+        addIntegerToTable(state->state, "LWT_INTEGER", LWType::LWT_INTEGER);
+        addIntegerToTable(state->state, "LWT_NUMBER", LWType::LWT_NUMBER);
+        addIntegerToTable(state->state, "LWT_BOOL", LWType::LWT_BOOL);
+        addIntegerToTable(state->state, "LWT_STRING", LWType::LWT_STRING);
 
         lua_setglobal(state->state, "LWType");
 
@@ -104,6 +118,8 @@ namespace lua_wrapper {
             v.nvalue = state->getNumber(v.name);
         } else if(v.type == LWType::LWT_BOOL) {
             v.bvalue = state->getBoolean(v.name);
+        } else if(v.type == LWType::LWT_STRING) {
+            v.svalue = state->getString(v.name);
         }
 
         state->exports.push_back(v);
@@ -135,6 +151,14 @@ namespace lua_wrapper {
         return value;
     }
 
+    std::string LWState::getString(std::string name) {
+        std::string value = "";
+        lua_getglobal(this->state, name.c_str());
+        value = lua_tostring(this->state, -1);
+        lua_pop(this->state, -1);
+        return value;
+    }
+
     void LWState::setInteger(std::string name, int value) {
         lua_pushinteger(this->state, value);
         lua_setglobal(this->state, name.c_str());
@@ -147,6 +171,11 @@ namespace lua_wrapper {
 
     void LWState::setBoolean(std::string name, bool value) {
         lua_pushboolean(this->state, value);
+        lua_setglobal(this->state, name.c_str());
+    }
+
+    void LWState::setString(std::string name, std::string value) {
+        lua_pushstring(this->state, value.c_str());
         lua_setglobal(this->state, name.c_str());
     }
 
