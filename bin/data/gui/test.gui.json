@@ -1,0 +1,17 @@
+{
+    "type": "Basic",
+    "script": "data/gui/test.lua",
+    "components": [
+        {
+            "type": "Label",
+            "text": "Hello, World",
+            "position": [32.0, 32.0]
+        },
+        {
+            "type": "Button",
+            "text": "Hello, World",
+            "position": [32.0, 64.0],
+            "on-click": "testButton"
+        }
+    ]
+}
